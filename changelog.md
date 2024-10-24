@@ -1,7 +1,7 @@
-# Version 1.68.0 (2024-10-19)
+# Version 1.68.0 (2024-10-24)
 
 ## What's Changed
-- Bump hahomematic to 2024.10.12
+- Bump hahomematic to 2024.10.13
   - Add central link methods to click event
   - Add create_central_links and remove_central_links to device and central
   - Add operation_mode to channel
@@ -9,6 +9,7 @@
   - Add version to code
   - Align method parameters with CCU
   - Check if channel has programs before deleting links
+  - Disable climate temperature validation when turning off
   - Fix wrong channel assignment for HmIP-DRBLI4
   - Use PRESS_SHORT for reportValueUsage
 - Add actions to manage central links

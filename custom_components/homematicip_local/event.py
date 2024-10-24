@@ -83,11 +83,11 @@ class HaHomematicEvent(EventEntity):
     ) -> None:
         """Initialize the event."""
         self._cu: ControlUnit = control_unit
+        self._hm_channel_events = hm_channel_events
         self._attr_event_types = [event.parameter.lower() for event in hm_channel_events]
         self._hm_primary_entity: GenericEvent = hm_channel_events[0]
-        self._hm_channel: HmChannel = hm_channel_events[0].channel
-        self._hm_device: HmDevice = hm_channel_events[0].channel.device
-        self._hm_channel_events = hm_channel_events
+        self._hm_channel: HmChannel = self._hm_primary_entity.channel
+        self._hm_device: HmDevice = self._hm_channel.device
         self._attr_translation_key = self._hm_primary_entity.event_type.value.replace(".", "_")
 
         self._attr_unique_id = f"{DOMAIN}_{self._hm_channel.unique_id}"
