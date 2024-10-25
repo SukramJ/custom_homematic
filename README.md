@@ -4,7 +4,7 @@ Homematic(IP) Integration for Home Assistant
 
 [Installation](https://github.com/danielperna84/custom_homematic/wiki/Installation)
 
-[Alt. Installation by J. Maus](https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration)
+[Alternative Installation by J. Maus](https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration)
 
 [Wiki with additional information](https://github.com/danielperna84/hahomematic/wiki)
 Please support the community by adding more valuable information to the wiki.delete_device
