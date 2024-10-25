@@ -4,7 +4,7 @@ Homematic(IP) Integration for Home Assistant
 
 [Installation](https://github.com/danielperna84/custom_homematic/wiki/Installation)
 
-[State of the integration](https://github.com/danielperna84/custom_homematic/blob/devel/info.md)
+[Alt. Installation by J. Maus](https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration)
 
 [Wiki with additional information](https://github.com/danielperna84/hahomematic/wiki)
 Please support the community by adding more valuable information to the wiki.delete_device
@@ -312,6 +312,11 @@ The Homematic(IP) Local integration makes various custom actions available.
 
 Clears the cache for a central unit from Home Assistant. Requires a restart.
 
+### `homematicip_local.create_central_links`
+
+Creates a central link from a device to the backend. This is required for rf-devices to enable push button support.
+[See](https://github.com/danielperna84/custom_homematic?tab=readme-ov-file#events-for-homematicip-devices)
+
 ### `homematicip_local.copy_schedule`
 
 __Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
@@ -397,6 +402,10 @@ Call to `putParamset` on the XML-RPC interface.
 __Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
 
 Call to `putParamset` for direct connections on the XML-RPC interface.
+
+### `homematicip_local.remove_central_links`
+
+Removes a central link on the backend.
 
 ### `homematicip_local.set_cover_combined_position`
 
@@ -639,7 +648,18 @@ data:
 
 ### Events for Homematic(IP) devices
 
-To receive button-press events for Homematic(IP) devices like WRC2 / WRC6 (wall switch) or SPDR (passage sensor) or the KRC4 (key ring remote control) or HM-PBI-4-FM (radio button interface) you have to create a program in the CCU:
+To receive button-press events for Homematic(IP) devices like WRC2 / WRC6 (wall switch) or SPDR (passage sensor) or the KRC4 (key ring remote control) or HM-PBI-4-FM (radio button interface) you have to several options:
+
+Option A
+Use the action [create_central_links](https://github.com/danielperna84/custom_homematic?tab=readme-ov-file#homeassistantcreate_central_links).
+A one time execution is required to activate the events.
+To deactivate the events the action [remove_central_links](https://github.com/danielperna84/custom_homematic?tab=readme-ov-file#homeassistantremove_central_links) can be used.
+
+Option B
+With RaspberryMatic no program is needed for buttons. Events can directly activated/deactivated within ->Settings->Devices. Click the "+" of e.g. a remote control then click directly the "button-channel". Press "activate". There is no direct feedback but a action message should appear.
+
+Option C
+Create a program in the CCU:
 
 1. In the menu of your CCU's admin panel go to `Programs and connections` > `Programs & CCU connection`
 2. Go to `New` in the footer menu
@@ -652,7 +672,7 @@ To receive button-press events for Homematic(IP) devices like WRC2 / WRC6 (wall 
 9. When your channels are working now, you can set the program to "inactive". Don't delete the program!
 
 Hint: To deactivate the event for one channel, remove that channel from the program
-Hint: With RaspberryMatic no program is needed for buttons. Events can directly activated/deactivated within ->Settings->Devices. Click the "+" of e.g. a remote control then click directly the "button-channel". Press "activate". There is no direct feedback but a action message should appear.
+
 
 ## Updating a device firmware
 
