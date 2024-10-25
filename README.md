@@ -314,7 +314,7 @@ Clears the cache for a central unit from Home Assistant. Requires a restart.
 
 ### `homematicip_local.create_central_links`
 
-Creates a central link from a device to the backend. This is required for rf-devices to enable push button support.
+Creates a central link from a device to the backend. This is required for rf-devices to enable button-press events.
 [See](https://github.com/danielperna84/custom_homematic?tab=readme-ov-file#events-for-homematicip-devices)
 
 ### `homematicip_local.copy_schedule`
@@ -405,7 +405,7 @@ Call to `putParamset` for direct connections on the XML-RPC interface.
 
 ### `homematicip_local.remove_central_links`
 
-Removes a central link on the backend.
+Removes a central link from the backend. This is required to disable enable button-press events.
 
 ### `homematicip_local.set_cover_combined_position`
 
@@ -650,15 +650,15 @@ data:
 
 To receive button-press events for Homematic(IP) devices like WRC2 / WRC6 (wall switch) or SPDR (passage sensor) or the KRC4 (key ring remote control) or HM-PBI-4-FM (radio button interface) you have to several options:
 
-Option A
+#### Option A:
 Use the action [create_central_links](https://github.com/danielperna84/custom_homematic?tab=readme-ov-file#homeassistantcreate_central_links).
 A one time execution is required to activate the events.
 To deactivate the events the action [remove_central_links](https://github.com/danielperna84/custom_homematic?tab=readme-ov-file#homeassistantremove_central_links) can be used.
 
-Option B
+#### Option B:
 With RaspberryMatic no program is needed for buttons. Events can directly activated/deactivated within ->Settings->Devices. Click the "+" of e.g. a remote control then click directly the "button-channel". Press "activate". There is no direct feedback but a action message should appear.
 
-Option C
+#### Option C:
 Create a program in the CCU:
 
 1. In the menu of your CCU's admin panel go to `Programs and connections` > `Programs & CCU connection`
