@@ -50,11 +50,11 @@ async def test_check_min_version(
     """Test check_min_version."""
     # no config_entry exists
 
-    orig_version = custom_components.homematicip_local.HMIP_LOCAL_MIN_VERSION
-    custom_components.homematicip_local.HMIP_LOCAL_MIN_VERSION = "2099.1.1"
+    orig_version = custom_components.homematicip_local.HMIP_LOCAL_MIN_HA_VERSION
+    custom_components.homematicip_local.HMIP_LOCAL_MIN_HA_VERSION = "2099.1.1"
     mock_config_entry_v2.add_to_hass(hass)
     assert await hass.config_entries.async_setup(mock_config_entry_v2.entry_id) is False
-    custom_components.homematicip_local.HMIP_LOCAL_MIN_VERSION = orig_version
+    custom_components.homematicip_local.HMIP_LOCAL_MIN_HA_VERSION = orig_version
 
 
 async def test_migrate_entry(
