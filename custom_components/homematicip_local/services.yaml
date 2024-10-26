@@ -624,6 +624,7 @@ turn_on_siren:
       required: false
       selector:
         text:
+
 light_set_on_time:
   target:
     entity:
@@ -638,6 +639,7 @@ light_set_on_time:
           max: 8580000
           unit_of_measurement: seconds
           mode: box
+
 switch_set_on_time:
   target:
     entity:
@@ -652,6 +654,7 @@ switch_set_on_time:
           max: 8580000
           unit_of_measurement: seconds
           mode: box
+
 set_cover_combined_position:
   target:
     entity:
@@ -679,6 +682,7 @@ set_cover_combined_position:
         number:
           min: 0
           max: 600
+
 update_device_firmware_data:
   fields:
     entry_id:
