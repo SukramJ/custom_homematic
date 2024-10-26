@@ -1,3 +1,8 @@
+# Version 1.68.1 (2024-10-26)
+- Bump hahomematic to 2024.10.14
+  - Use version from module hahomematic
+- Add check if Homematic(IP) local uses the expected version oh hahomematic
+
 # Version 1.68.0 (2024-10-24)
 
 ## What's Changed

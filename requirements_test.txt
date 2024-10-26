@@ -1,7 +1,7 @@
 -r requirements_test_pre_commit.txt
 
 async-upnp-client==0.41.0
-hahomematic==2024.10.13
+hahomematic==2024.10.14
 homeassistant==2024.10.3
 mypy==1.12.0
 mypy-dev==1.11.0a9
