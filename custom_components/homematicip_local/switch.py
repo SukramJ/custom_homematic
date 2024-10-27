@@ -6,9 +6,9 @@ import logging
 from typing import Any, Final
 
 from hahomematic.const import HmPlatform
-from hahomematic.platforms.custom import CeSwitch
-from hahomematic.platforms.generic import HmSwitch
-from hahomematic.platforms.hub import HmSysvarSwitch
+from hahomematic.platforms.custom import CustomDpSwitch
+from hahomematic.platforms.generic import DpSwitch
+from hahomematic.platforms.hub import SysvarDpSwitch
 import voluptuous as vol
 
 from homeassistant.components.switch import SwitchEntity
@@ -20,7 +20,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .const import SERVICE_SWITCH_SET_ON_TIME
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import HaHomematicGenericRestoreEntity, HaHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -37,52 +37,54 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_switch(hm_entities: tuple[CeSwitch | HmSwitch, ...]) -> None:
+    def async_add_switch(data_points: tuple[CustomDpSwitch | DpSwitch, ...]) -> None:
         """Add switch from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_SWITCH: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_SWITCH: Adding %i data points", len(data_points))
 
         if entities := [
             HaHomematicSwitch(
                 control_unit=control_unit,
-                hm_entity=hm_entity,
+                data_point=data_point,
             )
-            for hm_entity in hm_entities
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     @callback
-    def async_add_hub_switch(hm_entities: tuple[HmSysvarSwitch, ...]) -> None:
+    def async_add_hub_switch(data_points: tuple[SysvarDpSwitch, ...]) -> None:
         """Add sysvar switch from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_HUB_SWITCH: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_HUB_SWITCH: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarSwitch(control_unit=control_unit, hm_sysvar_entity=hm_entity)
-            for hm_entity in hm_entities
+            HaHomematicSysvarSwitch(control_unit=control_unit, data_point=data_point)
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.SWITCH),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.SWITCH),
             target=async_add_switch,
         )
     )
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.HUB_SWITCH),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_SWITCH),
             target=async_add_hub_switch,
         )
     )
 
     async_add_switch(
-        hm_entities=control_unit.get_new_entities(
-            entity_type=CeSwitch | HmSwitch,
+        data_points=control_unit.get_new_data_points(
+            data_point_type=CustomDpSwitch | DpSwitch,
         )
     )
 
-    async_add_hub_switch(hm_entities=control_unit.get_new_hub_entities(entity_type=HmSysvarSwitch))
+    async_add_hub_switch(
+        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSwitch)
+    )
 
     platform = entity_platform.async_get_current_platform()
     platform.async_register_entity_service(
@@ -94,25 +96,25 @@ async def async_setup_entry(
     )
 
 
-class HaHomematicSwitch(HaHomematicGenericRestoreEntity[CeSwitch | HmSwitch], SwitchEntity):
+class HaHomematicSwitch(HaHomematicGenericRestoreEntity[CustomDpSwitch | DpSwitch], SwitchEntity):
     """Representation of the HomematicIP switch entity."""
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return the state attributes of the generic entity."""
         attributes = super().extra_state_attributes
-        if isinstance(self._hm_entity, CeSwitch) and (
-            self._hm_entity.channel_value
-            and self._hm_entity.value != self._hm_entity.channel_value
+        if isinstance(self._data_point, CustomDpSwitch) and (
+            self._data_point.channel_value
+            and self._data_point.value != self._data_point.channel_value
         ):
-            attributes[ATTR_CHANNEL_STATE] = self._hm_entity.channel_value
+            attributes[ATTR_CHANNEL_STATE] = self._data_point.channel_value
         return attributes
 
     @property
     def is_on(self) -> bool | None:
         """Return true if switch is on."""
-        if self._hm_entity.is_valid:
-            return self._hm_entity.value is True
+        if self._data_point.is_valid:
+            return self._data_point.value is True
         if (
             self.is_restored
             and self._restored_state
@@ -127,32 +129,32 @@ class HaHomematicSwitch(HaHomematicGenericRestoreEntity[CeSwitch | HmSwitch], Sw
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the switch on."""
-        await self._hm_entity.turn_on()
+        await self._data_point.turn_on()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the switch off."""
-        await self._hm_entity.turn_off()
+        await self._data_point.turn_off()
 
     async def async_set_on_time(self, on_time: float) -> None:
         """Set the on time of the light."""
-        if isinstance(self._hm_entity, CeSwitch):
-            self._hm_entity.set_on_time(on_time=on_time)
-        if isinstance(self._hm_entity, HmSwitch):
-            await self._hm_entity.set_on_time(on_time=on_time)
+        if isinstance(self._data_point, CustomDpSwitch):
+            self._data_point.set_on_time(on_time=on_time)
+        if isinstance(self._data_point, DpSwitch):
+            await self._data_point.set_on_time(on_time=on_time)
 
 
-class HaHomematicSysvarSwitch(HaHomematicGenericSysvarEntity[HmSysvarSwitch], SwitchEntity):
+class HaHomematicSysvarSwitch(HaHomematicGenericSysvarEntity[SysvarDpSwitch], SwitchEntity):
     """Representation of the HomematicIP hub switch entity."""
 
     @property
     def is_on(self) -> bool | None:
         """Return true if switch is on."""
-        return self._hm_hub_entity.value is True
+        return self._data_point.value is True
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the switch on."""
-        await self._hm_hub_entity.send_variable(True)
+        await self._data_point.send_variable(True)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the switch off."""
-        await self._hm_hub_entity.send_variable(False)
+        await self._data_point.send_variable(False)

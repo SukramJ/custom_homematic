@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from hahomematic.const import CLICK_EVENTS, EntityUsage
+from hahomematic.const import CLICK_EVENTS, DataPointUsage
 from hahomematic.platforms.event import ClickEvent
 import voluptuous as vol
 
@@ -57,7 +57,7 @@ async def async_get_triggers(hass: HomeAssistant, device_id: str) -> list[dict[s
                     if not isinstance(action_event, ClickEvent):
                         continue
 
-                    if action_event.usage == EntityUsage.NO_CREATE:
+                    if action_event.usage == DataPointUsage.NO_CREATE:
                         continue
 
                     trigger = {

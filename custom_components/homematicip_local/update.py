@@ -6,7 +6,7 @@ import logging
 from typing import Any, Final
 
 from hahomematic.const import CALLBACK_TYPE, HmPlatform
-from hahomematic.platforms.update import HmUpdate
+from hahomematic.platforms.update import DpUpdate
 
 from homeassistant.components.update import UpdateEntity, UpdateEntityFeature
 from homeassistant.core import HomeAssistant, callback
@@ -17,7 +17,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .const import DOMAIN
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 
 _LOGGER = logging.getLogger(__name__)
 ATTR_FIRMWARE_UPDATE_STATE: Final = "firmware_update_state"
@@ -32,28 +32,28 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_update(hm_entities: tuple[HmUpdate, ...]) -> None:
+    def async_add_update(data_points: tuple[DpUpdate, ...]) -> None:
         """Add update from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_UPDATE: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_UPDATE: Adding %i data points", len(data_points))
 
         if entities := [
             HaHomematicUpdate(
                 control_unit=control_unit,
-                hm_entity=hm_entity,
+                data_point=data_point,
             )
-            for hm_entity in hm_entities
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.UPDATE),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.UPDATE),
             target=async_add_update,
         )
     )
 
-    async_add_update(hm_entities=control_unit.get_new_entities(entity_type=HmUpdate))
+    async_add_update(data_points=control_unit.get_new_data_points(data_point_type=DpUpdate))
 
 
 class HaHomematicUpdate(UpdateEntity):
@@ -70,63 +70,63 @@ class HaHomematicUpdate(UpdateEntity):
     def __init__(
         self,
         control_unit: ControlUnit,
-        hm_entity: HmUpdate,
+        data_point: DpUpdate,
     ) -> None:
         """Initialize the generic entity."""
         self._cu: ControlUnit = control_unit
-        self._hm_entity: HmUpdate = hm_entity
-        self._attr_unique_id = f"{DOMAIN}_{hm_entity.unique_id}"
+        self._data_point: DpUpdate = data_point
+        self._attr_unique_id = f"{DOMAIN}_{data_point.unique_id}"
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, hm_entity.device.identifier)},
+            identifiers={(DOMAIN, data_point.device.identifier)},
         )
         self._attr_extra_state_attributes = {
-            ATTR_FIRMWARE_UPDATE_STATE: hm_entity.device.firmware_update_state
+            ATTR_FIRMWARE_UPDATE_STATE: data_point.device.firmware_update_state
         }
         self._unregister_callbacks: list[CALLBACK_TYPE] = []
-        _LOGGER.debug("init: Setting up %s", hm_entity.full_name)
+        _LOGGER.debug("init: Setting up %s", data_point.full_name)
 
     @property
     def available(self) -> bool:
-        """Return if entity is available."""
-        return self._hm_entity.available
+        """Return if data point is available."""
+        return self._data_point.available
 
     @property
     def installed_version(self) -> str | None:
         """Version installed and in use."""
-        return self._hm_entity.firmware
+        return self._data_point.firmware
 
     @property
     def in_progress(self) -> bool | int | None:
         """Update installation progress."""
-        return self._hm_entity.in_progress
+        return self._data_point.in_progress
 
     @property
     def latest_version(self) -> str | None:
         """Latest version available for install."""
-        return self._hm_entity.latest_firmware
+        return self._data_point.latest_firmware
 
     @property
     def name(self) -> str | None:
         """Return the name of the entity."""
-        return self._hm_entity.name
+        return self._data_point.name
 
     async def async_install(self, version: str | None, backup: bool, **kwargs: Any) -> None:
         """Install an update."""
-        await self._hm_entity.update_firmware(refresh_after_update_intervals=(10, 60))
+        await self._data_point.update_firmware(refresh_after_update_intervals=(10, 60))
 
     async def async_update(self) -> None:
         """Update entity."""
-        await self._hm_entity.refresh_firmware_data()
+        await self._data_point.refresh_firmware_data()
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks and load initial data."""
         self._unregister_callbacks.append(
-            self._hm_entity.register_entity_updated_callback(
+            self._data_point.register_data_point_updated_callback(
                 cb=self._async_entity_changed, custom_id=self.entity_id
             )
         )
         self._unregister_callbacks.append(
-            self._hm_entity.register_device_removed_callback(cb=self._async_device_removed)
+            self._data_point.register_device_removed_callback(cb=self._async_device_removed)
         )
 
     @callback

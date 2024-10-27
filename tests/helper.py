@@ -9,8 +9,8 @@ from unittest.mock import MagicMock, Mock, patch
 from hahomematic import const as hahomematic_const
 from hahomematic.central import CentralConfig
 from hahomematic.client import InterfaceConfig, _ClientConfig
-from hahomematic.platforms.custom import CustomEntity
-from hahomematic.platforms.entity import BaseParameterEntity
+from hahomematic.platforms.custom import CustomDataPoint
+from hahomematic.platforms.data_point import BaseParameterDataPoint
 from hahomematic_support.client_local import ClientLocal, LocalRessources
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -26,18 +26,18 @@ EXCLUDE_METHODS_FROM_MOCKS: Final = [
     "default_platform",
     "event",
     "fire_device_removed_callback",
-    "fire_entity_updated_callback",
+    "fire_data_point_updated_callback",
     "get_event_data",
     "get_on_time_and_cleanup",
     "is_state_change",
-    "load_entity_value",
+    "load_data_point_value",
     "register_device_removed_callback",
-    "register_entity_updated_callback",
-    "register_internal_entity_updated_callback",
+    "register_data_point_updated_callback",
+    "register_internal_data_point_updated_callback",
     "set_usage",
     "unregister_device_removed_callback",
-    "unregister_entity_updated_callback",
-    "unregister_internal_entity_updated_callback",
+    "unregister_data_point_updated_callback",
+    "unregister_internal_data_point_updated_callback",
     "write_value",
 ]
 T = TypeVar("T")
@@ -129,8 +129,8 @@ class Factory:
             return_value=central,
         ).start()
         patch(
-            "custom_components.homematicip_local.generic_entity.get_hm_entity",
-            side_effect=get_hm_entity_mock,
+            "custom_components.homematicip_local.generic_entity.get_data_point",
+            side_effect=get_data_point_mock,
         ).start()
         patch(
             "homeassistant.helpers.entity.Entity.entity_registry_enabled_default",
@@ -158,19 +158,19 @@ def get_and_check_state(
     ha_state = hass.states.get(entity_id)
     assert ha_state is not None
     assert ha_state.name == entity_name
-    hm_entity = get_hm_entity(control=control, entity_id=entity_id)
+    data_point = get_data_point(control=control, entity_id=entity_id)
 
-    return ha_state, hm_entity
+    return ha_state, data_point
 
 
-def get_hm_entity(control: ControlUnit, entity_id: str):
-    """Get the hm entity by entity id."""
-    for entity in control.central.get_entities():
-        if entity.custom_id == entity_id:
-            return entity
-    for entity in control.central.get_hub_entities():
-        if entity.custom_id == entity_id:
-            return entity
+def get_data_point(control: ControlUnit, entity_id: str):
+    """Get the data point by entity id."""
+    for dp in control.central.get_data_points():
+        if dp.custom_id == entity_id:
+            return dp
+    for dp in control.central.get_hub_data_points():
+        if dp.custom_id == entity_id:
+            return dp
 
 
 def get_mock(instance, **kwargs):
@@ -184,32 +184,32 @@ def get_mock(instance, **kwargs):
     return mock
 
 
-def get_hm_entity_mock(hm_entity: T) -> T:
+def get_data_point_mock(data_point: T) -> T:
     """Return the mocked homematic entity."""
     try:
-        for method_name in _get_mockable_method_names(hm_entity):
-            patch.object(hm_entity, method_name).start()
+        for method_name in _get_mockable_method_names(data_point):
+            patch.object(data_point, method_name).start()
 
-        if isinstance(hm_entity, CustomEntity):
-            for g_entity in hm_entity._data_entities.values():
+        if isinstance(data_point, CustomDataPoint):
+            for g_entity in data_point._data_entities.values():
                 g_entity._set_last_update()
-        elif isinstance(hm_entity, BaseParameterEntity):
-            hm_entity._set_last_update()
-        if hasattr(hm_entity, "is_valid"):
-            assert hm_entity.is_valid is True
-        # patch.object(hm_entity, "is_valid", return_value=True).start()
+        elif isinstance(data_point, BaseParameterDataPoint):
+            data_point._set_last_update()
+        if hasattr(data_point, "is_valid"):
+            assert data_point.is_valid is True
+        # patch.object(data_point, "is_valid", return_value=True).start()
     except Exception:
         pass
     finally:
-        return hm_entity
+        return data_point
 
 
-def _get_mockable_method_names(hm_entity: Any) -> list[str]:
+def _get_mockable_method_names(data_point: Any) -> list[str]:
     """Return all relevant method names for mocking."""
     method_list: list[str] = []
-    for attribute in dir(hm_entity):
+    for attribute in dir(data_point):
         # Get the attribute value
-        attribute_value = getattr(hm_entity, attribute)
+        attribute_value = getattr(data_point, attribute)
         # Check that it is callable
         if (
             callable(attribute_value)

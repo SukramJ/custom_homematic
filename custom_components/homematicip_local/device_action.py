@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from hahomematic.const import Parameter
-from hahomematic.platforms.generic import HmAction, HmButton
+from hahomematic.platforms.generic import DpAction, DpButton
 import voluptuous as vol
 
 from homeassistant.const import CONF_DEVICE_ID, CONF_DOMAIN, CONF_TYPE
@@ -51,17 +51,17 @@ async def async_get_actions(hass: HomeAssistant, device_id: str) -> list[dict[st
             if control_unit.central.has_client(interface_id=interface_id) is False:
                 continue
             if hm_device := control_unit.central.get_device(address=device_address):
-                for entity in hm_device.generic_entities:
-                    if not isinstance(entity, HmAction | HmButton):
+                for dp in hm_device.generic_data_points:
+                    if not isinstance(dp, DpAction | DpButton):
                         continue
-                    if entity.parameter not in ACTION_PARAMS:
+                    if dp.parameter not in ACTION_PARAMS:
                         continue
 
                     action = {
                         CONF_DOMAIN: DOMAIN,
                         CONF_DEVICE_ID: device_id,
-                        CONF_TYPE: entity.parameter.lower(),
-                        CONF_SUBTYPE: entity.channel.no,
+                        CONF_TYPE: dp.parameter.lower(),
+                        CONF_SUBTYPE: dp.channel.no,
                     }
                     actions.append(action)
 
@@ -96,11 +96,8 @@ async def async_call_action_from_config(
             if control_unit.central.has_client(interface_id=interface_id) is False:
                 continue
             if hm_device := control_unit.central.get_device(address=device_address):
-                for entity in hm_device.generic_entities:
-                    if not isinstance(entity, HmAction | HmButton):
+                for dp in hm_device.generic_data_points:
+                    if not isinstance(dp, DpAction | DpButton):
                         continue
-                    if (
-                        entity.parameter == action_type.upper()
-                        and entity.channel.no == action_subtype
-                    ):
-                        await entity.send_value(True)
+                    if dp.parameter == action_type.upper() and dp.channel.no == action_subtype:
+                        await dp.send_value(True)

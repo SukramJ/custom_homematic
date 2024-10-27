@@ -7,10 +7,10 @@ import logging
 from typing import Any, TypeAlias, TypeVar, cast
 
 from hahomematic.const import EVENT_CHANNEL_NO, EVENT_PARAMETER, EVENT_VALUE, IDENTIFIER_SEPARATOR
-from hahomematic.platforms.custom import CustomEntity
-from hahomematic.platforms.entity import EVENT_DATA_SCHEMA, CallbackEntity
-from hahomematic.platforms.generic import GenericEntity
-from hahomematic.platforms.hub import GenericHubEntity
+from hahomematic.platforms.custom import CustomDataPoint
+from hahomematic.platforms.data_point import EVENT_DATA_SCHEMA, CallbackDataPoint
+from hahomematic.platforms.generic import GenericDataPoint
+from hahomematic.platforms.hub import GenericHubDataPoint
 import voluptuous as vol
 
 from homeassistant.const import CONF_TYPE
@@ -28,13 +28,13 @@ from .const import (
     EVENT_UNAVAILABLE,
 )
 
-# Union for entity types used as base class for entities
-HmBaseEntity: TypeAlias = CustomEntity | GenericEntity
-# Generic base type used for entities in Homematic(IP) Local
-HmGenericEntity = TypeVar("HmGenericEntity", bound=HmBaseEntity)
-# Generic base type used for sysvar entities in Homematic(IP) Local
-HmGenericSysvarEntity = TypeVar("HmGenericSysvarEntity", bound=GenericHubEntity)
-T = TypeVar("T", bound=CallbackEntity)
+# Union for entity types used as base class for data points
+HmBaseDataPoint: TypeAlias = CustomDataPoint | GenericDataPoint
+# Generic base type used for data points in Homematic(IP) Local
+HmGenericDataPoint = TypeVar("HmGenericDataPoint", bound=HmBaseDataPoint)
+# Generic base type used for sysvar data points in Homematic(IP) Local
+HmGenericSysvarDataPoint = TypeVar("HmGenericSysvarDataPoint", bound=GenericHubDataPoint)
+T = TypeVar("T", bound=CallbackDataPoint)
 
 BASE_EVENT_DATA_SCHEMA = EVENT_DATA_SCHEMA.extend(
     {
@@ -108,9 +108,9 @@ def get_device_address_at_interface_from_identifiers(
     return None
 
 
-def get_hm_entity(hm_entity: T) -> T:
-    """Return the homematic entity. Makes it mockable."""
-    return hm_entity
+def get_data_point(data_point: T) -> T:
+    """Return the homematic data point. Makes it mockable."""
+    return data_point
 
 
 class InvalidConfig(HomeAssistantError):

@@ -14,7 +14,7 @@ from hahomematic.platforms.custom import (
     SIMPLE_PROFILE_DICT,
     SIMPLE_WEEKDAY_LIST,
     WEEKDAY_DICT,
-    BaseClimateEntity,
+    BaseCustomDpClimate,
     HmHvacAction,
     HmHvacMode,
     HmPresetMode,
@@ -57,7 +57,7 @@ from .const import (
     SERVICE_SET_SCHEDULE_SIMPLE_PROFILE,
     SERVICE_SET_SCHEDULE_SIMPLE_PROFILE_WEEKDAY,
 )
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import HaHomematicGenericEntity, HaHomematicGenericRestoreEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -113,28 +113,30 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_climate(hm_entities: tuple[BaseClimateEntity, ...]) -> None:
+    def async_add_climate(data_points: tuple[BaseCustomDpClimate, ...]) -> None:
         """Add climate from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_CLIMATE: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_CLIMATE: Adding %i data points", len(data_points))
 
         if entities := [
             HaHomematicClimate(
                 control_unit=control_unit,
-                hm_entity=hm_entity,
+                data_point=data_point,
             )
-            for hm_entity in hm_entities
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.CLIMATE),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.CLIMATE),
             target=async_add_climate,
         )
     )
 
-    async_add_climate(hm_entities=control_unit.get_new_entities(entity_type=BaseClimateEntity))
+    async_add_climate(
+        data_points=control_unit.get_new_data_points(data_point_type=BaseCustomDpClimate)
+    )
 
     platform = entity_platform.async_get_current_platform()
 
@@ -244,7 +246,7 @@ async def async_setup_entry(
     )
 
 
-class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], ClimateEntity):
+class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], ClimateEntity):
     """Representation of the HomematicIP climate entity."""
 
     _attr_translation_key = "hmip_climate"
@@ -256,21 +258,21 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
     def __init__(
         self,
         control_unit: ControlUnit,
-        hm_entity: BaseClimateEntity,
+        data_point: BaseCustomDpClimate,
     ) -> None:
         """Initialize the climate entity."""
         super().__init__(
             control_unit=control_unit,
-            hm_entity=hm_entity,
+            data_point=data_point,
         )
         self._attr_temperature_unit = UnitOfTemperature.CELSIUS
-        self._attr_target_temperature_step = hm_entity.target_temperature_step
+        self._attr_target_temperature_step = data_point.target_temperature_step
 
     @property
     def target_temperature(self) -> float | None:
         """Return the temperature we try to reach."""
-        if self._hm_entity.is_valid:
-            return self._hm_entity.target_temperature
+        if self._data_point.is_valid:
+            return self._data_point.target_temperature
         if self.is_restored and self._restored_state:
             return self._restored_state.attributes.get(ATTR_TEMPERATURE)
         return None
@@ -278,8 +280,8 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
     @property
     def current_temperature(self) -> float | None:
         """Return the current temperature."""
-        if self._hm_entity.is_valid:
-            return self._hm_entity.current_temperature
+        if self._data_point.is_valid:
+            return self._data_point.current_temperature
         if self.is_restored and self._restored_state:
             return self._restored_state.attributes.get(ATTR_CURRENT_TEMPERATURE)
         return None
@@ -287,8 +289,8 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
     @property
     def current_humidity(self) -> int | None:
         """Return the current humidity."""
-        if self._hm_entity.is_valid:
-            return self._hm_entity.current_humidity
+        if self._data_point.is_valid:
+            return self._data_point.current_humidity
         if self.is_restored and self._restored_state:
             return self._restored_state.attributes.get(ATTR_CURRENT_HUMIDITY)
         return None
@@ -296,16 +298,16 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
     @property
     def hvac_action(self) -> HVACAction | None:
         """Return the hvac action."""
-        if self._hm_entity.hvac_action and self._hm_entity.hvac_action in HM_TO_HA_ACTION:
-            return HM_TO_HA_ACTION[self._hm_entity.hvac_action]
+        if self._data_point.hvac_action and self._data_point.hvac_action in HM_TO_HA_ACTION:
+            return HM_TO_HA_ACTION[self._data_point.hvac_action]
         return None
 
     @property
     def hvac_mode(self) -> HVACMode | None:
         """Return hvac mode."""
-        if self._hm_entity.is_valid:
-            if self._hm_entity.hvac_mode in HM_TO_HA_HVAC_MODE:
-                return HM_TO_HA_HVAC_MODE[self._hm_entity.hvac_mode]
+        if self._data_point.is_valid:
+            if self._data_point.hvac_mode in HM_TO_HA_HVAC_MODE:
+                return HM_TO_HA_HVAC_MODE[self._data_point.hvac_mode]
             return HVACMode.OFF
         if (
             self.is_restored
@@ -324,29 +326,29 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
         """Return the list of available hvac modes."""
         return [
             HM_TO_HA_HVAC_MODE[hm_hvac_mode]
-            for hm_hvac_mode in self._hm_entity.hvac_modes
+            for hm_hvac_mode in self._data_point.hvac_modes
             if hm_hvac_mode in HM_TO_HA_HVAC_MODE
         ]
 
     @property
     def min_temp(self) -> float:
         """Return the minimum temperature."""
-        return self._hm_entity.min_temp
+        return self._data_point.min_temp
 
     @property
     def max_temp(self) -> float:
         """Return the maximum temperature."""
-        return self._hm_entity.max_temp
+        return self._data_point.max_temp
 
     @property
     def preset_mode(self) -> str | None:
         """Return the current preset mode."""
         if (
-            self._hm_entity.is_valid
-            and self._hm_entity.preset_mode in SUPPORTED_HA_PRESET_MODES
-            or str(self._hm_entity.preset_mode).startswith(HM_PRESET_MODE_PREFIX)
+            self._data_point.is_valid
+            and self._data_point.preset_mode in SUPPORTED_HA_PRESET_MODES
+            or str(self._data_point.preset_mode).startswith(HM_PRESET_MODE_PREFIX)
         ):
-            return self._hm_entity.preset_mode
+            return self._data_point.preset_mode
         if self.is_restored and self._restored_state:
             return self._restored_state.attributes.get(ATTR_PRESET_MODE)
         return None
@@ -355,7 +357,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
     def preset_modes(self) -> list[str]:
         """Return a list of available preset modes incl. hmip profiles."""
         preset_modes = []
-        for hm_preset_mode in self._hm_entity.preset_modes:
+        for hm_preset_mode in self._data_point.preset_modes:
             if hm_preset_mode in SUPPORTED_HA_PRESET_MODES:
                 preset_modes.append(hm_preset_mode.value)
             if str(hm_preset_mode).startswith(HM_PRESET_MODE_PREFIX):
@@ -370,7 +372,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
             | ClimateEntityFeature.TURN_OFF
             | ClimateEntityFeature.TURN_ON
         )
-        if self._hm_entity.supports_preset:
+        if self._data_point.supports_preset:
             supported_features |= ClimateEntityFeature.PRESET_MODE
         return supported_features
 
@@ -379,13 +381,13 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
         """Return the state attributes of the climate entity."""
         attributes = super().extra_state_attributes
         if (
-            hasattr(self._hm_entity, "temperature_offset")
-            and (temperature_offset := self._hm_entity.temperature_offset) is not None
+            hasattr(self._data_point, "temperature_offset")
+            and (temperature_offset := self._data_point.temperature_offset) is not None
         ):
             attributes[ATTR_TEMPERATURE_OFFSET] = temperature_offset
         if (
-            hasattr(self._hm_entity, "optimum_start_stop")
-            and (optimum_start_stop := self._hm_entity.optimum_start_stop) is not None
+            hasattr(self._data_point, "optimum_start_stop")
+            and (optimum_start_stop := self._data_point.optimum_start_stop) is not None
         ):
             attributes[ATTR_OPTIMUM_START_STOP] = optimum_start_stop
         return attributes
@@ -394,14 +396,14 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
         """Set new target temperature."""
         if (temperature := kwargs.get(ATTR_TEMPERATURE)) is None:
             return
-        await self._hm_entity.set_temperature(temperature=temperature)
+        await self._data_point.set_temperature(temperature=temperature)
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set new target hvac mode."""
         if hvac_mode not in HA_TO_HM_HVAC_MODE:
             _LOGGER.warning("Hvac mode %s is not supported by integration", hvac_mode)
             return
-        await self._hm_entity.set_hvac_mode(HA_TO_HM_HVAC_MODE[hvac_mode])
+        await self._data_point.set_hvac_mode(HA_TO_HM_HVAC_MODE[hvac_mode])
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         """Set new preset mode."""
@@ -412,7 +414,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
                 self.hvac_mode,
             )
             return
-        await self._hm_entity.set_preset_mode(HmPresetMode(preset_mode))
+        await self._data_point.set_preset_mode(HmPresetMode(preset_mode))
 
     async def async_enable_away_mode_by_calendar(
         self,
@@ -422,7 +424,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
     ) -> None:
         """Enable the away mode by calendar on thermostat."""
         start = start or datetime.now() - timedelta(minutes=10)
-        await self._hm_entity.enable_away_mode_by_calendar(
+        await self._data_point.enable_away_mode_by_calendar(
             start=start, end=end, away_temperature=away_temperature
         )
 
@@ -430,63 +432,69 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
         self, hours: int, away_temperature: float
     ) -> None:
         """Enable the away mode by duration on thermostat."""
-        await self._hm_entity.enable_away_mode_by_duration(
+        await self._data_point.enable_away_mode_by_duration(
             hours=hours, away_temperature=away_temperature
         )
 
     async def async_disable_away_mode(self) -> None:
         """Disable the away mode on thermostat."""
-        await self._hm_entity.disable_away_mode()
+        await self._data_point.disable_away_mode()
 
     async def async_copy_schedule(self, source_entity_id: str) -> None:
         """Copy a schedule from this entity to another."""
-        if source_climate_entity := cast(
-            BaseClimateEntity,
-            self._hm_entity.device.central.get_entity_by_custom_id(custom_id=source_entity_id),
+        if source_climate_data_point := cast(
+            BaseCustomDpClimate,
+            self._data_point.device.central.get_data_point_by_custom_id(
+                custom_id=source_entity_id
+            ),
         ):
-            await source_climate_entity.copy_schedule(target_climate_entity=self._hm_entity)
+            await source_climate_data_point.copy_schedule(target_climate_entity=self._data_point)
 
     async def async_copy_schedule_profile(
         self, source_profile: str, target_profile: str, source_entity_id: str | None = None
     ) -> None:
         """Copy a schedule profile."""
         if source_entity_id and (
-            source_climate_entity := cast(
-                BaseClimateEntity,
-                self._hm_entity.device.central.get_entity_by_custom_id(custom_id=source_entity_id),
+            source_climate_data_point := cast(
+                BaseCustomDpClimate,
+                self._data_point.device.central.get_data_point_by_custom_id(
+                    custom_id=source_entity_id
+                ),
             )
         ):
-            await source_climate_entity.copy_schedule_profile(
+            await source_climate_data_point.copy_schedule_profile(
                 source_profile=source_profile,
                 target_profile=target_profile,
-                target_climate_entity=self._hm_entity,
+                target_climate_entity=self._data_point,
             )
         else:
-            await self._hm_entity.copy_schedule_profile(
+            await self._data_point.copy_schedule_profile(
                 source_profile=source_profile, target_profile=target_profile
             )
 
     async def async_get_schedule_profile(self, profile: str) -> ServiceResponse:
         """Return the schedule profile."""
-        return await self._hm_entity.get_schedule_profile(profile=profile)  # type: ignore[no-any-return]
+        return await self._data_point.get_schedule_profile(profile=profile)  # type: ignore[no-any-return]
 
     async def async_get_schedule_profile_weekday(
         self, profile: str, weekday: str
     ) -> ServiceResponse:
         """Return the schedule profile weekday."""
-        return await self._hm_entity.get_schedule_profile_weekday(profile=profile, weekday=weekday)  # type: ignore[no-any-return]
+        return await self._data_point.get_schedule_profile_weekday(  # type: ignore[no-any-return]
+            profile=profile, weekday=weekday
+        )
 
     async def async_set_schedule_profile(self, profile: str, profile_data: PROFILE_DICT) -> None:
         """Set the schedule profile."""
         for p_key, p_value in profile_data.items():
             profile_data[p_key] = {int(key): value for key, value in p_value.items()}
-        await self._hm_entity.set_schedule_profile(profile=profile, profile_data=profile_data)
+        await self._data_point.set_schedule_profile(profile=profile, profile_data=profile_data)
 
     async def async_set_schedule_simple_profile(
         self, profile: str, base_temperature: float, simple_profile_data: SIMPLE_PROFILE_DICT
     ) -> None:
         """Set the schedule simple profile."""
-        await self._hm_entity.set_simple_schedule_profile(
+        await self._data_point.set_simple_schedule_profile(
             profile=profile,
             base_temperature=base_temperature,
             simple_profile_data=simple_profile_data,
@@ -497,7 +505,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
     ) -> None:
         """Set the schedule profile weekday."""
         weekday_data = {int(key): value for key, value in weekday_data.items()}
-        await self._hm_entity.set_schedule_profile_weekday(
+        await self._data_point.set_schedule_profile_weekday(
             profile=profile, weekday=weekday, weekday_data=weekday_data
         )
 
@@ -509,7 +517,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseClimateEntity], Cli
         simple_weekday_list: SIMPLE_WEEKDAY_LIST,
     ) -> None:
         """Set the schedule simple profile weekday."""
-        await self._hm_entity.set_simple_schedule_profile_weekday(
+        await self._data_point.set_simple_schedule_profile_weekday(
             profile=profile,
             weekday=weekday,
             base_temperature=base_temperature,

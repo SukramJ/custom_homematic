@@ -6,8 +6,8 @@ import logging
 from typing import Any
 
 from hahomematic.const import HmPlatform, SysvarType
-from hahomematic.platforms.generic import BaseNumber
-from hahomematic.platforms.hub import HmSysvarNumber
+from hahomematic.platforms.generic import BaseDpNumber
+from hahomematic.platforms.hub import SysvarDpNumber
 
 from homeassistant.components.number import NumberEntity, NumberMode, RestoreNumber
 from homeassistant.const import EntityCategory
@@ -17,7 +17,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .const import HmEntityState
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 from .entity_helpers import HmNumberEntityDescription
 from .generic_entity import (
     ATTR_VALUE_STATE,
@@ -37,34 +37,34 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_number(hm_entities: tuple[BaseNumber, ...]) -> None:
+    def async_add_number(data_points: tuple[BaseDpNumber, ...]) -> None:
         """Add number from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_NUMBER: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_NUMBER: Adding %i data points", len(data_points))
 
         if entities := [
             HaHomematicNumber(
                 control_unit=control_unit,
-                hm_entity=hm_entity,
+                data_point=data_point,
             )
-            for hm_entity in hm_entities
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     @callback
-    def async_add_hub_number(hm_entities: tuple[HmSysvarNumber, ...]) -> None:
+    def async_add_hub_number(data_points: tuple[SysvarDpNumber, ...]) -> None:
         """Add sysvar number from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_HUB_NUMBER: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_HUB_NUMBER: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarNumber(control_unit=control_unit, hm_sysvar_entity=hm_entity)
-            for hm_entity in hm_entities
+            HaHomematicSysvarNumber(control_unit=control_unit, data_point=data_point)
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.NUMBER),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.NUMBER),
             target=async_add_number,
         )
     )
@@ -72,17 +72,19 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.HUB_NUMBER),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_NUMBER),
             target=async_add_hub_number,
         )
     )
 
-    async_add_number(hm_entities=control_unit.get_new_entities(entity_type=BaseNumber))
+    async_add_number(data_points=control_unit.get_new_data_points(data_point_type=BaseDpNumber))
 
-    async_add_hub_number(hm_entities=control_unit.get_new_hub_entities(entity_type=HmSysvarNumber))
+    async_add_hub_number(
+        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpNumber)
+    )
 
 
-class HaHomematicNumber(HaHomematicGenericEntity[BaseNumber], RestoreNumber):
+class HaHomematicNumber(HaHomematicGenericEntity[BaseDpNumber], RestoreNumber):
     """Representation of the HomematicIP number entity."""
 
     entity_description: HmNumberEntityDescription
@@ -93,38 +95,38 @@ class HaHomematicNumber(HaHomematicGenericEntity[BaseNumber], RestoreNumber):
     def __init__(
         self,
         control_unit: ControlUnit,
-        hm_entity: BaseNumber,
+        data_point: BaseDpNumber,
     ) -> None:
         """Initialize the number entity."""
         super().__init__(
             control_unit=control_unit,
-            hm_entity=hm_entity,
+            data_point=data_point,
         )
         self._multiplier: int = (
             self.entity_description.multiplier
             if hasattr(self, "entity_description")
             and self.entity_description
             and self.entity_description.multiplier is not None
-            else hm_entity.multiplier
+            else data_point.multiplier
         )
-        self._attr_native_min_value = hm_entity.min * self._multiplier
-        self._attr_native_max_value = hm_entity.max * self._multiplier
-        self._attr_native_step = 1.0 if hm_entity.hmtype == "INTEGER" else 0.01 * self._multiplier
-        if not hasattr(self, "entity_description") and hm_entity.unit:
-            self._attr_native_unit_of_measurement = hm_entity.unit
+        self._attr_native_min_value = data_point.min * self._multiplier
+        self._attr_native_max_value = data_point.max * self._multiplier
+        self._attr_native_step = 1.0 if data_point.hmtype == "INTEGER" else 0.01 * self._multiplier
+        if not hasattr(self, "entity_description") and data_point.unit:
+            self._attr_native_unit_of_measurement = data_point.unit
 
     @property
     def native_value(self) -> float | None:
         """Return the current value."""
-        if self._hm_entity.is_valid and self._hm_entity.value is not None:
-            return float(self._hm_entity.value * self._multiplier)
+        if self._data_point.is_valid and self._data_point.value is not None:
+            return float(self._data_point.value * self._multiplier)
         if self.is_restored:
             return self._restored_native_value
         return None
 
     async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
-        await self._hm_entity.send_value(value / self._multiplier)
+        await self._data_point.send_value(value / self._multiplier)
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -137,18 +139,18 @@ class HaHomematicNumber(HaHomematicGenericEntity[BaseNumber], RestoreNumber):
     @property
     def is_restored(self) -> bool:
         """Return if the state is restored."""
-        return not self._hm_entity.is_valid and self._restored_native_value is not None
+        return not self._data_point.is_valid and self._restored_native_value is not None
 
     async def async_added_to_hass(self) -> None:
         """Check, if state needs to be restored."""
         await super().async_added_to_hass()
-        if not self._hm_entity.is_valid and (
+        if not self._data_point.is_valid and (
             restored_sensor_data := await self.async_get_last_number_data()
         ):
             self._restored_native_value = restored_sensor_data.native_value
 
 
-class HaHomematicSysvarNumber(HaHomematicGenericSysvarEntity[HmSysvarNumber], NumberEntity):
+class HaHomematicSysvarNumber(HaHomematicGenericSysvarEntity[SysvarDpNumber], NumberEntity):
     """Representation of the HomematicIP hub number entity."""
 
     _attr_mode = NumberMode.BOX
@@ -156,17 +158,17 @@ class HaHomematicSysvarNumber(HaHomematicGenericSysvarEntity[HmSysvarNumber], Nu
     def __init__(
         self,
         control_unit: ControlUnit,
-        hm_sysvar_entity: HmSysvarNumber,
+        data_point: SysvarDpNumber,
     ) -> None:
         """Initialize the number entity."""
-        super().__init__(control_unit=control_unit, hm_sysvar_entity=hm_sysvar_entity)
-        if hm_sysvar_entity.min:
-            self._attr_native_min_value = float(hm_sysvar_entity.min)
-        if hm_sysvar_entity.max:
-            self._attr_native_max_value = float(hm_sysvar_entity.max)
-        if hm_sysvar_entity.unit:
-            self._attr_native_unit_of_measurement = hm_sysvar_entity.unit
-        elif hm_sysvar_entity.data_type in (
+        super().__init__(control_unit=control_unit, data_point=data_point)
+        if data_point.min:
+            self._attr_native_min_value = float(data_point.min)
+        if data_point.max:
+            self._attr_native_max_value = float(data_point.max)
+        if data_point.unit:
+            self._attr_native_unit_of_measurement = data_point.unit
+        elif data_point.data_type in (
             SysvarType.FLOAT,
             SysvarType.INTEGER,
         ):
@@ -175,10 +177,10 @@ class HaHomematicSysvarNumber(HaHomematicGenericSysvarEntity[HmSysvarNumber], Nu
     @property
     def native_value(self) -> float | None:
         """Return the current value."""
-        if (value := self._hm_hub_entity.value) is not None and isinstance(value, (int, float)):
+        if (value := self._data_point.value) is not None and isinstance(value, (int, float)):
             return float(value)
         return None
 
     async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
-        await self._hm_hub_entity.send_variable(value)
+        await self._data_point.send_variable(value)

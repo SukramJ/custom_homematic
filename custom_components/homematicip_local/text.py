@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 
 from hahomematic.const import HmPlatform
-from hahomematic.platforms.generic import HmText
-from hahomematic.platforms.hub import HmSysvarText
+from hahomematic.platforms.generic import DpText
+from hahomematic.platforms.hub import SysvarDpText
 
 from homeassistant.components.text import TextEntity
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -15,7 +15,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import HaHomematicGenericRestoreEntity, HaHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,58 +30,60 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_text(hm_entities: tuple[HmText, ...]) -> None:
+    def async_add_text(data_points: tuple[DpText, ...]) -> None:
         """Add text from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_TEXT: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_TEXT: Adding %i data points", len(data_points))
 
         if entities := [
             HaHomematicText(
                 control_unit=control_unit,
-                hm_entity=hm_entity,
+                data_point=data_point,
             )
-            for hm_entity in hm_entities
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     @callback
-    def async_add_hub_text(hm_entities: tuple[HmSysvarText, ...]) -> None:
+    def async_add_hub_text(data_points: tuple[SysvarDpText, ...]) -> None:
         """Add sysvar text from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_HUB_TEXT: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_HUB_TEXT: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarText(control_unit=control_unit, hm_sysvar_entity=hm_entity)
-            for hm_entity in hm_entities
+            HaHomematicSysvarText(control_unit=control_unit, data_point=data_point)
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.TEXT),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.TEXT),
             target=async_add_text,
         )
     )
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.HUB_TEXT),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_TEXT),
             target=async_add_hub_text,
         )
     )
 
-    async_add_text(hm_entities=control_unit.get_new_entities(entity_type=HmText))
+    async_add_text(data_points=control_unit.get_new_data_points(data_point_type=DpText))
 
-    async_add_hub_text(hm_entities=control_unit.get_new_hub_entities(entity_type=HmSysvarText))
+    async_add_hub_text(
+        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpText)
+    )
 
 
-class HaHomematicText(HaHomematicGenericRestoreEntity[HmText], TextEntity):
+class HaHomematicText(HaHomematicGenericRestoreEntity[DpText], TextEntity):
     """Representation of the HomematicIP text entity."""
 
     @property
     def native_value(self) -> str | None:
         """Return the value reported by the text."""
-        if self._hm_entity.is_valid:
-            return self._hm_entity.value  # type: ignore[no-any-return]
+        if self._data_point.is_valid:
+            return self._data_point.value  # type: ignore[no-any-return]
         if (
             self.is_restored
             and self._restored_state
@@ -96,17 +98,17 @@ class HaHomematicText(HaHomematicGenericRestoreEntity[HmText], TextEntity):
 
     async def async_set_value(self, value: str) -> None:
         """Send the text."""
-        await self._hm_entity.send_value(value=value)
+        await self._data_point.send_value(value=value)
 
 
-class HaHomematicSysvarText(HaHomematicGenericSysvarEntity[HmSysvarText], TextEntity):
+class HaHomematicSysvarText(HaHomematicGenericSysvarEntity[SysvarDpText], TextEntity):
     """Representation of the HomematicIP hub text entity."""
 
     @property
     def native_value(self) -> str | None:
         """Return the value reported by the text."""
-        return self._hm_hub_entity.value
+        return self._data_point.value
 
     async def async_set_value(self, value: str) -> None:
         """Send the text."""
-        await self._hm_hub_entity.send_variable(value=value)
+        await self._data_point.send_variable(value=value)

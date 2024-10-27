@@ -15,7 +15,7 @@ TEST_DEVICES: dict[str, str] = {
 # pylint: disable=protected-access
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_hmbinarysensor(
     factory: helper.Factory,
 ) -> None:
@@ -25,7 +25,7 @@ async def test_hmbinarysensor(
     entity_name = "HmIP-SWDO-I_VCU5864966"
 
     hass, control = await factory.setup_environment(TEST_DEVICES)
-    ha_state, hm_entity = helper.get_and_check_state(
+    ha_state, data_point = helper.get_and_check_state(
         hass=hass, control=control, entity_id=entity_id, entity_name=entity_name
     )
 
@@ -44,16 +44,16 @@ async def test_hmbinarysensor(
     assert hass.states.get(entity_id).state == STATE_OFF
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_hmsysvarbinarysensor(
     factory: helper.Factory,
 ) -> None:
-    """Test HmSysvarBinarySensor."""
+    """Test SysvarDpBinarySensor."""
     entity_id = "binary_sensor.centraltest_sv_logic"
     entity_name = "CentralTest sv_logic"
 
     hass, control = await factory.setup_environment({}, add_sysvars=True)
-    ha_state, hm_entity = helper.get_and_check_state(
+    ha_state, data_point = helper.get_and_check_state(
         hass=hass, control=control, entity_id=entity_id, entity_name=entity_name
     )
 

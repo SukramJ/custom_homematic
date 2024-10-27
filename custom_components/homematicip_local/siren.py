@@ -6,7 +6,7 @@ import logging
 from typing import Any, Final
 
 from hahomematic.const import HmPlatform
-from hahomematic.platforms.custom import BaseSiren, SirenOnArgs
+from hahomematic.platforms.custom import BaseCustomDpSiren, SirenOnArgs
 import voluptuous as vol
 
 from homeassistant.components.siren import (
@@ -24,7 +24,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .const import SERVICE_TURN_ON_SIREN
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import HaHomematicGenericRestoreEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -41,16 +41,16 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_siren(hm_entities: tuple[BaseSiren, ...]) -> None:
+    def async_add_siren(data_points: tuple[BaseCustomDpSiren, ...]) -> None:
         """Add siren from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_SIREN: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_SIREN: Adding %i data points", len(data_points))
 
         if entities := [
             HaHomematicSiren(
                 control_unit=control_unit,
-                hm_entity=hm_entity,
+                data_point=data_point,
             )
-            for hm_entity in hm_entities
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
@@ -68,15 +68,17 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.SIREN),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.SIREN),
             target=async_add_siren,
         )
     )
 
-    async_add_siren(hm_entities=control_unit.get_new_entities(entity_type=BaseSiren))
+    async_add_siren(
+        data_points=control_unit.get_new_data_points(data_point_type=BaseCustomDpSiren)
+    )
 
 
-class HaHomematicSiren(HaHomematicGenericRestoreEntity[BaseSiren], SirenEntity):
+class HaHomematicSiren(HaHomematicGenericRestoreEntity[BaseCustomDpSiren], SirenEntity):
     """Representation of the HomematicIP siren entity."""
 
     _attr_supported_features = SirenEntityFeature.TURN_OFF | SirenEntityFeature.TURN_ON
@@ -84,23 +86,23 @@ class HaHomematicSiren(HaHomematicGenericRestoreEntity[BaseSiren], SirenEntity):
     def __init__(
         self,
         control_unit: ControlUnit,
-        hm_entity: BaseSiren,
+        data_point: BaseCustomDpSiren,
     ) -> None:
         """Initialize the siren entity."""
         super().__init__(
             control_unit=control_unit,
-            hm_entity=hm_entity,
+            data_point=data_point,
         )
-        if hm_entity.supports_tones:
+        if data_point.supports_tones:
             self._attr_supported_features |= SirenEntityFeature.TONES
-        if hm_entity.supports_duration:
+        if data_point.supports_duration:
             self._attr_supported_features |= SirenEntityFeature.DURATION
 
     @property
     def is_on(self) -> bool | None:
         """Return true if siren is on."""
-        if self._hm_entity.is_valid:
-            return self._hm_entity.is_on is True
+        if self._data_point.is_valid:
+            return self._data_point.is_on is True
         if (
             self.is_restored
             and self._restored_state
@@ -116,12 +118,12 @@ class HaHomematicSiren(HaHomematicGenericRestoreEntity[BaseSiren], SirenEntity):
     @property
     def available_tones(self) -> list[int | str] | dict[int, str] | None:
         """Return a list of available tones."""
-        return self._hm_entity.available_tones  # type: ignore[return-value]
+        return self._data_point.available_tones  # type: ignore[return-value]
 
     @property
     def available_lights(self) -> list[int | str] | dict[int, str] | None:
         """Return a list of available lights."""
-        return self._hm_entity.available_lights  # type: ignore[return-value]
+        return self._data_point.available_lights  # type: ignore[return-value]
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the device on."""
@@ -132,8 +134,8 @@ class HaHomematicSiren(HaHomematicGenericRestoreEntity[BaseSiren], SirenEntity):
             hm_kwargs["optical_alarm"] = light
         if duration := kwargs.get(ATTR_DURATION):
             hm_kwargs["duration"] = duration
-        await self._hm_entity.turn_on(**hm_kwargs)
+        await self._data_point.turn_on(**hm_kwargs)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the device off."""
-        await self._hm_entity.turn_off()
+        await self._data_point.turn_off()

@@ -7,7 +7,7 @@ from typing import Any
 
 from hahomematic.const import (
     CALLBACK_TYPE,
-    ENTITY_EVENTS,
+    DATA_POINT_EVENTS,
     EVENT_ADDRESS,
     EVENT_INTERFACE_ID,
     HmPlatform,
@@ -25,7 +25,7 @@ from homeassistant.helpers.typing import UndefinedType
 
 from . import HomematicConfigEntry
 from .const import DOMAIN, EVENT_MODEL
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -39,30 +39,30 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_event(hm_entities: tuple[tuple[GenericEvent, ...], ...]) -> None:
+    def async_add_event(data_points: tuple[tuple[GenericEvent, ...], ...]) -> None:
         """Add event from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_EVENT: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_EVENT: Adding %i data points", len(data_points))
 
         if entities := [
             HaHomematicEvent(
                 control_unit=control_unit,
-                hm_channel_events=hm_channel_events,
+                data_point=data_point,
             )
-            for hm_channel_events in hm_entities
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.EVENT),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.EVENT),
             target=async_add_event,
         )
     )
 
-    for event_type in ENTITY_EVENTS:
+    for event_type in DATA_POINT_EVENTS:
         async_add_event(
-            hm_entities=control_unit.central.get_events(event_type=event_type, registered=False)
+            data_points=control_unit.central.get_events(event_type=event_type, registered=False)
         )
 
 
@@ -79,13 +79,13 @@ class HaHomematicEvent(EventEntity):
     def __init__(
         self,
         control_unit: ControlUnit,
-        hm_channel_events: tuple[GenericEvent, ...],
+        data_point: tuple[GenericEvent, ...],
     ) -> None:
         """Initialize the event."""
         self._cu: ControlUnit = control_unit
-        self._hm_channel_events = hm_channel_events
-        self._attr_event_types = [event.parameter.lower() for event in hm_channel_events]
-        self._hm_primary_entity: GenericEvent = hm_channel_events[0]
+        self._hm_channel_events = data_point
+        self._attr_event_types = [event.parameter.lower() for event in data_point]
+        self._hm_primary_entity: GenericEvent = data_point[0]
         self._hm_channel: HmChannel = self._hm_primary_entity.channel
         self._hm_device: HmDevice = self._hm_channel.device
         self._attr_translation_key = self._hm_primary_entity.event_type.value.replace(".", "_")
@@ -121,7 +121,7 @@ class HaHomematicEvent(EventEntity):
 
         for event in self._hm_channel_events:
             self._unregister_callbacks.append(
-                event.register_entity_updated_callback(
+                event.register_data_point_updated_callback(
                     cb=self._async_event_changed, custom_id=self.entity_id
                 )
             )

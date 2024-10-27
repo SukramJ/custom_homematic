@@ -8,8 +8,8 @@ import logging
 from typing import Any
 
 from hahomematic.const import HmPlatform, ParameterType, SysvarType
-from hahomematic.platforms.generic import HmSensor
-from hahomematic.platforms.hub import HmSysvarSensor
+from hahomematic.platforms.generic import DpSensor
+from hahomematic.platforms.hub import SysvarDpSensor
 
 from homeassistant.components.sensor import (
     RestoreSensor,
@@ -24,7 +24,7 @@ from homeassistant.helpers.typing import StateType
 
 from . import HomematicConfigEntry
 from .const import TOTAL_SYSVAR, HmEntityState
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 from .entity_helpers import HmSensorEntityDescription
 from .generic_entity import (
     ATTR_VALUE_STATE,
@@ -44,51 +44,53 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_sensor(hm_entities: tuple[HmSensor, ...]) -> None:
+    def async_add_sensor(data_points: tuple[DpSensor, ...]) -> None:
         """Add sensor from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_SENSOR: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_SENSOR: Adding %i data points", len(data_points))
 
         if entities := [
             HaHomematicSensor(
                 control_unit=control_unit,
-                hm_entity=hm_entity,
+                data_point=data_point,
             )
-            for hm_entity in hm_entities
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     @callback
-    def async_add_hub_sensor(hm_entities: tuple[HmSysvarSensor, ...]) -> None:
+    def async_add_hub_sensor(data_points: tuple[SysvarDpSensor, ...]) -> None:
         """Add sysvar sensor from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_HUB_SENSOR: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_HUB_SENSOR: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarSensor(control_unit=control_unit, hm_sysvar_entity=hm_entity)
-            for hm_entity in hm_entities
+            HaHomematicSysvarSensor(control_unit=control_unit, data_point=data_point)
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.SENSOR),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.SENSOR),
             target=async_add_sensor,
         )
     )
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.HUB_SENSOR),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_SENSOR),
             target=async_add_hub_sensor,
         )
     )
 
-    async_add_sensor(hm_entities=control_unit.get_new_entities(entity_type=HmSensor))
+    async_add_sensor(data_points=control_unit.get_new_data_points(data_point_type=DpSensor))
 
-    async_add_hub_sensor(hm_entities=control_unit.get_new_hub_entities(entity_type=HmSysvarSensor))
+    async_add_hub_sensor(
+        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSensor)
+    )
 
 
-class HaHomematicSensor(HaHomematicGenericEntity[HmSensor], RestoreSensor):
+class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
     """Representation of the HomematicIP sensor entity."""
 
     entity_description: HmSensorEntityDescription
@@ -97,46 +99,46 @@ class HaHomematicSensor(HaHomematicGenericEntity[HmSensor], RestoreSensor):
     def __init__(
         self,
         control_unit: ControlUnit,
-        hm_entity: HmSensor,
+        data_point: DpSensor,
     ) -> None:
         """Initialize the sensor entity."""
         super().__init__(
             control_unit=control_unit,
-            hm_entity=hm_entity,
+            data_point=data_point,
         )
         self._multiplier: int = (
             self.entity_description.multiplier
             if hasattr(self, "entity_description")
             and self.entity_description
             and self.entity_description.multiplier is not None
-            else hm_entity.multiplier
+            else data_point.multiplier
         )
-        if not hasattr(self, "entity_description") and hm_entity.unit:
-            self._attr_native_unit_of_measurement = hm_entity.unit
+        if not hasattr(self, "entity_description") and data_point.unit:
+            self._attr_native_unit_of_measurement = data_point.unit
         if self.device_class == SensorDeviceClass.ENUM:
             self._attr_options = (
-                [item.lower() for item in hm_entity.values] if hm_entity.values else None
+                [item.lower() for item in data_point.values] if data_point.values else None
             )
 
     @property
     def native_value(self) -> StateType | date | datetime | Decimal:
         """Return the native value of the entity."""
-        if self._hm_entity.is_valid:
+        if self._data_point.is_valid:
             if (
-                self._hm_entity.value is not None
-                and self._hm_entity.hmtype in (ParameterType.FLOAT, ParameterType.INTEGER)
+                self._data_point.value is not None
+                and self._data_point.hmtype in (ParameterType.FLOAT, ParameterType.INTEGER)
                 and self._multiplier != 1
             ):
-                return self._hm_entity.value * self._multiplier  # type: ignore[no-any-return]
+                return self._data_point.value * self._multiplier  # type: ignore[no-any-return]
             # Strings and enums with custom device class must be lowercase
             # to be translatable.
             if (
-                self._hm_entity.value is not None
+                self._data_point.value is not None
                 and self.translation_key is not None
-                and self._hm_entity.hmtype in (ParameterType.ENUM, ParameterType.STRING)
+                and self._data_point.hmtype in (ParameterType.ENUM, ParameterType.STRING)
             ):
-                return self._hm_entity.value.lower()  # type: ignore[no-any-return]
-            return self._hm_entity.value  # type: ignore[no-any-return]
+                return self._data_point.value.lower()  # type: ignore[no-any-return]
+            return self._data_point.value  # type: ignore[no-any-return]
         if self.is_restored:
             return self._restored_native_value  # type: ignore[no-any-return]
         return None
@@ -153,44 +155,44 @@ class HaHomematicSensor(HaHomematicGenericEntity[HmSensor], RestoreSensor):
     @property
     def is_restored(self) -> bool:
         """Return if the state is restored."""
-        return not self._hm_entity.is_valid and self._restored_native_value is not None
+        return not self._data_point.is_valid and self._restored_native_value is not None
 
     async def async_added_to_hass(self) -> None:
         """Check, if state needs to be restored."""
         await super().async_added_to_hass()
-        if not self._hm_entity.is_valid and (
+        if not self._data_point.is_valid and (
             restored_sensor_data := await self.async_get_last_sensor_data()
         ):
             self._restored_native_value = restored_sensor_data.native_value
 
 
-class HaHomematicSysvarSensor(HaHomematicGenericSysvarEntity[HmSysvarSensor], SensorEntity):
+class HaHomematicSysvarSensor(HaHomematicGenericSysvarEntity[SysvarDpSensor], SensorEntity):
     """Representation of the HomematicIP hub sensor entity."""
 
     def __init__(
         self,
         control_unit: ControlUnit,
-        hm_sysvar_entity: HmSysvarSensor,
+        data_point: SysvarDpSensor,
     ) -> None:
         """Initialize the sensor entity."""
-        super().__init__(control_unit=control_unit, hm_sysvar_entity=hm_sysvar_entity)
-        if hm_sysvar_entity.data_type == SysvarType.LIST:
-            self._attr_options = list(hm_sysvar_entity.values) if hm_sysvar_entity.values else None
+        super().__init__(control_unit=control_unit, data_point=data_point)
+        if data_point.data_type == SysvarType.LIST:
+            self._attr_options = list(data_point.values) if data_point.values else None
             self._attr_device_class = SensorDeviceClass.ENUM
         else:
-            if hm_sysvar_entity.data_type in (
+            if data_point.data_type in (
                 SysvarType.FLOAT,
                 SysvarType.INTEGER,
             ):
                 self._attr_state_class = (
                     SensorStateClass.TOTAL_INCREASING
-                    if hm_sysvar_entity.ccu_var_name.startswith(TOTAL_SYSVAR)
+                    if data_point.ccu_var_name.startswith(TOTAL_SYSVAR)
                     else SensorStateClass.MEASUREMENT
                 )
-            if unit := hm_sysvar_entity.unit:
+            if unit := data_point.unit:
                 self._attr_native_unit_of_measurement = unit
 
     @property
     def native_value(self) -> StateType | date | datetime | Decimal:
         """Return the native value of the entity."""
-        return self._hm_hub_entity.value
+        return self._data_point.value

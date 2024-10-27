@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 
 from hahomematic.const import HmPlatform
-from hahomematic.platforms.generic import HmBinarySensor
-from hahomematic.platforms.hub import HmSysvarBinarySensor
+from hahomematic.platforms.generic import DpBinarySensor
+from hahomematic.platforms.hub import SysvarDpBinarySensor
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.const import STATE_ON, STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -15,7 +15,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import HaHomematicGenericRestoreEntity, HaHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,29 +30,29 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_binary_sensor(hm_entities: tuple[HmBinarySensor, ...]) -> None:
+    def async_add_binary_sensor(data_points: tuple[DpBinarySensor, ...]) -> None:
         """Add binary_sensor from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_BINARY_SENSOR: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_BINARY_SENSOR: Adding %i data points", len(data_points))
         if entities := [
-            HaHomematicBinarySensor(control_unit=control_unit, hm_entity=hm_entity)
-            for hm_entity in hm_entities
+            HaHomematicBinarySensor(control_unit=control_unit, data_point=data_point)
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     @callback
-    def async_add_hub_binary_sensor(hm_entities: tuple[HmSysvarBinarySensor, ...]) -> None:
+    def async_add_hub_binary_sensor(data_points: tuple[SysvarDpBinarySensor, ...]) -> None:
         """Add sysvar binary sensor from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_HUB_BINARY_SENSOR: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_HUB_BINARY_SENSOR: Adding %i data points", len(data_points))
         if entities := [
-            HaHomematicSysvarBinarySensor(control_unit=control_unit, hm_sysvar_entity=hm_entity)
-            for hm_entity in hm_entities
+            HaHomematicSysvarBinarySensor(control_unit=control_unit, data_point=data_point)
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(
+            signal=signal_new_data_point(
                 entry_id=entry.entry_id, platform=HmPlatform.BINARY_SENSOR
             ),
             target=async_add_binary_sensor,
@@ -61,26 +61,28 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry.entry_id, HmPlatform.HUB_BINARY_SENSOR),
+            signal=signal_new_data_point(entry.entry_id, HmPlatform.HUB_BINARY_SENSOR),
             target=async_add_hub_binary_sensor,
         )
     )
 
-    async_add_binary_sensor(hm_entities=control_unit.get_new_entities(entity_type=HmBinarySensor))
+    async_add_binary_sensor(
+        data_points=control_unit.get_new_data_points(data_point_type=DpBinarySensor)
+    )
 
     async_add_hub_binary_sensor(
-        hm_entities=control_unit.get_new_hub_entities(entity_type=HmSysvarBinarySensor)
+        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpBinarySensor)
     )
 
 
-class HaHomematicBinarySensor(HaHomematicGenericRestoreEntity[HmBinarySensor], BinarySensorEntity):
+class HaHomematicBinarySensor(HaHomematicGenericRestoreEntity[DpBinarySensor], BinarySensorEntity):
     """Representation of the Homematic(IP) Local binary sensor."""
 
     @property
     def is_on(self) -> bool | None:
         """Return true if sensor is active."""
-        if self._hm_entity.is_valid:
-            return self._hm_entity.value
+        if self._data_point.is_valid:
+            return self._data_point.value
         if (
             self.is_restored
             and self._restored_state
@@ -88,15 +90,15 @@ class HaHomematicBinarySensor(HaHomematicGenericRestoreEntity[HmBinarySensor], B
             not in (STATE_UNKNOWN, STATE_UNAVAILABLE)
         ):
             return restored_state == STATE_ON
-        return self._hm_entity.default  # type: ignore[no-any-return]
+        return self._data_point.default  # type: ignore[no-any-return]
 
 
 class HaHomematicSysvarBinarySensor(
-    HaHomematicGenericSysvarEntity[HmSysvarBinarySensor], BinarySensorEntity
+    HaHomematicGenericSysvarEntity[SysvarDpBinarySensor], BinarySensorEntity
 ):
     """Representation of the HomematicIP hub binary_sensor entity."""
 
     @property
     def is_on(self) -> bool | None:
         """Return the native value of the entity."""
-        return bool(self._hm_hub_entity.value)
+        return bool(self._data_point.value)

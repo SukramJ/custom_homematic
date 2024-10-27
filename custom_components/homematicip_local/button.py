@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 
 from hahomematic.const import HmPlatform
-from hahomematic.platforms.generic import HmButton
-from hahomematic.platforms.hub import HmProgramButton
+from hahomematic.platforms.generic import DpButton
+from hahomematic.platforms.hub import ProgramDpButton
 
 from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant, callback
@@ -14,7 +14,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
-from .control_unit import ControlUnit, signal_new_hm_entity
+from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import ATTR_NAME, HaHomematicGenericEntity, HaHomematicGenericHubEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,34 +29,34 @@ async def async_setup_entry(
     control_unit: ControlUnit = entry.runtime_data
 
     @callback
-    def async_add_button(hm_entities: tuple[HmButton, ...]) -> None:
+    def async_add_button(data_points: tuple[DpButton, ...]) -> None:
         """Add button from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_BUTTON: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_BUTTON: Adding %i data points", len(data_points))
 
         if entities := [
             HaHomematicButton(
                 control_unit=control_unit,
-                hm_entity=hm_entity,
+                data_point=data_point,
             )
-            for hm_entity in hm_entities
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     @callback
-    def async_add_program_button(hm_entities: tuple[HmProgramButton, ...]) -> None:
+    def async_add_program_button(data_points: tuple[ProgramDpButton, ...]) -> None:
         """Add program button from Homematic(IP) Local."""
-        _LOGGER.debug("ASYNC_ADD_PROGRAM_BUTTON: Adding %i entities", len(hm_entities))
+        _LOGGER.debug("ASYNC_ADD_PROGRAM_BUTTON: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicProgramButton(control_unit=control_unit, hm_program_button=hm_entity)
-            for hm_entity in hm_entities
+            HaHomematicProgramButton(control_unit=control_unit, data_point=data_point)
+            for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.BUTTON),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.BUTTON),
             target=async_add_button,
         )
     )
@@ -64,24 +64,24 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_hm_entity(entry_id=entry.entry_id, platform=HmPlatform.HUB_BUTTON),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_BUTTON),
             target=async_add_program_button,
         )
     )
 
-    async_add_button(hm_entities=control_unit.get_new_entities(entity_type=HmButton))
+    async_add_button(data_points=control_unit.get_new_data_points(data_point_type=DpButton))
 
     async_add_program_button(
-        hm_entities=control_unit.get_new_hub_entities(entity_type=HmProgramButton)
+        data_points=control_unit.get_new_hub_data_points(data_point_type=ProgramDpButton)
     )
 
 
-class HaHomematicButton(HaHomematicGenericEntity[HmButton], ButtonEntity):
+class HaHomematicButton(HaHomematicGenericEntity[DpButton], ButtonEntity):
     """Representation of the Homematic(IP) Local button."""
 
     async def async_press(self) -> None:
         """Execute a button press."""
-        await self._hm_entity.press()
+        await self._data_point.press()
 
 
 class HaHomematicProgramButton(HaHomematicGenericHubEntity, ButtonEntity):
@@ -90,16 +90,16 @@ class HaHomematicProgramButton(HaHomematicGenericHubEntity, ButtonEntity):
     def __init__(
         self,
         control_unit: ControlUnit,
-        hm_program_button: HmProgramButton,
+        data_point: ProgramDpButton,
     ) -> None:
         """Initialize the button entity."""
         super().__init__(
             control_unit=control_unit,
-            hm_hub_entity=hm_program_button,
+            data_point=data_point,
         )
-        self._hm_hub_entity: HmProgramButton = hm_program_button
-        self._attr_extra_state_attributes = {ATTR_NAME: self._hm_hub_entity.ccu_program_name}
+        self._data_point: ProgramDpButton = data_point
+        self._attr_extra_state_attributes = {ATTR_NAME: self._data_point.ccu_program_name}
 
     async def async_press(self) -> None:
         """Execute a button press."""
-        await self._hm_hub_entity.press()
+        await self._data_point.press()

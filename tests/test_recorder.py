@@ -36,7 +36,7 @@ TEST_DEVICES: dict[str, str] = {
 # pylint: disable=protected-access
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def no_test_generic_entity_un_recorded(
     factory_with_recorder: helper.Factory,
 ) -> None:
@@ -46,7 +46,7 @@ async def no_test_generic_entity_un_recorded(
     entity_name = "HmIP-SWDO-I_VCU5864966 "
 
     hass, control = await factory_with_recorder.setup_environment(TEST_DEVICES)
-    ha_state, hm_entity = helper.get_and_check_state(
+    ha_state, data_point = helper.get_and_check_state(
         hass=hass, control=control, entity_id=entity_id, entity_name=entity_name
     )
 
@@ -82,7 +82,7 @@ async def no_test_generic_entity_un_recorded(
                 break
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def no_test_event_entity_un_recorded(
     factory_with_recorder: helper.Factory,
 ) -> None:
@@ -92,7 +92,7 @@ async def no_test_event_entity_un_recorded(
     entity_name = "HmIP-BSM_VCU2128127 ch1"
 
     hass, control = await factory_with_recorder.setup_environment(TEST_DEVICES)
-    ha_state, hm_entity = helper.get_and_check_state(
+    ha_state, data_point = helper.get_and_check_state(
         hass=hass, control=control, entity_id=entity_id, entity_name=entity_name
     )
     assert ha_state.state == STATE_UNKNOWN
@@ -119,7 +119,7 @@ async def no_test_event_entity_un_recorded(
                 break
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def no_test_update_entity_un_recorded(
     factory_with_recorder: helper.Factory,
 ) -> None:
@@ -129,7 +129,7 @@ async def no_test_update_entity_un_recorded(
     entity_name = "HmIP-SWDO-I_VCU5864966 Update"
 
     hass, control = await factory_with_recorder.setup_environment(TEST_DEVICES)
-    ha_state, hm_entity = helper.get_and_check_state(
+    ha_state, data_point = helper.get_and_check_state(
         hass=hass, control=control, entity_id=entity_id, entity_name=entity_name
     )
 
@@ -153,7 +153,7 @@ async def no_test_update_entity_un_recorded(
                 break
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def no_test_sysvar_entity_un_recorded(
     factory_with_recorder: helper.Factory,
 ) -> None:
@@ -162,7 +162,7 @@ async def no_test_sysvar_entity_un_recorded(
     entity_name = "CentralTest sv_logic"
 
     hass, control = await factory_with_recorder.setup_environment({}, add_sysvars=True)
-    ha_state, hm_entity = helper.get_and_check_state(
+    ha_state, data_point = helper.get_and_check_state(
         hass=hass, control=control, entity_id=entity_id, entity_name=entity_name
     )
 
