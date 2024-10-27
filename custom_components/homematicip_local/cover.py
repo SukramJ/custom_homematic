@@ -5,14 +5,9 @@ from __future__ import annotations
 import logging
 from typing import Any, TypeVar
 
-from hahomematic.const import HmPlatform
-from hahomematic.platforms.custom import (
-    CustomDpBlind,
-    CustomDpCover,
-    CustomDpGarage,
-    CustomDpIpBlind,
-)
-from hahomematic.platforms.data_point import CallParameterCollector
+from hahomematic.const import DataPointCategory
+from hahomematic.model.custom import CustomDpBlind, CustomDpCover, CustomDpGarage, CustomDpIpBlind
+from hahomematic.model.data_point import CallParameterCollector
 import voluptuous as vol
 
 from homeassistant.components.cover import (
@@ -98,7 +93,9 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.COVER),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.COVER
+            ),
             target=async_add_cover,
         )
     )

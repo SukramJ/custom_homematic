@@ -5,7 +5,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Final
 
-from hahomematic.const import PLATFORMS
+from hahomematic.const import CATEGORIES
 
 from homeassistant.const import Platform
 
@@ -141,22 +141,16 @@ class HmEntityState(StrEnum):
     VALID = "valid"
 
 
-class HmEntityType(StrEnum):
-    """Enum with hahomematic entity types."""
-
-    GENERIC = "generic"
-    CUSTOM = "custom"
+BLOCKED_CATEGORIES: Final[tuple[str, ...]] = ()
 
 
-BLOCK_PLATFORMS: Final[tuple[str, ...]] = ()
-
-
-def _get_hmip_local_platforms() -> tuple[str, ...]:
+def _get_hmip_local_platforms() -> tuple[Platform, ...]:
     """Return relevant Homematic(IP) Local platforms."""
-    platforms = list(Platform)
-    hm_platforms = [platform.value for platform in PLATFORMS if platform not in BLOCK_PLATFORMS]
+    return tuple(
+        Platform(pf)
+        for pf in list(Platform)
+        if pf in [category.value for category in CATEGORIES if category not in BLOCKED_CATEGORIES]
+    )
 
-    return tuple(hm_platform for hm_platform in hm_platforms if hm_platform in platforms)
 
-
-HMIP_LOCAL_PLATFORMS: Final[tuple[str, ...]] = _get_hmip_local_platforms()
+HMIP_LOCAL_PLATFORMS: Final[tuple[Platform, ...]] = _get_hmip_local_platforms()

@@ -7,9 +7,9 @@ from decimal import Decimal
 import logging
 from typing import Any
 
-from hahomematic.const import HmPlatform, ParameterType, SysvarType
-from hahomematic.platforms.generic import DpSensor
-from hahomematic.platforms.hub import SysvarDpSensor
+from hahomematic.const import DataPointCategory, ParameterType, SysvarType
+from hahomematic.model.generic import DpSensor
+from hahomematic.model.hub import SysvarDpSensor
 
 from homeassistant.components.sensor import (
     RestoreSensor,
@@ -71,14 +71,18 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.SENSOR),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.SENSOR
+            ),
             target=async_add_sensor,
         )
     )
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_SENSOR),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.HUB_SENSOR
+            ),
             target=async_add_hub_sensor,
         )
     )

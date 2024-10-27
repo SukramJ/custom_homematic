@@ -7,10 +7,10 @@ import logging
 from typing import Any, TypeAlias, TypeVar, cast
 
 from hahomematic.const import EVENT_CHANNEL_NO, EVENT_PARAMETER, EVENT_VALUE, IDENTIFIER_SEPARATOR
-from hahomematic.platforms.custom import CustomDataPoint
-from hahomematic.platforms.data_point import EVENT_DATA_SCHEMA, CallbackDataPoint
-from hahomematic.platforms.generic import GenericDataPoint
-from hahomematic.platforms.hub import GenericHubDataPoint
+from hahomematic.model.custom import CustomDataPoint
+from hahomematic.model.data_point import EVENT_DATA_SCHEMA, CallbackDataPoint
+from hahomematic.model.generic import GenericDataPoint
+from hahomematic.model.hub import GenericHubDataPoint
 import voluptuous as vol
 
 from homeassistant.const import CONF_TYPE

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import logging
 
-from hahomematic.const import HmPlatform
-from hahomematic.platforms.generic import DpText
-from hahomematic.platforms.hub import SysvarDpText
+from hahomematic.const import DataPointCategory
+from hahomematic.model.generic import DpText
+from hahomematic.model.hub import SysvarDpText
 
 from homeassistant.components.text import TextEntity
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -57,14 +57,16 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.TEXT),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.TEXT),
             target=async_add_text,
         )
     )
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_TEXT),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.HUB_TEXT
+            ),
             target=async_add_hub_text,
         )
     )

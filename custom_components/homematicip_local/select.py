@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import logging
 
-from hahomematic.const import HmPlatform
-from hahomematic.platforms.generic import DpSelect
-from hahomematic.platforms.hub import SysvarDpSelect
+from hahomematic.const import DataPointCategory
+from hahomematic.model.generic import DpSelect
+from hahomematic.model.hub import SysvarDpSelect
 
 from homeassistant.components.select import SelectEntity
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -57,7 +57,9 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.SELECT),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.SELECT
+            ),
             target=async_add_select,
         )
     )
@@ -65,7 +67,9 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_SELECT),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.HUB_SELECT
+            ),
             target=async_add_hub_select,
         )
     )

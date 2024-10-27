@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Final
 
-from hahomematic.const import CALLBACK_TYPE, HmPlatform
-from hahomematic.platforms.update import DpUpdate
+from hahomematic.const import CALLBACK_TYPE, DataPointCategory
+from hahomematic.model.update import DpUpdate
 
 from homeassistant.components.update import UpdateEntity, UpdateEntityFeature
 from homeassistant.core import HomeAssistant, callback
@@ -48,7 +48,9 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.UPDATE),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.UPDATE
+            ),
             target=async_add_update,
         )
     )

@@ -7,17 +7,17 @@ from datetime import datetime, timedelta
 import logging
 from typing import Any, Final, cast
 
-from hahomematic.const import HmPlatform
-from hahomematic.platforms.custom import (
-    HM_PRESET_MODE_PREFIX,
+from hahomematic.const import DataPointCategory
+from hahomematic.model.custom import (
     PROFILE_DICT,
+    PROFILE_PREFIX,
     SIMPLE_PROFILE_DICT,
     SIMPLE_WEEKDAY_LIST,
     WEEKDAY_DICT,
     BaseCustomDpClimate,
-    HmHvacAction,
-    HmHvacMode,
-    HmPresetMode,
+    ClimateActivity,
+    ClimateMode,
+    ClimateProfile,
 )
 import voluptuous as vol
 
@@ -87,20 +87,20 @@ SUPPORTED_HA_PRESET_MODES: Final = [
     PRESET_NONE,
 ]
 
-HM_TO_HA_HVAC_MODE: Mapping[HmHvacMode, HVACMode] = {
-    HmHvacMode.AUTO: HVACMode.AUTO,
-    HmHvacMode.COOL: HVACMode.COOL,
-    HmHvacMode.HEAT: HVACMode.HEAT,
-    HmHvacMode.OFF: HVACMode.OFF,
+HM_TO_HA_HVAC_MODE: Mapping[ClimateMode, HVACMode] = {
+    ClimateMode.AUTO: HVACMode.AUTO,
+    ClimateMode.COOL: HVACMode.COOL,
+    ClimateMode.HEAT: HVACMode.HEAT,
+    ClimateMode.OFF: HVACMode.OFF,
 }
 
-HA_TO_HM_HVAC_MODE: Mapping[HVACMode, HmHvacMode] = {v: k for k, v in HM_TO_HA_HVAC_MODE.items()}
+HA_TO_HM_HVAC_MODE: Mapping[HVACMode, ClimateMode] = {v: k for k, v in HM_TO_HA_HVAC_MODE.items()}
 
-HM_TO_HA_ACTION: Mapping[HmHvacAction, HVACAction] = {
-    HmHvacAction.COOL: HVACAction.COOLING,
-    HmHvacAction.HEAT: HVACAction.HEATING,
-    HmHvacAction.IDLE: HVACAction.IDLE,
-    HmHvacAction.OFF: HVACAction.OFF,
+HM_TO_HA_ACTION: Mapping[ClimateActivity, HVACAction] = {
+    ClimateActivity.COOL: HVACAction.COOLING,
+    ClimateActivity.HEAT: HVACAction.HEATING,
+    ClimateActivity.IDLE: HVACAction.IDLE,
+    ClimateActivity.OFF: HVACAction.OFF,
 }
 
 
@@ -129,7 +129,9 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.CLIMATE),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.CLIMATE
+            ),
             target=async_add_climate,
         )
     )
@@ -298,16 +300,16 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
     @property
     def hvac_action(self) -> HVACAction | None:
         """Return the hvac action."""
-        if self._data_point.hvac_action and self._data_point.hvac_action in HM_TO_HA_ACTION:
-            return HM_TO_HA_ACTION[self._data_point.hvac_action]
+        if self._data_point.activity and self._data_point.activity in HM_TO_HA_ACTION:
+            return HM_TO_HA_ACTION[self._data_point.activity]
         return None
 
     @property
     def hvac_mode(self) -> HVACMode | None:
         """Return hvac mode."""
         if self._data_point.is_valid:
-            if self._data_point.hvac_mode in HM_TO_HA_HVAC_MODE:
-                return HM_TO_HA_HVAC_MODE[self._data_point.hvac_mode]
+            if self._data_point.mode in HM_TO_HA_HVAC_MODE:
+                return HM_TO_HA_HVAC_MODE[self._data_point.mode]
             return HVACMode.OFF
         if (
             self.is_restored
@@ -325,9 +327,9 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
     def hvac_modes(self) -> list[HVACMode]:
         """Return the list of available hvac modes."""
         return [
-            HM_TO_HA_HVAC_MODE[hm_hvac_mode]
-            for hm_hvac_mode in self._data_point.hvac_modes
-            if hm_hvac_mode in HM_TO_HA_HVAC_MODE
+            HM_TO_HA_HVAC_MODE[mode]
+            for mode in self._data_point.modes
+            if mode in HM_TO_HA_HVAC_MODE
         ]
 
     @property
@@ -345,10 +347,10 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
         """Return the current preset mode."""
         if (
             self._data_point.is_valid
-            and self._data_point.preset_mode in SUPPORTED_HA_PRESET_MODES
-            or str(self._data_point.preset_mode).startswith(HM_PRESET_MODE_PREFIX)
+            and self._data_point.profile in SUPPORTED_HA_PRESET_MODES
+            or str(self._data_point.profile).startswith(PROFILE_PREFIX)
         ):
-            return self._data_point.preset_mode
+            return self._data_point.profile
         if self.is_restored and self._restored_state:
             return self._restored_state.attributes.get(ATTR_PRESET_MODE)
         return None
@@ -357,11 +359,11 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
     def preset_modes(self) -> list[str]:
         """Return a list of available preset modes incl. hmip profiles."""
         preset_modes = []
-        for hm_preset_mode in self._data_point.preset_modes:
-            if hm_preset_mode in SUPPORTED_HA_PRESET_MODES:
-                preset_modes.append(hm_preset_mode.value)
-            if str(hm_preset_mode).startswith(HM_PRESET_MODE_PREFIX):
-                preset_modes.append(hm_preset_mode.value)
+        for profile in self._data_point.profiles:
+            if profile in SUPPORTED_HA_PRESET_MODES:
+                preset_modes.append(profile.value)
+            if str(profile).startswith(PROFILE_PREFIX):
+                preset_modes.append(profile.value)
         return preset_modes
 
     @property
@@ -372,7 +374,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
             | ClimateEntityFeature.TURN_OFF
             | ClimateEntityFeature.TURN_ON
         )
-        if self._data_point.supports_preset:
+        if self._data_point.supports_profiles:
             supported_features |= ClimateEntityFeature.PRESET_MODE
         return supported_features
 
@@ -403,7 +405,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
         if hvac_mode not in HA_TO_HM_HVAC_MODE:
             _LOGGER.warning("Hvac mode %s is not supported by integration", hvac_mode)
             return
-        await self._data_point.set_hvac_mode(HA_TO_HM_HVAC_MODE[hvac_mode])
+        await self._data_point.set_mode(mode=HA_TO_HM_HVAC_MODE[hvac_mode])
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         """Set new preset mode."""
@@ -414,7 +416,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
                 self.hvac_mode,
             )
             return
-        await self._data_point.set_preset_mode(HmPresetMode(preset_mode))
+        await self._data_point.set_profile(profile=ClimateProfile(preset_mode))
 
     async def async_enable_away_mode_by_calendar(
         self,

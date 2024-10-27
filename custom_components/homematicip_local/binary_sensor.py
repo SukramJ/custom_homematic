@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import logging
 
-from hahomematic.const import HmPlatform
-from hahomematic.platforms.generic import DpBinarySensor
-from hahomematic.platforms.hub import SysvarDpBinarySensor
+from hahomematic.const import DataPointCategory
+from hahomematic.model.generic import DpBinarySensor
+from hahomematic.model.hub import SysvarDpBinarySensor
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.const import STATE_ON, STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -53,7 +53,7 @@ async def async_setup_entry(
         func=async_dispatcher_connect(
             hass=hass,
             signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=HmPlatform.BINARY_SENSOR
+                entry_id=entry.entry_id, platform=DataPointCategory.BINARY_SENSOR
             ),
             target=async_add_binary_sensor,
         )
@@ -61,7 +61,7 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry.entry_id, HmPlatform.HUB_BINARY_SENSOR),
+            signal=signal_new_data_point(entry.entry_id, DataPointCategory.HUB_BINARY_SENSOR),
             target=async_add_hub_binary_sensor,
         )
     )

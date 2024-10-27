@@ -11,7 +11,6 @@ from pytest_homeassistant_custom_component.components.recorder.common import (
 from custom_components.homematicip_local.const import EVENT_MODEL
 from custom_components.homematicip_local.generic_entity import (
     ATTR_ADDRESS,
-    ATTR_ENTITY_TYPE,
     ATTR_FUNCTION,
     ATTR_INTERFACE_ID,
     ATTR_MODEL,
@@ -19,7 +18,6 @@ from custom_components.homematicip_local.generic_entity import (
     ATTR_PARAMETER,
     ATTR_VALUE_STATE,
     HmEntityState,
-    HmEntityType,
 )
 from custom_components.homematicip_local.update import ATTR_FIRMWARE_UPDATE_STATE
 from homeassistant.components.recorder.history import get_significant_states
@@ -52,7 +50,6 @@ async def no_test_generic_entity_un_recorded(
 
     assert ha_state.state == STATE_OFF
     assert ha_state.attributes[ATTR_ADDRESS] == "VCU5864966:1"
-    assert ha_state.attributes[ATTR_ENTITY_TYPE] == HmEntityType.GENERIC
     assert ha_state.attributes[ATTR_FUNCTION] is None
     assert ha_state.attributes[ATTR_INTERFACE_ID] == "CentralTest-BidCos-RF"
     assert ha_state.attributes[ATTR_MODEL] == "HmIP-SWDO-I"
@@ -73,7 +70,6 @@ async def no_test_generic_entity_un_recorded(
         for state in entity_states:
             if state.entity_id == entity_id:
                 assert ATTR_ADDRESS not in state.attributes
-                assert ATTR_ENTITY_TYPE not in state.attributes
                 assert ATTR_FUNCTION not in state.attributes
                 assert ATTR_INTERFACE_ID not in state.attributes
                 assert ATTR_MODEL not in state.attributes

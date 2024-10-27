@@ -7,10 +7,10 @@ import logging
 from typing import Any, Final, Generic
 
 from hahomematic.const import CALLBACK_TYPE, CallSource
-from hahomematic.platforms.custom import CustomDataPoint
-from hahomematic.platforms.data_point import CallbackDataPoint
-from hahomematic.platforms.generic import GenericDataPoint
-from hahomematic.platforms.hub import GenericHubDataPoint, GenericSysvarDataPoint
+from hahomematic.model.custom import CustomDataPoint
+from hahomematic.model.data_point import CallbackDataPoint
+from hahomematic.model.generic import GenericDataPoint
+from hahomematic.model.hub import GenericHubDataPoint, GenericSysvarDataPoint
 
 from homeassistant.core import State, callback
 from homeassistant.helpers import device_registry as dr, entity_registry as er
@@ -19,14 +19,13 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.typing import UndefinedType
 
-from .const import DOMAIN, HmEntityState, HmEntityType
+from .const import DOMAIN, HmEntityState
 from .control_unit import ControlUnit
 from .entity_helpers import get_entity_description
 from .support import HmGenericDataPoint, HmGenericSysvarDataPoint, get_data_point
 
 _LOGGER = logging.getLogger(__name__)
 ATTR_ADDRESS: Final = "address"
-ATTR_ENTITY_TYPE: Final = "entity_type"
 ATTR_FUNCTION: Final = "function"
 ATTR_INTERFACE_ID: Final = "interface_id"
 ATTR_MODEL: Final = "model"
@@ -43,7 +42,6 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
 
     NO_RECORED_ATTRIBUTES = {
         ATTR_ADDRESS,
-        ATTR_ENTITY_TYPE,
         ATTR_FUNCTION,
         ATTR_INTERFACE_ID,
         ATTR_MODEL,
@@ -113,12 +111,9 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
             ATTR_MODEL: self._data_point.device.model,
         }
         if isinstance(self._data_point, GenericDataPoint):
-            attributes[ATTR_ENTITY_TYPE] = HmEntityType.GENERIC.value
             attributes[ATTR_PARAMETER] = self._data_point.parameter
             attributes[ATTR_FUNCTION] = self._data_point.function
 
-        if isinstance(self._data_point, CustomDataPoint):
-            attributes[ATTR_ENTITY_TYPE] = HmEntityType.CUSTOM.value
         return attributes
 
     @property

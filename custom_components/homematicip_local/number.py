@@ -5,9 +5,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from hahomematic.const import HmPlatform, SysvarType
-from hahomematic.platforms.generic import BaseDpNumber
-from hahomematic.platforms.hub import SysvarDpNumber
+from hahomematic.const import DataPointCategory, SysvarType
+from hahomematic.model.generic import BaseDpNumber
+from hahomematic.model.hub import SysvarDpNumber
 
 from homeassistant.components.number import NumberEntity, NumberMode, RestoreNumber
 from homeassistant.const import EntityCategory
@@ -64,7 +64,9 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.NUMBER),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.NUMBER
+            ),
             target=async_add_number,
         )
     )
@@ -72,7 +74,9 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_NUMBER),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.HUB_NUMBER
+            ),
             target=async_add_hub_number,
         )
     )

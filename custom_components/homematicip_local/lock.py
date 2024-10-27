@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from hahomematic.const import HmPlatform
-from hahomematic.platforms.custom import BaseCustomDpLock, LockState
+from hahomematic.const import DataPointCategory
+from hahomematic.model.custom import BaseCustomDpLock, LockState
 
 from homeassistant.components.lock import LockEntity, LockEntityFeature
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -46,7 +46,7 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.LOCK),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.LOCK),
             target=async_add_lock,
         )
     )

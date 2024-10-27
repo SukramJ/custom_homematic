@@ -9,10 +9,10 @@ from enum import StrEnum
 import logging
 from typing import Final
 
-from hahomematic.const import HmPlatform
-from hahomematic.platforms.custom import CustomDataPoint
-from hahomematic.platforms.generic import GenericDataPoint
-from hahomematic.platforms.hub import GenericHubDataPoint
+from hahomematic.const import DataPointCategory
+from hahomematic.model.custom import CustomDataPoint
+from hahomematic.model.generic import GenericDataPoint
+from hahomematic.model.hub import GenericHubDataPoint
 from hahomematic.support import element_matches_key
 
 from homeassistant.components.binary_sensor import (
@@ -780,58 +780,58 @@ _LOCK_DESCRIPTIONS_BY_POSTFIX: Mapping[str | tuple[str, ...], EntityDescription]
 }
 
 _ENTITY_DESCRIPTION_BY_DEVICE: Mapping[
-    HmPlatform, Mapping[str | tuple[str, ...], EntityDescription]
+    DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]
 ] = {
-    HmPlatform.COVER: _COVER_DESCRIPTIONS_BY_DEVICE,
-    HmPlatform.SIREN: _SIREN_DESCRIPTIONS_BY_DEVICE,
-    HmPlatform.SWITCH: _SWITCH_DESCRIPTIONS_BY_DEVICE,
+    DataPointCategory.COVER: _COVER_DESCRIPTIONS_BY_DEVICE,
+    DataPointCategory.SIREN: _SIREN_DESCRIPTIONS_BY_DEVICE,
+    DataPointCategory.SWITCH: _SWITCH_DESCRIPTIONS_BY_DEVICE,
 }
 
 _ENTITY_DESCRIPTION_BY_PARAM: Mapping[
-    HmPlatform, Mapping[str | tuple[str, ...], EntityDescription]
+    DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]
 ] = {
-    HmPlatform.BINARY_SENSOR: _BINARY_SENSOR_DESCRIPTIONS_BY_PARAM,
-    HmPlatform.BUTTON: _BUTTOM_DESCRIPTIONS_BY_PARAM,
-    HmPlatform.NUMBER: _NUMBER_DESCRIPTIONS_BY_PARAM,
-    HmPlatform.SELECT: _SELECT_DESCRIPTIONS_BY_PARAM,
-    HmPlatform.SENSOR: _SENSOR_DESCRIPTIONS_BY_PARAM,
-    HmPlatform.SWITCH: _SWITCH_DESCRIPTIONS_BY_PARAM,
+    DataPointCategory.BINARY_SENSOR: _BINARY_SENSOR_DESCRIPTIONS_BY_PARAM,
+    DataPointCategory.BUTTON: _BUTTOM_DESCRIPTIONS_BY_PARAM,
+    DataPointCategory.NUMBER: _NUMBER_DESCRIPTIONS_BY_PARAM,
+    DataPointCategory.SELECT: _SELECT_DESCRIPTIONS_BY_PARAM,
+    DataPointCategory.SENSOR: _SENSOR_DESCRIPTIONS_BY_PARAM,
+    DataPointCategory.SWITCH: _SWITCH_DESCRIPTIONS_BY_PARAM,
 }
 
 _ENTITY_DESCRIPTION_BY_POSTFIX: Mapping[
-    HmPlatform, Mapping[str | tuple[str, ...], EntityDescription]
+    DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]
 ] = {
-    HmPlatform.LOCK: _LOCK_DESCRIPTIONS_BY_POSTFIX,
+    DataPointCategory.LOCK: _LOCK_DESCRIPTIONS_BY_POSTFIX,
 }
 
 _ENTITY_DESCRIPTION_BY_DEVICE_AND_PARAM: Mapping[
-    HmPlatform, Mapping[tuple[str | tuple[str, ...], str], EntityDescription]
+    DataPointCategory, Mapping[tuple[str | tuple[str, ...], str], EntityDescription]
 ] = {
-    HmPlatform.BINARY_SENSOR: _BINARY_SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM,
-    HmPlatform.NUMBER: _NUMBER_DESCRIPTIONS_BY_DEVICE_AND_PARAM,
-    HmPlatform.SENSOR: _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM,
+    DataPointCategory.BINARY_SENSOR: _BINARY_SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM,
+    DataPointCategory.NUMBER: _NUMBER_DESCRIPTIONS_BY_DEVICE_AND_PARAM,
+    DataPointCategory.SENSOR: _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM,
 }
 
 
-_DEFAULT_PLATFORM_DESCRIPTION: Mapping[HmPlatform, EntityDescription] = {
-    HmPlatform.BUTTON: HmButtonEntityDescription(
+_DEFAULT_PLATFORM_DESCRIPTION: Mapping[DataPointCategory, EntityDescription] = {
+    DataPointCategory.BUTTON: HmButtonEntityDescription(
         key="button_default",
         entity_registry_enabled_default=False,
         translation_key="button_press",
     ),
-    HmPlatform.SWITCH: SwitchEntityDescription(
+    DataPointCategory.SWITCH: SwitchEntityDescription(
         key="switch_default",
         device_class=SwitchDeviceClass.SWITCH,
     ),
-    HmPlatform.SELECT: SelectEntityDescription(
+    DataPointCategory.SELECT: SelectEntityDescription(
         key="select_default", entity_category=EntityCategory.CONFIG
     ),
-    HmPlatform.HUB_BUTTON: HmButtonEntityDescription(
+    DataPointCategory.HUB_BUTTON: HmButtonEntityDescription(
         key="hub_button_default",
         entity_registry_enabled_default=False,
         translation_key="button_press",
     ),
-    HmPlatform.HUB_SWITCH: SwitchEntityDescription(
+    DataPointCategory.HUB_SWITCH: SwitchEntityDescription(
         key="hub_switch_default",
         device_class=SwitchDeviceClass.SWITCH,
     ),
@@ -898,7 +898,7 @@ def _find_entity_description(
             return entity_desc
 
         if (
-            data_point.platform == HmPlatform.SENSOR
+            data_point.category == DataPointCategory.SENSOR
             and data_point.unit
             and (entity_desc := _SENSOR_DESCRIPTIONS_BY_UNIT.get(data_point.unit))
         ):
@@ -911,7 +911,7 @@ def _find_entity_description(
         if entity_desc := _get_entity_description_by_postfix(data_point=data_point):
             return entity_desc
 
-    return _DEFAULT_PLATFORM_DESCRIPTION.get(data_point.platform)
+    return _DEFAULT_PLATFORM_DESCRIPTION.get(data_point.category)
 
 
 def _get_entity_description_by_model_and_param(
@@ -919,7 +919,7 @@ def _get_entity_description_by_model_and_param(
 ) -> EntityDescription | None:
     """Get entity_description by model and parameter."""
     if platform_device_and_param_descriptions := _ENTITY_DESCRIPTION_BY_DEVICE_AND_PARAM.get(  # noqa: E501
-        data_point.platform
+        data_point.category
     ):
         for data, entity_desc in platform_device_and_param_descriptions.items():
             if data[1] == data_point.parameter and (
@@ -936,7 +936,7 @@ def _get_entity_description_by_param(
     data_point: GenericDataPoint,
 ) -> EntityDescription | None:
     """Get entity_description by model and parameter."""
-    if platform_param_descriptions := _ENTITY_DESCRIPTION_BY_PARAM.get(data_point.platform):
+    if platform_param_descriptions := _ENTITY_DESCRIPTION_BY_PARAM.get(data_point.category):
         for params, entity_desc in platform_param_descriptions.items():
             if _param_in_list(params=params, parameter=data_point.parameter):
                 return entity_desc
@@ -947,7 +947,7 @@ def _get_entity_description_by_postfix(
     data_point: CustomDataPoint,
 ) -> EntityDescription | None:
     """Get entity_description by model and parameter."""
-    if platform_postfix_descriptions := _ENTITY_DESCRIPTION_BY_POSTFIX.get(data_point.platform):
+    if platform_postfix_descriptions := _ENTITY_DESCRIPTION_BY_POSTFIX.get(data_point.category):
         for postfix, entity_desc in platform_postfix_descriptions.items():
             if _param_in_list(params=postfix, parameter=data_point.data_point_name_postfix):
                 return entity_desc
@@ -958,7 +958,7 @@ def _get_entity_description_by_model(
     data_point: HmGenericDataPoint,
 ) -> EntityDescription | None:
     """Get entity_description by model."""
-    if platform_device_descriptions := _ENTITY_DESCRIPTION_BY_DEVICE.get(data_point.platform):
+    if platform_device_descriptions := _ENTITY_DESCRIPTION_BY_DEVICE.get(data_point.category):
         for devices, entity_desc in platform_device_descriptions.items():
             if element_matches_key(
                 search_elements=devices,

@@ -9,8 +9,8 @@ from unittest.mock import MagicMock, Mock, patch
 from hahomematic import const as hahomematic_const
 from hahomematic.central import CentralConfig
 from hahomematic.client import InterfaceConfig, _ClientConfig
-from hahomematic.platforms.custom import CustomDataPoint
-from hahomematic.platforms.data_point import BaseParameterDataPoint
+from hahomematic.model.custom import CustomDataPoint
+from hahomematic.model.data_point import BaseParameterDataPoint
 from hahomematic_support.client_local import ClientLocal, LocalRessources
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -23,7 +23,7 @@ from tests import const
 _LOGGER = logging.getLogger(__name__)
 
 EXCLUDE_METHODS_FROM_MOCKS: Final = [
-    "default_platform",
+    "default_category",
     "event",
     "fire_device_removed_callback",
     "fire_data_point_updated_callback",

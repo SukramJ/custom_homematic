@@ -10,10 +10,10 @@ from hahomematic.const import (
     DATA_POINT_EVENTS,
     EVENT_ADDRESS,
     EVENT_INTERFACE_ID,
-    HmPlatform,
+    DataPointCategory,
 )
-from hahomematic.platforms.device import HmChannel, HmDevice
-from hahomematic.platforms.event import GenericEvent
+from hahomematic.model.device import Channel, Device
+from hahomematic.model.event import GenericEvent
 
 from homeassistant.components.event import EventDeviceClass, EventEntity
 from homeassistant.core import HomeAssistant, callback
@@ -55,7 +55,9 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.EVENT),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.EVENT
+            ),
             target=async_add_event,
         )
     )
@@ -85,10 +87,10 @@ class HaHomematicEvent(EventEntity):
         self._cu: ControlUnit = control_unit
         self._hm_channel_events = data_point
         self._attr_event_types = [event.parameter.lower() for event in data_point]
-        self._hm_primary_entity: GenericEvent = data_point[0]
-        self._hm_channel: HmChannel = self._hm_primary_entity.channel
-        self._hm_device: HmDevice = self._hm_channel.device
-        self._attr_translation_key = self._hm_primary_entity.event_type.value.replace(".", "_")
+        self._hm_primary_event: GenericEvent = data_point[0]
+        self._hm_channel: Channel = self._hm_primary_event.channel
+        self._hm_device: Device = self._hm_channel.device
+        self._attr_translation_key = self._hm_primary_event.event_type.value.replace(".", "_")
 
         self._attr_unique_id = f"{DOMAIN}_{self._hm_channel.unique_id}"
         self._attr_device_info = DeviceInfo(
@@ -114,7 +116,7 @@ class HaHomematicEvent(EventEntity):
     @property
     def name(self) -> str | UndefinedType | None:
         """Return the name of the entity."""
-        return self._hm_primary_entity.name_data.channel_name
+        return self._hm_primary_event.name_data.channel_name
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks and load initial data."""

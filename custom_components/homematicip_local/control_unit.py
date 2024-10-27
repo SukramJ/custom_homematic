@@ -28,9 +28,9 @@ from hahomematic.const import (
     IP_ANY_V4,
     PORT_ANY,
     BackendSystemEvent,
+    DataPointCategory,
     DeviceFirmwareState,
-    HmPlatform,
-    HomematicEventType,
+    EventType,
     InterfaceEventType,
     InterfaceName,
     Manufacturer,
@@ -38,7 +38,7 @@ from hahomematic.const import (
     SystemInformation,
 )
 from hahomematic.exceptions import BaseHomematicException
-from hahomematic.platforms.data_point import CallbackDataPoint
+from hahomematic.model.data_point import CallbackDataPoint
 from hahomematic.support import check_config
 
 from homeassistant.const import CONF_HOST, CONF_PATH, CONF_PORT
@@ -321,7 +321,9 @@ class ControlUnit(BaseControlUnit):
             for channel_events in kwargs["new_channel_events"]:
                 async_dispatcher_send(
                     self._hass,
-                    signal_new_data_point(entry_id=self._entry_id, platform=HmPlatform.EVENT),
+                    signal_new_data_point(
+                        entry_id=self._entry_id, platform=DataPointCategory.EVENT
+                    ),
                     channel_events,
                 )
             self._async_add_virtual_remotes_to_device_registry()
@@ -341,13 +343,11 @@ class ControlUnit(BaseControlUnit):
         return
 
     @callback
-    def _async_homematic_callback(
-        self, hm_event_type: HomematicEventType, event_data: dict[str, Any]
-    ) -> None:
+    def _async_homematic_callback(self, event_type: EventType, event_data: dict[str, Any]) -> None:
         """Execute the callback used for device related events."""
 
         interface_id = event_data[EVENT_INTERFACE_ID]
-        if hm_event_type == HomematicEventType.INTERFACE:
+        if event_type == EventType.INTERFACE:
             interface_event_type = event_data[EVENT_TYPE]
             issue_id = f"{interface_event_type}-{interface_id}"
             event_data = cast(dict[str, Any], INTERFACE_EVENT_SCHEMA(event_data))
@@ -418,14 +418,14 @@ class ControlUnit(BaseControlUnit):
             if device_entry := self._async_get_device_entry(device_address=device_address):
                 name = device_entry.name_by_user or device_entry.name
                 event_data.update({EVENT_DEVICE_ID: device_entry.id, EVENT_NAME: name})
-            if hm_event_type in (HomematicEventType.IMPULSE, HomematicEventType.KEYPRESS):
+            if event_type in (EventType.IMPULSE, EventType.KEYPRESS):
                 event_data = cleanup_click_event_data(event_data=event_data)
                 if is_valid_event(event_data=event_data, schema=CLICK_EVENT_SCHEMA):
                     self._hass.bus.fire(
-                        event_type=hm_event_type.value,
+                        event_type=event_type.value,
                         event_data=event_data,
                     )
-            elif hm_event_type == HomematicEventType.DEVICE_AVAILABILITY:
+            elif event_type == EventType.DEVICE_AVAILABILITY:
                 parameter = event_data[EVENT_PARAMETER]
                 unavailable = event_data[EVENT_VALUE]
                 if parameter in (Parameter.STICKY_UN_REACH, Parameter.UN_REACH):
@@ -444,10 +444,10 @@ class ControlUnit(BaseControlUnit):
                         schema=DEVICE_AVAILABILITY_EVENT_SCHEMA,
                     ):
                         self._hass.bus.fire(
-                            event_type=hm_event_type.value,
+                            event_type=event_type.value,
                             event_data=event_data,
                         )
-            elif hm_event_type == HomematicEventType.DEVICE_ERROR:
+            elif event_type == EventType.DEVICE_ERROR:
                 error_parameter = event_data[EVENT_PARAMETER]
                 if error_parameter in FILTER_ERROR_EVENT_PARAMETERS:
                     return
@@ -479,7 +479,7 @@ class ControlUnit(BaseControlUnit):
                 )
                 if is_valid_event(event_data=event_data, schema=DEVICE_ERROR_EVENT_SCHEMA):
                     self._hass.bus.fire(
-                        event_type=hm_event_type.value,
+                        event_type=event_type.value,
                         event_data=event_data,
                     )
 
@@ -511,15 +511,15 @@ class ControlUnit(BaseControlUnit):
         data_point_type: type[_DATA_POINT_T] | UnionType,
     ) -> tuple[_DATA_POINT_T, ...]:
         """Return all data points by type."""
-        platform = (
-            data_point_type.__args__[0].default_platform()
+        category = (
+            data_point_type.__args__[0].default_category()
             if isinstance(data_point_type, UnionType)
-            else data_point_type.default_platform()
+            else data_point_type.default_category()
         )
         return cast(
             tuple[_DATA_POINT_T, ...],
             self.central.get_data_points(
-                platform=platform,
+                category=category,
                 exclude_no_create=True,
                 registered=False,
             ),
@@ -533,7 +533,7 @@ class ControlUnit(BaseControlUnit):
         return cast(
             tuple[_DATA_POINT_T, ...],
             self.central.get_hub_data_points(
-                platform=data_point_type.default_platform(),
+                category=data_point_type.default_category(),
                 registered=False,
             ),
         )
@@ -779,7 +779,7 @@ class HmScheduler:
         )
 
 
-def signal_new_data_point(entry_id: str, platform: HmPlatform) -> str:
+def signal_new_data_point(entry_id: str, platform: DataPointCategory) -> str:
     """Gateway specific event to signal new device."""
     return f"{DOMAIN}-new-data-point-{entry_id}-{platform.value}"
 

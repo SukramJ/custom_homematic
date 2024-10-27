@@ -5,10 +5,10 @@ from __future__ import annotations
 import logging
 from typing import Any, Final
 
-from hahomematic.const import HmPlatform
-from hahomematic.platforms.custom import CustomDpSwitch
-from hahomematic.platforms.generic import DpSwitch
-from hahomematic.platforms.hub import SysvarDpSwitch
+from hahomematic.const import DataPointCategory
+from hahomematic.model.custom import CustomDpSwitch
+from hahomematic.model.generic import DpSwitch
+from hahomematic.model.hub import SysvarDpSwitch
 import voluptuous as vol
 
 from homeassistant.components.switch import SwitchEntity
@@ -64,14 +64,18 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.SWITCH),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.SWITCH
+            ),
             target=async_add_switch,
         )
     )
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(entry_id=entry.entry_id, platform=HmPlatform.HUB_SWITCH),
+            signal=signal_new_data_point(
+                entry_id=entry.entry_id, platform=DataPointCategory.HUB_SWITCH
+            ),
             target=async_add_hub_switch,
         )
     )
