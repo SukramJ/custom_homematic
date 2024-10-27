@@ -1,6 +1,7 @@
 # Version 1.69.0 (2024-10-27)
-- Bump hahomematic to 2024.10.15
-  - Rename entity to data point to better distinguish from HA
+- Bump hahomematic to 2024.10.16
+  - Optimize MASTER data load
+  - Rename model to better distinguish from HA
 - Add missing action icons
 - Follow backend changes
 
