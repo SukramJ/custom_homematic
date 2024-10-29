@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from hahomematic.const import EVENT_ADDRESS, EVENT_INTERFACE_ID, DeviceFirmwareState
+from hahomematic.const import DeviceFirmwareState, EventKey
 import pytest
 from pytest_homeassistant_custom_component.components.recorder.common import (
     async_wait_recording_done,
@@ -92,8 +92,8 @@ async def no_test_event_entity_un_recorded(
         hass=hass, control=control, entity_id=entity_id, entity_name=entity_name
     )
     assert ha_state.state == STATE_UNKNOWN
-    assert ha_state.attributes[EVENT_ADDRESS] == "VCU2128127:1"
-    assert ha_state.attributes[EVENT_INTERFACE_ID] == "CentralTest-BidCos-RF"
+    assert ha_state.attributes[EventKey.ADDRESS] == "VCU2128127:1"
+    assert ha_state.attributes[EventKey.INTERFACE_ID] == "CentralTest-BidCos-RF"
     assert ha_state.attributes[EVENT_MODEL] == "HmIP-BSM"
     await async_wait_recording_done(hass)
 
@@ -109,8 +109,8 @@ async def no_test_event_entity_un_recorded(
     for entity_states in states.values():
         for state in entity_states:
             if state.entity_id == entity_id:
-                assert EVENT_ADDRESS not in state.attributes
-                assert EVENT_INTERFACE_ID not in state.attributes
+                assert EventKey.ADDRESS not in state.attributes
+                assert EventKey.INTERFACE_ID not in state.attributes
                 assert EVENT_MODEL not in state.attributes
                 break
 
