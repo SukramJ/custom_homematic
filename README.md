@@ -535,7 +535,18 @@ The `ERROR*` parameters are evaluated for this event type in the backend.
 Go to the devices page of the integration and select a device. Click the three-dot menu at the button and press Delete.
 This will only delete the device from Home Assistant and not from the CCU.
 
-### What is the meaning of `XmlRPC-Server received no events`?
+### What is the meaning of `Error fetching initial data` / `Fehler beim Abrufen der Anfangsdaten`?
+
+This integration uses a [REGA script](https://github.com/danielperna84/hahomematic/blob/devel/hahomematic/rega_scripts/fetch_all_device_data.fn) to fetch as much data in a single call as possible, to avoid multiple request to get the required initial data.
+In rare cases the output of the script can be invalid, so a further processing is not possible, and the fallback solution is to fetch all required data with individual calls, that cause a higher duty cycle during the start phase of the integration.
+
+This problem can be analysed by executing the [REGA script](https://github.com/danielperna84/hahomematic/blob/devel/hahomematic/rega_scripts/fetch_all_device_data.fn) in the CCU. The parameter ##interface## (line 17) must be replaced with the interface mention from the poped-up issue. The expected result is a valid json. 
+Search (search for GET_ALL_DEVICE_DATA) within the issue tracker and discussion forum for related items.
+
+Please don't create an issue, because this is not an issue with the integration. 
+Use an existing discussion or start a new one, and attach the result of the executed REGA script.
+
+### What is the meaning of `XmlRPC-Server received no events` / `XmlRPC-Server empfängt keine Ereignisse`?
 
 This integration does not fetch new updates from the backend, it **receives** state changes and new values for devices from the backend by the XmlRPC server.
 
@@ -546,7 +557,7 @@ This persistent notification is only displayed in HA if the received PONG events
 
 So the message means there is a problem in the communication from the backend to HA that was **identified** by the integration but not **caused**.
 
-### What is the meaning of `Ping/Pong Mismatch on Interface`?
+### What is the meaning of `Pending Pong mismatch on interface` / `Austehende Pong Ereignisse auf Interface`?
 
 Only relevant for CCU.
 

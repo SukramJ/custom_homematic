@@ -564,6 +564,10 @@
         }
     },
     "issues": {
+        "fetch_data": {
+            "description": "Unable to fetch data using a rega script.\n\nThis indicates an issue on your CCU.\n\nUsing fallback, that leeds to a higher DutyCycle during Integration startup for interface {interface_id}",
+            "title": "Error fetching initial data"
+        },
         "interface_not_reachable": {
             "description": "No connection to interface {interface_id}.\n\nThis Integration tries an automatic reconnect.\n\nCheck the Home Assistant log files for more details",
             "title": "Interface {interface_id} not reachable"

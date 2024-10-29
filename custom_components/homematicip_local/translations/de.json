@@ -568,6 +568,10 @@
         }
     },
     "issues": {
+        "fetch_data": {
+            "description": "Daten können mit einem Rega-Skript nicht abgerufen werden.\n\nDies weist auf ein Problem mit Ihrer CCU hin.\n\nDurch die Verwendung eines Fallbacks kommt es zu einem erhöhten DutyCycle beim Integrationsstart für die Schnittstelle {interface_id}",
+            "title": "Fehler beim Abrufen der Anfangsdaten"
+        },
         "interface_not_reachable": {
             "description": "Keine Verbindung zu Schnittstelle {interface_id}.\n\nDiese Integration versucht eine automatische Wiederverbindung.\n\nWeitere Informationen finden Sie in den Protokolldateien von Home Assistant",
             "title": "Interface {interface_id} nicht erreichbar"
