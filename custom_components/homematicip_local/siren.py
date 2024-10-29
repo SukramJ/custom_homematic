@@ -23,7 +23,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
-from .const import SERVICE_TURN_ON_SIREN
+from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import HaHomematicGenericRestoreEntity
 
@@ -56,7 +56,7 @@ async def async_setup_entry(
 
     platform = entity_platform.async_get_current_platform()
     platform.async_register_entity_service(
-        SERVICE_TURN_ON_SIREN,
+        HmipLocalServices.TURN_ON_SIREN,
         {
             vol.Optional(ATTR_TONE): cv.string,
             vol.Optional(ATTR_LIGHT): cv.string,

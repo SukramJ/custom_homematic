@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from hahomematic.const import EVENT_PARAMETER, EventType
+from hahomematic.const import EventKey, EventType
 
 from homeassistant.components.logbook import LOGBOOK_ENTRY_MESSAGE, LOGBOOK_ENTRY_NAME
 from homeassistant.core import Event, HomeAssistant, callback
@@ -25,7 +25,7 @@ def async_describe_events(
         """Describe Homematic(IP) Local logbook device error event."""
         if not is_valid_event(event_data=event.data, schema=DEVICE_ERROR_EVENT_SCHEMA):
             return {}
-        error_name = event.data[EVENT_PARAMETER].replace("_", " ").title()
+        error_name = event.data[EventKey.PARAMETER].replace("_", " ").title()
         error_value = event.data[EVENT_ERROR_VALUE]
         is_error = event.data[EVENT_ERROR]
         error_message = (

@@ -6,7 +6,7 @@ from collections.abc import Mapping
 import logging
 from typing import Any, TypeAlias, TypeVar, cast
 
-from hahomematic.const import EVENT_CHANNEL_NO, EVENT_PARAMETER, EVENT_VALUE, IDENTIFIER_SEPARATOR
+from hahomematic.const import IDENTIFIER_SEPARATOR, EventKey
 from hahomematic.model.custom import CustomDataPoint
 from hahomematic.model.data_point import EVENT_DATA_SCHEMA, CallbackDataPoint
 from hahomematic.model.generic import GenericDataPoint
@@ -46,9 +46,9 @@ CLICK_EVENT_SCHEMA = BASE_EVENT_DATA_SCHEMA.extend(
     {
         vol.Required(CONF_TYPE): str,
         vol.Required(CONF_SUBTYPE): int,
-        vol.Remove(EVENT_CHANNEL_NO): int,
-        vol.Remove(EVENT_PARAMETER): str,
-        vol.Remove(EVENT_VALUE): vol.Any(bool, int),
+        vol.Remove(str(EventKey.CHANNEL_NO)): int,
+        vol.Remove(str(EventKey.PARAMETER)): str,
+        vol.Remove(str(EventKey.VALUE)): vol.Any(bool, int),
     },
     extra=vol.ALLOW_EXTRA,
 )
@@ -75,17 +75,18 @@ DEVICE_ERROR_EVENT_SCHEMA = BASE_EVENT_DATA_SCHEMA.extend(
 _LOGGER = logging.getLogger(__name__)
 
 
-def cleanup_click_event_data(event_data: dict[str, Any]) -> dict[str, Any]:
+def cleanup_click_event_data(event_data: dict[Any, Any]) -> dict[str, Any]:
     """Cleanup the click_event."""
-    event_data.update(
+    cleand_event_data = {str(key): value for key, value in event_data.items()}
+    cleand_event_data.update(
         {
-            CONF_TYPE: event_data[EVENT_PARAMETER].lower(),
-            CONF_SUBTYPE: event_data[EVENT_CHANNEL_NO],
+            CONF_TYPE: cleand_event_data[EventKey.PARAMETER].lower(),
+            CONF_SUBTYPE: cleand_event_data[EventKey.CHANNEL_NO],
         }
     )
-    del event_data[EVENT_PARAMETER]
-    del event_data[EVENT_CHANNEL_NO]
-    return event_data
+    del cleand_event_data[EventKey.PARAMETER]
+    del cleand_event_data[EventKey.CHANNEL_NO]
+    return cleand_event_data
 
 
 def is_valid_event(event_data: Mapping[str, Any], schema: vol.Schema) -> bool:

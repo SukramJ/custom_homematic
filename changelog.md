@@ -1,9 +1,12 @@
 # Version 1.69.0 (2024-10-27)
-- Bump hahomematic to 2024.10.16
+- Bump hahomematic to 2024.10.17
+  - Fire interface event, if data could not be fetched with script from CCU
   - Optimize MASTER data load
   - Rename model to better distinguish from HA
+  - Use enum for json/event keys
 - Add missing action icons
 - Follow backend changes
+- Use enum for services
 
 # Version 1.68.1 (2024-10-26)
 - Bump hahomematic to 2024.10.14

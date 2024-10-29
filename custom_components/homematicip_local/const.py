@@ -11,7 +11,7 @@ from homeassistant.const import Platform
 
 DOMAIN: Final = "homematicip_local"
 HMIP_LOCAL_MIN_HA_VERSION: Final = "2024.10.0dev0"
-HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.10.16"
+HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.10.17"
 
 DEFAULT_DEVICE_FIRMWARE_CHECK_ENABLED: Final = True
 DEFAULT_DEVICE_FIRMWARE_CHECK_INTERVAL: Final = 21600  # 6h
@@ -56,71 +56,42 @@ EVENT_NAME: Final = "name"
 EVENT_TITLE: Final = "title"
 EVENT_UNAVAILABLE: Final = "unavailable"
 
-SERVICE_CLEAR_CACHE: Final = "clear_cache"
-SERVICE_COPY_SCHEDULE: Final = "copy_schedule"
-SERVICE_COPY_SCHEDULE_PROFILE: Final = "copy_schedule_profile"
-SERVICE_CREATE_CENTRAL_LINKS: Final = "create_central_links"
-SERVICE_DISABLE_AWAY_MODE: Final = "disable_away_mode"
-SERVICE_ENABLE_AWAY_MODE_BY_CALENDAR: Final = "enable_away_mode_by_calendar"
-SERVICE_ENABLE_AWAY_MODE_BY_DURATION: Final = "enable_away_mode_by_duration"
-SERVICE_EXPORT_DEVICE_DEFINITION: Final = "export_device_definition"
-SERVICE_FETCH_SYSTEM_VARIABLES: Final = "fetch_system_variables"
-SERVICE_FORCE_DEVICE_AVAILABILITY: Final = "force_device_availability"
-SERVICE_GET_DEVICE_VALUE: Final = "get_device_value"
-SERVICE_GET_LINK_PARAMSET: Final = "get_link_paramset"
-SERVICE_GET_LINK_PEERS: Final = "get_link_peers"
-SERVICE_GET_PARAMSET: Final = "get_paramset"
-SERVICE_GET_SCHEDULE_PROFILE: Final = "get_schedule_profile"
-SERVICE_GET_SCHEDULE_PROFILE_WEEKDAY: Final = "get_schedule_profile_weekday"
-SERVICE_LIGHT_SET_ON_TIME: Final = "light_set_on_time"
-SERVICE_PUT_LINK_PARAMSET: Final = "put_link_paramset"
-SERVICE_PUT_PARAMSET: Final = "put_paramset"
-SERVICE_REMOVE_CENTRAL_LINKS: Final = "remove_central_links"
-SERVICE_SET_COVER_COMBINED_POSITION: Final = "set_cover_combined_position"
-SERVICE_SET_DEVICE_VALUE: Final = "set_device_value"
-SERVICE_SET_INSTALL_MODE: Final = "set_install_mode"
-SERVICE_SET_SCHEDULE_PROFILE: Final = "set_schedule_profile"
-SERVICE_SET_SCHEDULE_PROFILE_WEEKDAY: Final = "set_schedule_profile_weekday"
-SERVICE_SET_SCHEDULE_SIMPLE_PROFILE: Final = "set_schedule_simple_profile"
-SERVICE_SET_SCHEDULE_SIMPLE_PROFILE_WEEKDAY: Final = "set_schedule_simple_profile_weekday"
-SERVICE_SET_VARIABLE_VALUE: Final = "set_variable_value"
-SERVICE_SWITCH_SET_ON_TIME: Final = "switch_set_on_time"
-SERVICE_TURN_ON_SIREN: Final = "turn_on_siren"
-SERVICE_UPDATE_DEVICE_FIRMWARE_DATA: Final = "update_device_firmware_data"
 
-HMIP_LOCAL_SERVICES: Final = (
-    SERVICE_CLEAR_CACHE,
-    SERVICE_COPY_SCHEDULE,
-    SERVICE_COPY_SCHEDULE_PROFILE,
-    SERVICE_CREATE_CENTRAL_LINKS,
-    SERVICE_DISABLE_AWAY_MODE,
-    SERVICE_ENABLE_AWAY_MODE_BY_CALENDAR,
-    SERVICE_ENABLE_AWAY_MODE_BY_DURATION,
-    SERVICE_EXPORT_DEVICE_DEFINITION,
-    SERVICE_FETCH_SYSTEM_VARIABLES,
-    SERVICE_FORCE_DEVICE_AVAILABILITY,
-    SERVICE_GET_DEVICE_VALUE,
-    SERVICE_GET_LINK_PARAMSET,
-    SERVICE_GET_LINK_PEERS,
-    SERVICE_GET_PARAMSET,
-    SERVICE_GET_SCHEDULE_PROFILE,
-    SERVICE_GET_SCHEDULE_PROFILE_WEEKDAY,
-    SERVICE_LIGHT_SET_ON_TIME,
-    SERVICE_PUT_LINK_PARAMSET,
-    SERVICE_PUT_PARAMSET,
-    SERVICE_REMOVE_CENTRAL_LINKS,
-    SERVICE_SET_COVER_COMBINED_POSITION,
-    SERVICE_SET_DEVICE_VALUE,
-    SERVICE_SET_INSTALL_MODE,
-    SERVICE_SET_SCHEDULE_PROFILE,
-    SERVICE_SET_SCHEDULE_PROFILE_WEEKDAY,
-    SERVICE_SET_SCHEDULE_SIMPLE_PROFILE,
-    SERVICE_SET_SCHEDULE_SIMPLE_PROFILE_WEEKDAY,
-    SERVICE_SET_VARIABLE_VALUE,
-    SERVICE_SWITCH_SET_ON_TIME,
-    SERVICE_TURN_ON_SIREN,
-    SERVICE_UPDATE_DEVICE_FIRMWARE_DATA,
-)
+class HmipLocalServices(StrEnum):
+    """Enum with services."""
+
+    CLEAR_CACHE = "clear_cache"
+    COPY_SCHEDULE = "copy_schedule"
+    COPY_SCHEDULE_PROFILE = "copy_schedule_profile"
+    CREATE_CENTRAL_LINKS = "create_central_links"
+    DISABLE_AWAY_MODE = "disable_away_mode"
+    ENABLE_AWAY_MODE_BY_CALENDAR = "enable_away_mode_by_calendar"
+    ENABLE_AWAY_MODE_BY_DURATION = "enable_away_mode_by_duration"
+    EXPORT_DEVICE_DEFINITION = "export_device_definition"
+    FETCH_SYSTEM_VARIABLES = "fetch_system_variables"
+    FORCE_DEVICE_AVAILABILITY = "force_device_availability"
+    GET_DEVICE_VALUE = "get_device_value"
+    GET_LINK_PARAMSET = "get_link_paramset"
+    GET_LINK_PEERS = "get_link_peers"
+    GET_PARAMSET = "get_paramset"
+    GET_SCHEDULE_PROFILE = "get_schedule_profile"
+    GET_SCHEDULE_PROFILE_WEEKDAY = "get_schedule_profile_weekday"
+    LIGHT_SET_ON_TIME = "light_set_on_time"
+    PUT_LINK_PARAMSET = "put_link_paramset"
+    PUT_PARAMSET = "put_paramset"
+    REMOVE_CENTRAL_LINKS = "remove_central_links"
+    SET_COVER_COMBINED_POSITION = "set_cover_combined_position"
+    SET_DEVICE_VALUE = "set_device_value"
+    SET_INSTALL_MODE = "set_install_mode"
+    SET_SCHEDULE_PROFILE = "set_schedule_profile"
+    SET_SCHEDULE_PROFILE_WEEKDAY = "set_schedule_profile_weekday"
+    SET_SCHEDULE_SIMPLE_PROFILE = "set_schedule_simple_profile"
+    SET_SCHEDULE_SIMPLE_PROFILE_WEEKDAY = "set_schedule_simple_profile_weekday"
+    SET_VARIABLE_VALUE = "set_variable_value"
+    SWITCH_SET_ON_TIME = "switch_set_on_time"
+    TURN_ON_SIREN = "turn_on_siren"
+    UPDATE_DEVICE_FIRMWARE_DATA = "update_device_firmware_data"
+
 
 TOTAL_SYSVAR: Final[tuple[str, ...]] = (
     "svEnergyCounter_",

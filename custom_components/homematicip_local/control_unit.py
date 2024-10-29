@@ -16,20 +16,12 @@ from hahomematic.const import (
     CALLBACK_TYPE,
     CONF_PASSWORD,
     CONF_USERNAME,
-    EVENT_ADDRESS,
-    EVENT_AVAILABLE,
-    EVENT_DATA,
-    EVENT_INTERFACE_ID,
-    EVENT_PARAMETER,
-    EVENT_PONG_MISMATCH_COUNT,
-    EVENT_SECONDS_SINCE_LAST_EVENT,
-    EVENT_TYPE,
-    EVENT_VALUE,
     IP_ANY_V4,
     PORT_ANY,
     BackendSystemEvent,
     DataPointCategory,
     DeviceFirmwareState,
+    EventKey,
     EventType,
     InterfaceEventType,
     InterfaceName,
@@ -346,17 +338,17 @@ class ControlUnit(BaseControlUnit):
     def _async_homematic_callback(self, event_type: EventType, event_data: dict[str, Any]) -> None:
         """Execute the callback used for device related events."""
 
-        interface_id = event_data[EVENT_INTERFACE_ID]
+        interface_id = event_data[EventKey.INTERFACE_ID]
         if event_type == EventType.INTERFACE:
-            interface_event_type = event_data[EVENT_TYPE]
+            interface_event_type = event_data[EventKey.TYPE]
             issue_id = f"{interface_event_type}-{interface_id}"
             event_data = cast(dict[str, Any], INTERFACE_EVENT_SCHEMA(event_data))
-            data = event_data[EVENT_DATA]
+            data = event_data[EventKey.DATA]
             if interface_event_type == InterfaceEventType.CALLBACK:
                 if not self._enable_system_notifications:
                     _LOGGER.debug("SYSTEM NOTIFICATION disabled for CALLBACK")
                     return
-                if data[EVENT_AVAILABLE]:
+                if data[EventKey.AVAILABLE]:
                     async_delete_issue(hass=self._hass, domain=DOMAIN, issue_id=issue_id)
                 else:
                     async_create_issue(
@@ -368,15 +360,17 @@ class ControlUnit(BaseControlUnit):
                         severity=IssueSeverity.WARNING,
                         translation_key="xmlrpc_server_receives_no_events",
                         translation_placeholders={
-                            EVENT_INTERFACE_ID: interface_id,
-                            EVENT_SECONDS_SINCE_LAST_EVENT: data[EVENT_SECONDS_SINCE_LAST_EVENT],
+                            EventKey.INTERFACE_ID: interface_id,
+                            EventKey.SECONDS_SINCE_LAST_EVENT: data[
+                                EventKey.SECONDS_SINCE_LAST_EVENT
+                            ],
                         },
                     )
             elif interface_event_type == InterfaceEventType.PENDING_PONG:
                 if not self._enable_system_notifications:
                     _LOGGER.debug("SYSTEM NOTIFICATION disabled for PENDING_PONG")
                     return
-                if data[EVENT_PONG_MISMATCH_COUNT] == 0:
+                if data[EventKey.PONG_MISMATCH_COUNT] == 0:
                     async_delete_issue(
                         hass=self._hass,
                         domain=DOMAIN,
@@ -393,11 +387,11 @@ class ControlUnit(BaseControlUnit):
                         translation_key="pending_pong_mismatch",
                         translation_placeholders={
                             CONF_INSTANCE_NAME: self._instance_name,
-                            EVENT_INTERFACE_ID: interface_id,
+                            EventKey.INTERFACE_ID: interface_id,
                         },
                     )
             elif interface_event_type == InterfaceEventType.PROXY:
-                if data[EVENT_AVAILABLE]:
+                if data[EventKey.AVAILABLE]:
                     async_delete_issue(hass=self._hass, domain=DOMAIN, issue_id=issue_id)
                 else:
                     async_create_issue(
@@ -408,12 +402,23 @@ class ControlUnit(BaseControlUnit):
                         severity=IssueSeverity.WARNING,
                         translation_key="interface_not_reachable",
                         translation_placeholders={
-                            EVENT_INTERFACE_ID: interface_id,
+                            EventKey.INTERFACE_ID: interface_id,
                         },
                     )
-
+            elif interface_event_type == InterfaceEventType.FETCH_DATA:
+                async_create_issue(
+                    hass=self._hass,
+                    domain=DOMAIN,
+                    issue_id=issue_id,
+                    is_fixable=False,
+                    severity=IssueSeverity.WARNING,
+                    translation_key="fetch_data",
+                    translation_placeholders={
+                        EventKey.INTERFACE_ID: interface_id,
+                    },
+                )
         else:
-            device_address = event_data[EVENT_ADDRESS]
+            device_address = event_data[EventKey.ADDRESS]
             name: str | None = None
             if device_entry := self._async_get_device_entry(device_address=device_address):
                 name = device_entry.name_by_user or device_entry.name
@@ -426,8 +431,8 @@ class ControlUnit(BaseControlUnit):
                         event_data=event_data,
                     )
             elif event_type == EventType.DEVICE_AVAILABILITY:
-                parameter = event_data[EVENT_PARAMETER]
-                unavailable = event_data[EVENT_VALUE]
+                parameter = event_data[EventKey.PARAMETER]
+                unavailable = event_data[EventKey.VALUE]
                 if parameter in (Parameter.STICKY_UN_REACH, Parameter.UN_REACH):
                     title = f"{DOMAIN.upper()} Device not reachable"
                     event_data.update(
@@ -448,13 +453,13 @@ class ControlUnit(BaseControlUnit):
                             event_data=event_data,
                         )
             elif event_type == EventType.DEVICE_ERROR:
-                error_parameter = event_data[EVENT_PARAMETER]
+                error_parameter = event_data[EventKey.PARAMETER]
                 if error_parameter in FILTER_ERROR_EVENT_PARAMETERS:
                     return
                 error_parameter_display = error_parameter.replace("_", " ").title()
                 title = f"{DOMAIN.upper()} Device Error"
                 error_message: str = ""
-                error_value = event_data[EVENT_VALUE]
+                error_value = event_data[EventKey.VALUE]
                 display_error: bool = False
                 if isinstance(error_value, bool):
                     display_error = error_value

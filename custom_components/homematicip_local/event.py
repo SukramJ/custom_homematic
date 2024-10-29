@@ -5,13 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from hahomematic.const import (
-    CALLBACK_TYPE,
-    DATA_POINT_EVENTS,
-    EVENT_ADDRESS,
-    EVENT_INTERFACE_ID,
-    DataPointCategory,
-)
+from hahomematic.const import CALLBACK_TYPE, DATA_POINT_EVENTS, DataPointCategory, EventKey
 from hahomematic.model.device import Channel, Device
 from hahomematic.model.event import GenericEvent
 
@@ -76,7 +70,7 @@ class HaHomematicEvent(EventEntity):
     _attr_has_entity_name = True
     _attr_should_poll = False
 
-    _unrecorded_attributes = frozenset({EVENT_ADDRESS, EVENT_INTERFACE_ID, EVENT_MODEL})
+    _unrecorded_attributes = frozenset({EventKey.ADDRESS, EventKey.INTERFACE_ID, EVENT_MODEL})
 
     def __init__(
         self,
@@ -97,8 +91,8 @@ class HaHomematicEvent(EventEntity):
             identifiers={(DOMAIN, self._hm_device.identifier)},
         )
         self._attr_extra_state_attributes = {
-            EVENT_INTERFACE_ID: self._hm_device.interface_id,
-            EVENT_ADDRESS: self._hm_channel.address,
+            EventKey.INTERFACE_ID: self._hm_device.interface_id,
+            EventKey.ADDRESS: self._hm_channel.address,
             EVENT_MODEL: self._hm_device.model,
         }
         self._unregister_callbacks: list[CALLBACK_TYPE] = []

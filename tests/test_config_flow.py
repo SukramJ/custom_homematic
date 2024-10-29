@@ -6,7 +6,7 @@ from typing import Any
 from unittest.mock import patch
 
 from hahomematic.const import CONF_PASSWORD, CONF_USERNAME, InterfaceName, SystemInformation
-from hahomematic.exceptions import AuthFailure, NoConnection
+from hahomematic.exceptions import AuthFailure, NoConnectionException
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -495,7 +495,7 @@ async def test_form_cannot_connect(hass: HomeAssistant) -> None:
     with (
         patch(
             "custom_components.homematicip_local.config_flow._async_validate_config_and_get_system_information",
-            side_effect=NoConnection("no host"),
+            side_effect=NoConnectionException("no host"),
         ),
         patch(
             "custom_components.homematicip_local.async_setup_entry",
@@ -546,7 +546,7 @@ async def test_options_form_cannot_connect(
     with (
         patch(
             "custom_components.homematicip_local.config_flow._async_validate_config_and_get_system_information",
-            side_effect=NoConnection("no host"),
+            side_effect=NoConnectionException("no host"),
         ),
         patch(
             "custom_components.homematicip_local.async_setup_entry",

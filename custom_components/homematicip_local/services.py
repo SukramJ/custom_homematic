@@ -28,26 +28,7 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.device_registry import DeviceEntry
 from homeassistant.helpers.service import async_register_admin_service, verify_domain_control
 
-from .const import (
-    DOMAIN,
-    HMIP_LOCAL_SERVICES,
-    SERVICE_CLEAR_CACHE,
-    SERVICE_CREATE_CENTRAL_LINKS,
-    SERVICE_EXPORT_DEVICE_DEFINITION,
-    SERVICE_FETCH_SYSTEM_VARIABLES,
-    SERVICE_FORCE_DEVICE_AVAILABILITY,
-    SERVICE_GET_DEVICE_VALUE,
-    SERVICE_GET_LINK_PARAMSET,
-    SERVICE_GET_LINK_PEERS,
-    SERVICE_GET_PARAMSET,
-    SERVICE_PUT_LINK_PARAMSET,
-    SERVICE_PUT_PARAMSET,
-    SERVICE_REMOVE_CENTRAL_LINKS,
-    SERVICE_SET_DEVICE_VALUE,
-    SERVICE_SET_INSTALL_MODE,
-    SERVICE_SET_VARIABLE_VALUE,
-    SERVICE_UPDATE_DEVICE_FIRMWARE_DATA,
-)
+from .const import DOMAIN, HmipLocalServices
 from .control_unit import ControlUnit
 from .support import get_device_address_at_interface_from_identifiers
 
@@ -83,7 +64,7 @@ BASE_SCHEMA_DEVICE = vol.Schema(
     }
 )
 
-SCHEMA_SERVICE_CREATE_CENTRAL_LINKS = vol.All(
+SCHEMA_CREATE_CENTRAL_LINKS = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_ENTRY_ID),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_ENTRY_ID),
     vol.Schema(
@@ -94,31 +75,31 @@ SCHEMA_SERVICE_CREATE_CENTRAL_LINKS = vol.All(
     ),
 )
 
-SCHEMA_SERVICE_CLEAR_CACHE = vol.Schema(
+SCHEMA_CLEAR_CACHE = vol.Schema(
     {
         vol.Required(CONF_ENTRY_ID): cv.string,
     }
 )
 
-SCHEMA_SERVICE_EXPORT_DEVICE_DEFINITION = vol.Schema(
+SCHEMA_EXPORT_DEVICE_DEFINITION = vol.Schema(
     {
         vol.Required(CONF_DEVICE_ID): cv.string,
     }
 )
 
-SCHEMA_SERVICE_FETCH_SYSTEM_VARIABLES = vol.Schema(
+SCHEMA_FETCH_SYSTEM_VARIABLES = vol.Schema(
     {
         vol.Required(CONF_ENTRY_ID): cv.string,
     }
 )
 
-SCHEMA_SERVICE_FORCE_DEVICE_AVAILABILITY = vol.All(
+SCHEMA_FORCE_DEVICE_AVAILABILITY = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     BASE_SCHEMA_DEVICE,
 )
 
-SCHEMA_SERVICE_GET_DEVICE_VALUE = vol.All(
+SCHEMA_GET_DEVICE_VALUE = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     BASE_SCHEMA_DEVICE.extend(
@@ -129,7 +110,7 @@ SCHEMA_SERVICE_GET_DEVICE_VALUE = vol.All(
     ),
 )
 
-SCHEMA_SERVICE_GET_LINK_PEERS = vol.All(
+SCHEMA_GET_LINK_PEERS = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     BASE_SCHEMA_DEVICE.extend(
@@ -139,14 +120,14 @@ SCHEMA_SERVICE_GET_LINK_PEERS = vol.All(
     ),
 )
 
-SCHEMA_SERVICE_GET_LINK_PARAMSET = vol.All(
+SCHEMA_GET_LINK_PARAMSET = vol.All(
     {
         vol.Optional(CONF_RECEIVER_CHANNEL_ADDRESS): haval.channel_address,
         vol.Optional(CONF_SENDER_CHANNEL_ADDRESS): haval.channel_address,
     }
 )
 
-SCHEMA_SERVICE_GET_PARAMSET = vol.All(
+SCHEMA_GET_PARAMSET = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     BASE_SCHEMA_DEVICE.extend(
@@ -159,7 +140,7 @@ SCHEMA_SERVICE_GET_PARAMSET = vol.All(
     ),
 )
 
-SCHEMA_SERVICE_REMOVE_CENTRAL_LINKS = vol.All(
+SCHEMA_REMOVE_CENTRAL_LINKS = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_ENTRY_ID),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_ENTRY_ID),
     vol.Schema(
@@ -170,7 +151,7 @@ SCHEMA_SERVICE_REMOVE_CENTRAL_LINKS = vol.All(
     ),
 )
 
-SCHEMA_SERVICE_SET_VARIABLE_VALUE = vol.Schema(
+SCHEMA_SET_VARIABLE_VALUE = vol.Schema(
     {
         vol.Required(CONF_ENTRY_ID): cv.string,
         vol.Required(CONF_NAME): cv.string,
@@ -178,7 +159,7 @@ SCHEMA_SERVICE_SET_VARIABLE_VALUE = vol.Schema(
     }
 )
 
-SCHEMA_SERVICE_SET_INSTALL_MODE = vol.Schema(
+SCHEMA_SET_INSTALL_MODE = vol.Schema(
     {
         vol.Required(CONF_INTERFACE_ID): cv.string,
         vol.Optional(CONF_TIME, default=60): cv.positive_int,
@@ -187,7 +168,7 @@ SCHEMA_SERVICE_SET_INSTALL_MODE = vol.Schema(
     }
 )
 
-SCHEMA_SERVICE_SET_DEVICE_VALUE = vol.All(
+SCHEMA_SET_DEVICE_VALUE = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     BASE_SCHEMA_DEVICE.extend(
@@ -204,7 +185,7 @@ SCHEMA_SERVICE_SET_DEVICE_VALUE = vol.All(
     ),
 )
 
-SCHEMA_SERVICE_PUT_LINK_PARAMSET = vol.All(
+SCHEMA_PUT_LINK_PARAMSET = vol.All(
     {
         vol.Optional(CONF_RECEIVER_CHANNEL_ADDRESS): haval.channel_address,
         vol.Optional(CONF_SENDER_CHANNEL_ADDRESS): haval.channel_address,
@@ -213,7 +194,7 @@ SCHEMA_SERVICE_PUT_LINK_PARAMSET = vol.All(
     }
 )
 
-SCHEMA_SERVICE_PUT_PARAMSET = vol.All(
+SCHEMA_PUT_PARAMSET = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     BASE_SCHEMA_DEVICE.extend(
@@ -229,7 +210,7 @@ SCHEMA_SERVICE_PUT_PARAMSET = vol.All(
     ),
 )
 
-SCHEMA_SERVICE_UPDATE_DEVICE_FIRMWARE_DATA = vol.Schema(
+SCHEMA_UPDATE_DEVICE_FIRMWARE_DATA = vol.Schema(
     {
         vol.Required(CONF_ENTRY_ID): cv.string,
     }
@@ -244,162 +225,162 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         """Call correct Homematic(IP) Local service."""
         service_name = service.service
 
-        if service_name == SERVICE_CREATE_CENTRAL_LINKS:
+        if service_name == HmipLocalServices.CREATE_CENTRAL_LINKS:
             await _async_service_create_central_link(hass=hass, service=service)
-        elif service_name == SERVICE_CLEAR_CACHE:
+        elif service_name == HmipLocalServices.CLEAR_CACHE:
             await _async_service_clear_cache(hass=hass, service=service)
-        elif service_name == SERVICE_EXPORT_DEVICE_DEFINITION:
+        elif service_name == HmipLocalServices.EXPORT_DEVICE_DEFINITION:
             await _async_service_export_device_definition(hass=hass, service=service)
-        elif service_name == SERVICE_FETCH_SYSTEM_VARIABLES:
+        elif service_name == HmipLocalServices.FETCH_SYSTEM_VARIABLES:
             await _async_service_fetch_system_variables(hass=hass, service=service)
-        elif service_name == SERVICE_FORCE_DEVICE_AVAILABILITY:
+        elif service_name == HmipLocalServices.FORCE_DEVICE_AVAILABILITY:
             await _async_service_force_device_availability(hass=hass, service=service)
-        elif service_name == SERVICE_GET_DEVICE_VALUE:
+        elif service_name == HmipLocalServices.GET_DEVICE_VALUE:
             return await _async_service_get_device_value(hass=hass, service=service)
-        elif service_name == SERVICE_GET_LINK_PEERS:
+        elif service_name == HmipLocalServices.GET_LINK_PEERS:
             return await _async_service_get_link_peers(hass=hass, service=service)
-        elif service_name == SERVICE_GET_LINK_PARAMSET:
+        elif service_name == HmipLocalServices.GET_LINK_PARAMSET:
             return await _async_service_get_link_paramset(hass=hass, service=service)
-        elif service_name == SERVICE_GET_PARAMSET:
+        elif service_name == HmipLocalServices.GET_PARAMSET:
             return await _async_service_get_paramset(hass=hass, service=service)
-        elif service_name == SERVICE_PUT_LINK_PARAMSET:
+        elif service_name == HmipLocalServices.PUT_LINK_PARAMSET:
             await _async_service_put_link_paramset(hass=hass, service=service)
-        elif service_name == SERVICE_PUT_PARAMSET:
+        elif service_name == HmipLocalServices.PUT_PARAMSET:
             await _async_service_put_paramset(hass=hass, service=service)
-        elif service_name == SERVICE_REMOVE_CENTRAL_LINKS:
+        elif service_name == HmipLocalServices.REMOVE_CENTRAL_LINKS:
             await _async_service_remove_central_link(hass=hass, service=service)
-        elif service_name == SERVICE_SET_INSTALL_MODE:
+        elif service_name == HmipLocalServices.SET_INSTALL_MODE:
             await _async_service_set_install_mode(hass=hass, service=service)
-        elif service_name == SERVICE_SET_DEVICE_VALUE:
+        elif service_name == HmipLocalServices.SET_DEVICE_VALUE:
             await _async_service_set_device_value(hass=hass, service=service)
-        elif service_name == SERVICE_SET_VARIABLE_VALUE:
+        elif service_name == HmipLocalServices.SET_VARIABLE_VALUE:
             await _async_service_set_variable_value(hass=hass, service=service)
-        elif service_name == SERVICE_UPDATE_DEVICE_FIRMWARE_DATA:
+        elif service_name == HmipLocalServices.UPDATE_DEVICE_FIRMWARE_DATA:
             await _async_service_update_device_firmware_data(hass=hass, service=service)
         return None
 
     async_register_admin_service(
         hass=hass,
         domain=DOMAIN,
-        service=SERVICE_CREATE_CENTRAL_LINKS,
+        service=HmipLocalServices.CREATE_CENTRAL_LINKS,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_CREATE_CENTRAL_LINKS,
+        schema=SCHEMA_CREATE_CENTRAL_LINKS,
     )
 
     async_register_admin_service(
         hass=hass,
         domain=DOMAIN,
-        service=SERVICE_CLEAR_CACHE,
+        service=HmipLocalServices.CLEAR_CACHE,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_CLEAR_CACHE,
+        schema=SCHEMA_CLEAR_CACHE,
     )
 
     async_register_admin_service(
         hass=hass,
         domain=DOMAIN,
-        service=SERVICE_EXPORT_DEVICE_DEFINITION,
+        service=HmipLocalServices.EXPORT_DEVICE_DEFINITION,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_EXPORT_DEVICE_DEFINITION,
+        schema=SCHEMA_EXPORT_DEVICE_DEFINITION,
     )
 
     async_register_admin_service(
         hass=hass,
         domain=DOMAIN,
-        service=SERVICE_FETCH_SYSTEM_VARIABLES,
+        service=HmipLocalServices.FETCH_SYSTEM_VARIABLES,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_FETCH_SYSTEM_VARIABLES,
+        schema=SCHEMA_FETCH_SYSTEM_VARIABLES,
     )
 
     async_register_admin_service(
         hass=hass,
         domain=DOMAIN,
-        service=SERVICE_FORCE_DEVICE_AVAILABILITY,
+        service=HmipLocalServices.FORCE_DEVICE_AVAILABILITY,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_FORCE_DEVICE_AVAILABILITY,
+        schema=SCHEMA_FORCE_DEVICE_AVAILABILITY,
     )
 
     hass.services.async_register(
         domain=DOMAIN,
-        service=SERVICE_GET_DEVICE_VALUE,
+        service=HmipLocalServices.GET_DEVICE_VALUE,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_GET_DEVICE_VALUE,
+        schema=SCHEMA_GET_DEVICE_VALUE,
         supports_response=SupportsResponse.OPTIONAL,
     )
 
     hass.services.async_register(
         domain=DOMAIN,
-        service=SERVICE_GET_LINK_PEERS,
+        service=HmipLocalServices.GET_LINK_PEERS,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_GET_LINK_PEERS,
+        schema=SCHEMA_GET_LINK_PEERS,
         supports_response=SupportsResponse.OPTIONAL,
     )
 
     hass.services.async_register(
         domain=DOMAIN,
-        service=SERVICE_GET_LINK_PARAMSET,
+        service=HmipLocalServices.GET_LINK_PARAMSET,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_GET_LINK_PARAMSET,
+        schema=SCHEMA_GET_LINK_PARAMSET,
         supports_response=SupportsResponse.OPTIONAL,
     )
 
     hass.services.async_register(
         domain=DOMAIN,
-        service=SERVICE_GET_PARAMSET,
+        service=HmipLocalServices.GET_PARAMSET,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_GET_PARAMSET,
+        schema=SCHEMA_GET_PARAMSET,
         supports_response=SupportsResponse.OPTIONAL,
     )
 
     async_register_admin_service(
         hass=hass,
         domain=DOMAIN,
-        service=SERVICE_REMOVE_CENTRAL_LINKS,
+        service=HmipLocalServices.REMOVE_CENTRAL_LINKS,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_REMOVE_CENTRAL_LINKS,
+        schema=SCHEMA_REMOVE_CENTRAL_LINKS,
     )
 
     hass.services.async_register(
         domain=DOMAIN,
-        service=SERVICE_SET_VARIABLE_VALUE,
+        service=HmipLocalServices.SET_VARIABLE_VALUE,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_SET_VARIABLE_VALUE,
+        schema=SCHEMA_SET_VARIABLE_VALUE,
     )
 
     hass.services.async_register(
         domain=DOMAIN,
-        service=SERVICE_SET_DEVICE_VALUE,
+        service=HmipLocalServices.SET_DEVICE_VALUE,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_SET_DEVICE_VALUE,
+        schema=SCHEMA_SET_DEVICE_VALUE,
     )
 
     async_register_admin_service(
         hass=hass,
         domain=DOMAIN,
-        service=SERVICE_SET_INSTALL_MODE,
+        service=HmipLocalServices.SET_INSTALL_MODE,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_SET_INSTALL_MODE,
+        schema=SCHEMA_SET_INSTALL_MODE,
     )
 
     hass.services.async_register(
         domain=DOMAIN,
-        service=SERVICE_PUT_LINK_PARAMSET,
+        service=HmipLocalServices.PUT_LINK_PARAMSET,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_PUT_LINK_PARAMSET,
+        schema=SCHEMA_PUT_LINK_PARAMSET,
     )
 
     hass.services.async_register(
         domain=DOMAIN,
-        service=SERVICE_PUT_PARAMSET,
+        service=HmipLocalServices.PUT_PARAMSET,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_PUT_PARAMSET,
+        schema=SCHEMA_PUT_PARAMSET,
     )
 
     async_register_admin_service(
         hass=hass,
         domain=DOMAIN,
-        service=SERVICE_UPDATE_DEVICE_FIRMWARE_DATA,
+        service=HmipLocalServices.UPDATE_DEVICE_FIRMWARE_DATA,
         service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SERVICE_UPDATE_DEVICE_FIRMWARE_DATA,
+        schema=SCHEMA_UPDATE_DEVICE_FIRMWARE_DATA,
     )
 
 
@@ -408,7 +389,7 @@ async def async_unload_services(hass: HomeAssistant) -> None:
     if len(async_get_loaded_config_entries(hass=hass)) > 0:
         return
 
-    for hmip_local_service in HMIP_LOCAL_SERVICES:
+    for hmip_local_service in HmipLocalServices:
         hass.services.async_remove(domain=DOMAIN, service=hmip_local_service)
 
 

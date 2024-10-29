@@ -44,19 +44,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
-from .const import (
-    SERVICE_COPY_SCHEDULE,
-    SERVICE_COPY_SCHEDULE_PROFILE,
-    SERVICE_DISABLE_AWAY_MODE,
-    SERVICE_ENABLE_AWAY_MODE_BY_CALENDAR,
-    SERVICE_ENABLE_AWAY_MODE_BY_DURATION,
-    SERVICE_GET_SCHEDULE_PROFILE,
-    SERVICE_GET_SCHEDULE_PROFILE_WEEKDAY,
-    SERVICE_SET_SCHEDULE_PROFILE,
-    SERVICE_SET_SCHEDULE_PROFILE_WEEKDAY,
-    SERVICE_SET_SCHEDULE_SIMPLE_PROFILE,
-    SERVICE_SET_SCHEDULE_SIMPLE_PROFILE_WEEKDAY,
-)
+from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import HaHomematicGenericEntity, HaHomematicGenericRestoreEntity
 
@@ -143,7 +131,7 @@ async def async_setup_entry(
     platform = entity_platform.async_get_current_platform()
 
     platform.async_register_entity_service(
-        name=SERVICE_ENABLE_AWAY_MODE_BY_CALENDAR,
+        name=HmipLocalServices.ENABLE_AWAY_MODE_BY_CALENDAR,
         schema={
             vol.Optional(ATTR_AWAY_START): cv.datetime,
             vol.Required(ATTR_AWAY_END): cv.datetime,
@@ -154,7 +142,7 @@ async def async_setup_entry(
         func="async_enable_away_mode_by_calendar",
     )
     platform.async_register_entity_service(
-        name=SERVICE_ENABLE_AWAY_MODE_BY_DURATION,
+        name=HmipLocalServices.ENABLE_AWAY_MODE_BY_DURATION,
         schema={
             vol.Required(ATTR_AWAY_HOURS): cv.positive_int,
             vol.Required(ATTR_AWAY_TEMPERATURE, default=18.0): vol.All(
@@ -164,13 +152,13 @@ async def async_setup_entry(
         func="async_enable_away_mode_by_duration",
     )
     platform.async_register_entity_service(
-        name=SERVICE_DISABLE_AWAY_MODE,
+        name=HmipLocalServices.DISABLE_AWAY_MODE,
         schema={},
         func="async_disable_away_mode",
     )
 
     platform.async_register_entity_service(
-        name=SERVICE_COPY_SCHEDULE,
+        name=HmipLocalServices.COPY_SCHEDULE,
         schema={
             vol.Required(ATTR_SOURCE_ENTITY_ID): cv.string,
         },
@@ -178,7 +166,7 @@ async def async_setup_entry(
     )
 
     platform.async_register_entity_service(
-        name=SERVICE_COPY_SCHEDULE_PROFILE,
+        name=HmipLocalServices.COPY_SCHEDULE_PROFILE,
         schema={
             vol.Optional(ATTR_SOURCE_ENTITY_ID): cv.string,
             vol.Required(ATTR_SOURCE_PROFILE): cv.string,
@@ -189,7 +177,7 @@ async def async_setup_entry(
     )
 
     platform.async_register_entity_service(
-        name=SERVICE_GET_SCHEDULE_PROFILE,
+        name=HmipLocalServices.GET_SCHEDULE_PROFILE,
         schema={
             vol.Required(ATTR_PROFILE): cv.string,
         },
@@ -198,7 +186,7 @@ async def async_setup_entry(
     )
 
     platform.async_register_entity_service(
-        name=SERVICE_GET_SCHEDULE_PROFILE_WEEKDAY,
+        name=HmipLocalServices.GET_SCHEDULE_PROFILE_WEEKDAY,
         schema={
             vol.Required(ATTR_PROFILE): cv.string,
             vol.Required(ATTR_WEEKDAY): cv.string,
@@ -208,7 +196,7 @@ async def async_setup_entry(
     )
 
     platform.async_register_entity_service(
-        name=SERVICE_SET_SCHEDULE_PROFILE,
+        name=HmipLocalServices.SET_SCHEDULE_PROFILE,
         schema={
             vol.Required(ATTR_PROFILE): cv.string,
             vol.Required(ATTR_PROFILE_DATA): dict,
@@ -217,7 +205,7 @@ async def async_setup_entry(
     )
 
     platform.async_register_entity_service(
-        name=SERVICE_SET_SCHEDULE_PROFILE_WEEKDAY,
+        name=HmipLocalServices.SET_SCHEDULE_PROFILE_WEEKDAY,
         schema={
             vol.Required(ATTR_PROFILE): cv.string,
             vol.Required(ATTR_WEEKDAY): cv.string,
@@ -227,7 +215,7 @@ async def async_setup_entry(
     )
 
     platform.async_register_entity_service(
-        name=SERVICE_SET_SCHEDULE_SIMPLE_PROFILE,
+        name=HmipLocalServices.SET_SCHEDULE_SIMPLE_PROFILE,
         schema={
             vol.Required(ATTR_PROFILE): cv.string,
             vol.Required(ATTR_BASE_TEMPERATURE): cv.positive_float,
@@ -237,7 +225,7 @@ async def async_setup_entry(
     )
 
     platform.async_register_entity_service(
-        name=SERVICE_SET_SCHEDULE_SIMPLE_PROFILE_WEEKDAY,
+        name=HmipLocalServices.SET_SCHEDULE_SIMPLE_PROFILE_WEEKDAY,
         schema={
             vol.Required(ATTR_PROFILE): cv.string,
             vol.Required(ATTR_WEEKDAY): cv.string,
