@@ -894,7 +894,7 @@
                     "name": "Sender Channel Address"
                 }
             },
-            "name": "Put paramset"
+            "name": "Put link paramset"
         },
         "put_paramset": {
             "description": "Call to putParamset on the RPC XML interface",
