@@ -233,4 +233,4 @@ class HaHomematicLight(HaHomematicGenericRestoreEntity[CustomDpDimmer], LightEnt
     @callback
     def async_set_on_time(self, on_time: float) -> None:
         """Set the on time of the light."""
-        self._data_point.set_on_time(on_time=on_time)
+        self._data_point.set_timer_on_time(on_time=on_time)
