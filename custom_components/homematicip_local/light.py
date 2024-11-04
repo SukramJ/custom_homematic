@@ -83,7 +83,7 @@ async def async_setup_entry(
     platform.async_register_entity_service(
         HmipLocalServices.LIGHT_SET_ON_TIME,
         {
-            vol.Required(ATTR_ON_TIME): vol.All(vol.Coerce(int), vol.Range(min=0, max=8580000)),
+            vol.Required(ATTR_ON_TIME): vol.All(vol.Coerce(int), vol.Range(min=-1, max=8580000)),
         },
         "async_set_on_time",
     )
