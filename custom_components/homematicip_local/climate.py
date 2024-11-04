@@ -438,7 +438,9 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
                 custom_id=source_entity_id
             ),
         ):
-            await source_climate_data_point.copy_schedule(target_climate_entity=self._data_point)
+            await source_climate_data_point.copy_schedule(
+                target_climate_data_point=self._data_point
+            )
 
     async def async_copy_schedule_profile(
         self, source_profile: str, target_profile: str, source_entity_id: str | None = None
@@ -455,7 +457,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
             await source_climate_data_point.copy_schedule_profile(
                 source_profile=source_profile,
                 target_profile=target_profile,
-                target_climate_entity=self._data_point,
+                target_climate_data_point=self._data_point,
             )
         else:
             await self._data_point.copy_schedule_profile(

@@ -1,4 +1,12 @@
+# Version 1.70.0 (2024-11-04)
+
+## What's Changed
+- Bump hahomematic to 2024.11.0
+  - Improve on_time usage
+
 # Version 1.69.0 (2024-10-27)
+
+## What's Changed
 - Bump hahomematic to 2024.10.17
   - Fire interface event, if data could not be fetched with script from CCU
   - Optimize MASTER data load
@@ -9,6 +17,8 @@
 - Use enum for services
 
 # Version 1.68.1 (2024-10-26)
+
+## What's Changed
 - Bump hahomematic to 2024.10.14
   - Use version from module hahomematic
 - Add check if Homematic(IP) local uses the expected version of hahomematic
