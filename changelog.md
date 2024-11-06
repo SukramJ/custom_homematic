@@ -1,8 +1,9 @@
-# Version 1.70.0 (2024-11-04)
+# Version 1.70.0 (2024-11-06)
 
 ## What's Changed
 - Bump hahomematic to 2024.11.0
   - Improve on_time usage
+- Fix copy schedule 
 
 # Version 1.69.0 (2024-10-27)
 
