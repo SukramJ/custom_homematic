@@ -23,8 +23,8 @@ from hahomematic.const import (
     DeviceFirmwareState,
     EventKey,
     EventType,
+    Interface,
     InterfaceEventType,
-    InterfaceName,
     Manufacturer,
     Parameter,
     SystemInformation,
@@ -173,7 +173,7 @@ class BaseControlUnit:
             interface_configs.add(
                 InterfaceConfig(
                     central_name=self._instance_name,
-                    interface=InterfaceName(interface_name),
+                    interface=Interface(interface_name),
                     port=interface[CONF_PORT],
                     remote_path=interface.get(CONF_PATH),
                 )

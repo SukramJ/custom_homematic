@@ -7,7 +7,7 @@ from pprint import pformat
 from typing import Any, Final, cast
 from urllib.parse import urlparse
 
-from hahomematic.const import DEFAULT_TLS, InterfaceName, SystemInformation
+from hahomematic.const import DEFAULT_TLS, Interface, SystemInformation
 from hahomematic.exceptions import AuthFailure, BaseHomematicException
 import voluptuous as vol
 from voluptuous.schema_builder import UNDEFINED, Schema
@@ -150,29 +150,29 @@ def get_interface_schema(use_tls: bool, data: ConfigType, from_config_flow: bool
     """Return the interface schema with or without tls ports."""
     interfaces = data.get(CONF_INTERFACE, {})
     # HmIP-RF
-    if InterfaceName.HMIP_RF in interfaces:
-        hmip_rf_enabled = interfaces.get(InterfaceName.HMIP_RF) is not None
+    if Interface.HMIP_RF in interfaces:
+        hmip_rf_enabled = interfaces.get(Interface.HMIP_RF) is not None
     else:
         hmip_rf_enabled = True
     hmip_port = IF_HMIP_RF_TLS_PORT if use_tls else IF_HMIP_RF_PORT
 
     # BidCos-RF
-    if InterfaceName.BIDCOS_RF in interfaces:
-        bidcos_rf_enabled = interfaces.get(InterfaceName.BIDCOS_RF) is not None
+    if Interface.BIDCOS_RF in interfaces:
+        bidcos_rf_enabled = interfaces.get(Interface.BIDCOS_RF) is not None
     else:
         bidcos_rf_enabled = True
     bidcos_rf_port = IF_BIDCOS_RF_TLS_PORT if use_tls else IF_BIDCOS_RF_PORT
 
     # Virtual devices
-    if InterfaceName.VIRTUAL_DEVICES in interfaces:
-        virtual_devices_enabled = interfaces.get(InterfaceName.VIRTUAL_DEVICES) is not None
+    if Interface.VIRTUAL_DEVICES in interfaces:
+        virtual_devices_enabled = interfaces.get(Interface.VIRTUAL_DEVICES) is not None
     else:
         virtual_devices_enabled = False
     virtual_devices_port = IF_VIRTUAL_DEVICES_TLS_PORT if use_tls else IF_VIRTUAL_DEVICES_PORT
 
     # BidCos-Wired
-    if InterfaceName.BIDCOS_WIRED in interfaces:
-        bidcos_wired_enabled = interfaces.get(InterfaceName.BIDCOS_WIRED) is not None
+    if Interface.BIDCOS_WIRED in interfaces:
+        bidcos_wired_enabled = interfaces.get(Interface.BIDCOS_WIRED) is not None
     else:
         bidcos_wired_enabled = False
     bidcos_wired_port = IF_BIDCOS_WIRED_TLS_PORT if use_tls else IF_BIDCOS_WIRED_PORT
@@ -365,7 +365,9 @@ class DomainConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_ssdp(self, discovery_info: ssdp.SsdpServiceInfo) -> ConfigFlowResult:
         """Handle a discovered HomeMatic CCU."""
         _LOGGER.debug("Homematic(IP) Local SSDP discovery %s", pformat(discovery_info))
-        instance_name = _get_instance_name(friendly_name=discovery_info.upnp.get("friendlyName"))
+        instance_name = (
+            _get_instance_name(friendly_name=discovery_info.upnp.get("friendlyName")) or "CCU"
+        )
         serial = _get_serial(model_description=discovery_info.upnp.get("modelDescription"))
 
         host = cast(str, urlparse(discovery_info.ssdp_location).hostname)
@@ -507,20 +509,20 @@ def _update_interface_input(data: ConfigType, interface_input: ConfigType) -> No
     if interface_input is not None:
         data[CONF_INTERFACE] = {}
         if interface_input[CONF_HMIP_RF_ENABLED] is True:
-            data[CONF_INTERFACE][InterfaceName.HMIP_RF] = {
+            data[CONF_INTERFACE][Interface.HMIP_RF] = {
                 CONF_PORT: interface_input[CONF_HMIP_RF_PORT],
             }
         if interface_input[CONF_BIDCOS_RF_ENABLED] is True:
-            data[CONF_INTERFACE][InterfaceName.BIDCOS_RF] = {
+            data[CONF_INTERFACE][Interface.BIDCOS_RF] = {
                 CONF_PORT: interface_input[CONF_BIDCOS_RF_PORT],
             }
         if interface_input[CONF_VIRTUAL_DEVICES_ENABLED] is True:
-            data[CONF_INTERFACE][InterfaceName.VIRTUAL_DEVICES] = {
+            data[CONF_INTERFACE][Interface.VIRTUAL_DEVICES] = {
                 CONF_PORT: interface_input[CONF_VIRTUAL_DEVICES_PORT],
                 CONF_PATH: interface_input.get(CONF_VIRTUAL_DEVICES_PATH),
             }
         if interface_input[CONF_BIDCOS_WIRED_ENABLED] is True:
-            data[CONF_INTERFACE][InterfaceName.BIDCOS_WIRED] = {
+            data[CONF_INTERFACE][Interface.BIDCOS_WIRED] = {
                 CONF_PORT: interface_input[CONF_BIDCOS_WIRED_PORT],
             }
         if interface_input[CONF_ADVANCED_CONFIG] is False:

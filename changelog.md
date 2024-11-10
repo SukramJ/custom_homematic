@@ -1,3 +1,11 @@
+# Version 1.71.0 (2024-11-10)
+
+## What's Changed
+- Bump hahomematic to 2024.11.1
+  - Add getDeviceDescription, getParamsetDescription, listDevices, getValue, setValue, getParamset, putParamset to json_rpc
+  - Add data_point_path event
+  - Rename event to data_point_event
+
 # Version 1.70.0 (2024-11-06)
 
 ## What's Changed

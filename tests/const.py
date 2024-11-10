@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from hahomematic.const import InterfaceName, ProgramData, SystemVariableData, SysvarType
+from hahomematic.const import Interface, ProgramData, SystemVariableData, SysvarType
 
 CONFIG_ENTRY_ID = "12345678"
 CONFIG_ENTRY_UNIQUE_ID = "9876543210"
@@ -10,7 +10,7 @@ DEFAULT_CALLBACK_PORT = 8967
 HOST = "127.0.0.1"
 INSTANCE_NAME = "CentralTest"
 INVALID_PASSWORD = "In_VäLid"
-INTERFACE_ID = f"{INSTANCE_NAME}-{InterfaceName.BIDCOS_RF}"
+INTERFACE_ID = f"{INSTANCE_NAME}-{Interface.BIDCOS_RF}"
 LOCAL_PORT = 2002
 PASSWORD = "pass"
 SERIAL = "0987654321"
