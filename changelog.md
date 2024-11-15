@@ -1,13 +1,14 @@
 # Version 1.71.0 (2024-11-15)
 
 ## What's Changed
-- Bump hahomematic to 2024.11.1
+- Bump hahomematic to 2024.11.2
   - Add basic support for json clients
   - Add data_point_path event
   - Add getDeviceDescription, getParamsetDescription, listDevices, getValue, setValue, getParamset, putParamset to json_rpc
   - Add option to refresh data by interface
   - Add xml_rpc support flag to client
   - Extend DP_KEY with interface_id
+  - Ignore unknown interfaces
   - Rename event to data_point_event
 - Add mqtt support
 
