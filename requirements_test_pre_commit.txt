@@ -1,4 +1,4 @@
 bandit==1.7.10
 codespell==2.3.0
-ruff==0.7.2
+ruff==0.7.3
 yamllint==1.35.1

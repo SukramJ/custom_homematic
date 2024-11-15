@@ -54,6 +54,7 @@ from .const import (
     CONF_INTERFACE,
     CONF_JSON_PORT,
     CONF_LISTEN_ON_ALL_IP,
+    CONF_MQTT_ENABLED,
     CONF_PROGRAM_SCAN_ENABLED,
     CONF_SYS_SCAN_INTERVAL,
     CONF_SYSVAR_SCAN_ENABLED,
@@ -66,6 +67,7 @@ from .const import (
     DEFAULT_DEVICE_FIRMWARE_UPDATING_CHECK_INTERVAL,
     DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS,
     DEFAULT_LISTEN_ON_ALL_IP,
+    DEFAULT_MQTT_ENABLED,
     DEFAULT_PROGRAM_SCAN_ENABLED,
     DEFAULT_SYS_SCAN_INTERVAL,
     DEFAULT_SYSVAR_SCAN_ENABLED,
@@ -83,6 +85,7 @@ from .const import (
     LEARN_MORE_URL_PONG_MISMATCH,
     LEARN_MORE_URL_XMLRPC_SERVER_RECEIVES_NO_EVENTS,
 )
+from .mqtt import MQTTConsumer
 from .support import (
     CLICK_EVENT_SCHEMA,
     DEVICE_AVAILABILITY_EVENT_SCHEMA,
@@ -218,6 +221,8 @@ class ControlUnit(BaseControlUnit):
             hass=self._hass,
             control_unit=self,
         )
+        if control_config.mqtt_enabled:
+            self._mqtt_consumer: Final = MQTTConsumer(hass=self._hass)
 
     async def start_central(self) -> None:
         """Start the central unit."""
@@ -230,9 +235,13 @@ class ControlUnit(BaseControlUnit):
         )
         await super().start_central()
         self._async_add_central_to_device_registry()
+        if self.config.mqtt_enabled:
+            await self._mqtt_consumer.subscribe(central=self._central)
 
     async def stop_central(self, *args: Any) -> None:
         """Stop the central unit."""
+        if self.config.mqtt_enabled:
+            self._mqtt_consumer.unsubscribe(central=self._central)
         if self._scheduler.initialized:
             self._scheduler.de_init()
 
@@ -611,6 +620,7 @@ class ControlConfig:
         self.sys_scan_interval: Final = advanced_config.get(
             CONF_SYS_SCAN_INTERVAL, DEFAULT_SYS_SCAN_INTERVAL
         )
+        self.mqtt_enabled: Final = advanced_config.get(CONF_MQTT_ENABLED, DEFAULT_MQTT_ENABLED)
 
         self.listen_on_all_ip = advanced_config.get(
             CONF_LISTEN_ON_ALL_IP, DEFAULT_LISTEN_ON_ALL_IP

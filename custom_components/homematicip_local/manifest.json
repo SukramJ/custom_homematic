@@ -3,7 +3,7 @@
   "name": "Homematic(IP) Local",
   "codeowners": ["@danielperna84", "@SukramJ"],
   "config_flow": true,
-  "dependencies": [],
+  "dependencies": ["http", "mqtt"],
   "documentation": "https://github.com/danielperna84/custom_homematic",
   "homekit": {},
   "integration_type": "hub",
