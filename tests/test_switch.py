@@ -30,14 +30,14 @@ async def test_switch(factory: helper.Factory) -> None:
     )
     assert ha_state.state == STATE_OFF
 
-    await control.central.event(const.INTERFACE_ID, "VCU2128127:4", "STATE", 1)
+    await control.central.data_point_event(const.INTERFACE_ID, "VCU2128127:4", "STATE", 1)
     await hass.async_block_till_done()
     assert hass.states.get(entity_id).state == STATE_ON
     assert data_point.turn_on.call_count == 0
     await hass.services.async_call("switch", "turn_on", {"entity_id": entity_id}, blocking=True)
     assert data_point.turn_on.call_count == 1
 
-    await control.central.event(const.INTERFACE_ID, "VCU2128127:4", "STATE", 0)
+    await control.central.data_point_event(const.INTERFACE_ID, "VCU2128127:4", "STATE", 0)
     await hass.async_block_till_done()
     assert hass.states.get(entity_id).state == STATE_OFF
     assert data_point.turn_off.call_count == 0
