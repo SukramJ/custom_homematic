@@ -179,7 +179,7 @@ class BaseControlUnit:
                 InterfaceConfig(
                     central_name=self._instance_name,
                     interface=Interface(interface_name),
-                    port=interface[CONF_PORT],
+                    port=interface.get(CONF_PORT),
                     remote_path=interface.get(CONF_PATH),
                 )
             )
@@ -609,7 +609,6 @@ class ControlConfig:
 
         # interface_config
         self.interface_config = data.get(CONF_INTERFACE, {})
-
         # advanced_config
         advanced_config = data.get(CONF_ADVANCED_CONFIG, {})
         self.enable_system_notifications = advanced_config.get(
@@ -624,12 +623,12 @@ class ControlConfig:
         self.sys_scan_interval: Final = advanced_config.get(
             CONF_SYS_SCAN_INTERVAL, DEFAULT_SYS_SCAN_INTERVAL
         )
-        self.mqtt_enabled: Final = advanced_config.get(CONF_MQTT_ENABLED, DEFAULT_MQTT_ENABLED)
-        self.mqtt_prefix: Final = advanced_config.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)
 
         self.listen_on_all_ip = advanced_config.get(
             CONF_LISTEN_ON_ALL_IP, DEFAULT_LISTEN_ON_ALL_IP
         )
+        self.mqtt_enabled: Final = advanced_config.get(CONF_MQTT_ENABLED, DEFAULT_MQTT_ENABLED)
+        self.mqtt_prefix: Final = advanced_config.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)
         self.un_ignore: Final = advanced_config.get(CONF_UN_IGNORE, DEFAULT_UN_IGNORE)
 
     def check_config(self) -> None:
