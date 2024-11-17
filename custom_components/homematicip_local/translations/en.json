@@ -13,9 +13,15 @@
                 "data": {
                     "enable_system_notifications": "Enable system notifications",
                     "listen_on_all_ip": "listen on all ip",
+                    "mqtt_enabled": "enable MQTT",
+                    "mqtt_prefix": "MQTT Prefix",
                     "program_scan_enabled": "enable program scan",
                     "sysvar_scan_enabled": "enable system variable scan",
                     "sysvar_scan_interval": "Sysvar/Program scan interval"
+                },
+                "data_description": {
+                    "mqtt_enabled": "Enable MQTT to support Callbacks for CCU-Jack and CUxD",
+                    "mqtt_prefix": "Define the mqtt prefix used for the CCU-Jack bridge"
                 },
                 "description": "Configure the advanced parameters"
             },
@@ -47,6 +53,8 @@
                     "bidcos_rf_port": "HM-RF Port",
                     "bidcos_wired_enabled": "enable BidCos-Wired (HM-Wired)",
                     "bidcos_wired_port": "BidCos-Wired Port",
+                    "ccu_jack_enabled": "enable CCU-Jack",
+                    "cuxd_enabled": "enable CUxD",
                     "hmip_rf_enabled": "enable Homematic IP",
                     "hmip_rf_port": "HmIP-RF Port",
                     "virtual_devices_enabled": "enable Groups (Heating-Group)",
@@ -594,12 +602,16 @@
                 "data": {
                     "enable_system_notifications": "Enable system notifications",
                     "listen_on_all_ip": "listen on all ip",
+                    "mqtt_enabled": "enable MQTT",
+                    "mqtt_prefix": "MQTT Prefix",
                     "program_scan_enabled": "enable program scan",
                     "sysvar_scan_enabled": "enable system variable scan",
                     "sysvar_scan_interval": "Sysvar/Program scan interval",
                     "un_ignore": "UN-IGNORE Parameters"
                 },
                 "data_description": {
+                    "mqtt_enabled": "Enable MQTT to support Callbacks for CCU-Jack and CUxD",
+                    "mqtt_prefix": "Define the mqtt prefix used for the CCU-Jack bridge",
                     "un_ignore": "Check the documentation for information about UN-IGNORE"
                 },
                 "description": "Configure the advanced parameters"
@@ -631,11 +643,19 @@
                     "bidcos_rf_port": "HM-RF Port",
                     "bidcos_wired_enabled": "enable BidCos-Wired (HM-Wired)",
                     "bidcos_wired_port": "BidCos-Wired Port",
+                    "ccu_jack_enabled": "enable CCU-Jack",
+                    "cuxd_enabled": "enable CUxD",
                     "hmip_rf_enabled": "enable Homematic IP",
                     "hmip_rf_port": "HmIP-RF Port",
+                    "mqtt_enabled": "enable MQTT",
+                    "mqtt_prefix": "MQTT Prefix",
                     "virtual_devices_enabled": "enable Groups (Heating-Group)",
                     "virtual_devices_path": "Groups Path",
                     "virtual_devices_port": "Groups Port"
+                },
+                "data_description": {
+                    "mqtt_enabled": "Enable MQTT to support Callbacks for CCU-Jack and CUxD",
+                    "mqtt_prefix": "Define the mqtt prefix used for the CCU-Jack bridge"
                 },
                 "description": "Re-Configure the interfaces to CCU"
             }

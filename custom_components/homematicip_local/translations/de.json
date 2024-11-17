@@ -13,9 +13,15 @@
                 "data": {
                     "enable_system_notifications": "Systembenachrichtigungen aktivieren",
                     "listen_on_all_ip": "Auf allen IP Adressen lauschen",
+                    "mqtt_enabled": "MQTT aktivieren",
+                    "mqtt_prefix": "MQTT Prefix",
                     "program_scan_enabled": "Programm Scan aktivieren",
                     "sysvar_scan_enabled": "Systemvariablen Scan aktivieren",
                     "sysvar_scan_interval": "Sysvar/Program Scan Interval"
+                },
+                "data_description": {
+                    "mqtt_enabled": "Aktiviere MQTT, um Callbacks für CCU-Jack und CUxD zu nutzen",
+                    "mqtt_prefix": "Das für die CCU-Jack-Brücke verwendete MQTT-Präfix"
                 },
                 "description": "Konfiguration der erweiterten Parameter"
             },
@@ -42,19 +48,21 @@
                 "description": "Bitte Pflichtfelder ausfüllen"
             },
             "interface": {
-                "data": {
+                   "data": {
                     "advanced_config": "erweiterte Konfiguration",
                     "bidcos_rf_enabled": "Homematic (Bidcos-RF) aktivieren",
                     "bidcos_rf_port": "HM-RF Port",
                     "bidcos_wired_enabled": "Homematic-Wired (BidCos-Wired) aktivieren",
                     "bidcos_wired_port": "BidCos-Wired Port",
+                    "ccu_jack_enabled": "CCU-Jack aktivieren",
+                    "cuxd_enabled": "CUxD aktivieren",
                     "hmip_rf_enabled": "Homematic IP aktivieren",
                     "hmip_rf_port": "HmIP-RF Port",
                     "virtual_devices_enabled": "Heizgruppen aktivieren",
                     "virtual_devices_path": "Gruppen Pfad",
                     "virtual_devices_port": "Gruppen Port"
                 },
-                "description": "Konfiguration der CCU Schnittstellen"
+                "description": "Neu-Konfiguration der CCU Schnittstellen"
             }
         }
     },
@@ -598,12 +606,16 @@
                 "data": {
                     "enable_system_notifications": "Systembenachrichtigungen aktivieren",
                     "listen_on_all_ip": "Auf allen IP Adressen lauschen",
+                    "mqtt_enabled": "MQTT aktivieren",
+                    "mqtt_prefix": "MQTT Prefix",
                     "program_scan_enabled": "Programm Scan aktivieren",
                     "sysvar_scan_enabled": "Systemvariablen Scan aktivieren",
                     "sysvar_scan_interval": "Sysvar/Program Scan Interval",
                     "un_ignore": "UN-IGNORE Parameter"
                 },
                 "data_description": {
+                    "mqtt_enabled": "Aktiviere MQTT, um Callbacks für CCU-Jack und CUxD zu nutzen",
+                    "mqtt_prefix": "Das für die CCU-Jack-Brücke verwendete MQTT-Präfix",
                     "un_ignore": "Schauen Sie in die Dokumentation für Informationen über UN-IGNORE"
                 },
                 "description": "Konfiguration der erweiterten Parameter"
@@ -635,6 +647,8 @@
                     "bidcos_rf_port": "HM-RF Port",
                     "bidcos_wired_enabled": "Homematic-Wired (BidCos-Wired) aktivieren",
                     "bidcos_wired_port": "BidCos-Wired Port",
+                    "ccu_jack_enabled": "CCU-Jack aktivieren",
+                    "cuxd_enabled": "CUxD aktivieren",
                     "hmip_rf_enabled": "Homematic IP aktivieren",
                     "hmip_rf_port": "HmIP-RF Port",
                     "virtual_devices_enabled": "Heizgruppen aktivieren",
