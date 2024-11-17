@@ -20,6 +20,7 @@ from homeassistant.core import HomeAssistant
 
 from tests import const, helper
 
+pytest_plugins = "pytest_homeassistant_custom_component"  # pylint: disable=invalid-name
 # pylint: disable=protected-access, redefined-outer-name
 
 

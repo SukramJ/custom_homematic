@@ -3,6 +3,7 @@
 async-upnp-client==0.41.0
 hahomematic==2024.11.2
 homeassistant==2024.11.1
+isal==1.7.1
 mypy==1.13.0
 mypy-dev==1.11.0a9
 pre-commit==4.0.1

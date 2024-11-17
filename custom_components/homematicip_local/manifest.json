@@ -1,9 +1,9 @@
 {
   "domain": "homematicip_local",
   "name": "Homematic(IP) Local",
+  "after_dependencies": ["mqtt"],
   "codeowners": ["@danielperna84", "@SukramJ"],
   "config_flow": true,
-  "dependencies": ["mqtt"],
   "documentation": "https://github.com/danielperna84/custom_homematic",
   "homekit": {},
   "integration_type": "hub",
