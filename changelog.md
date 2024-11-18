@@ -1,5 +1,9 @@
 # Version 1.71.0 (2024-11-18)
 
+## New Festures
+- Add CUxD and CCU-Jack support
+- Add mqtt support for CUxD and CCU-Jack
+
 ## What's Changed
 - Bump hahomematic to 2024.11.3
   - Add basic support for json clients
@@ -19,6 +23,7 @@
   - Reduce MAX_CACHE_AGE to 15s
   - Remove clients for not available interfaces
   - Rename event to data_point_event
+- Add CUxD and CCU-Jack support
 - Add mqtt support
 - Add new option to UI (but disabled)
 

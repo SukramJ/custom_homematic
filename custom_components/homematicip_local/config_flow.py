@@ -69,7 +69,6 @@ from .const import (
     DEFAULT_SYSVAR_SCAN_ENABLED,
     DEFAULT_UN_IGNORE,
     DOMAIN,
-    ENABLE_EXPERIMENTAL_FEATURES,
 )
 from .control_unit import ControlConfig, ControlUnit, validate_config_and_get_system_information
 from .support import InvalidConfig
@@ -221,10 +220,6 @@ def get_interface_schema(use_tls: bool, data: ConfigType, from_config_flow: bool
     )
     if from_config_flow:
         del interface_schema.schema[CONF_ADVANCED_CONFIG]
-
-    if not ENABLE_EXPERIMENTAL_FEATURES:
-        del interface_schema.schema[CONF_CCU_JACK_ENABLED]
-        del interface_schema.schema[CONF_CUXD_ENABLED]
     return interface_schema
 
 
@@ -295,9 +290,6 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
     )
     if not all_un_ignore_parameters:
         del advanced_schema.schema[CONF_UN_IGNORE]
-    if not ENABLE_EXPERIMENTAL_FEATURES:
-        del advanced_schema.schema[CONF_MQTT_ENABLED]
-        del advanced_schema.schema[CONF_MQTT_PREFIX]
     return advanced_schema
 
 
@@ -569,11 +561,11 @@ def _update_interface_input(data: ConfigType, interface_input: ConfigType) -> No
         data[CONF_INTERFACE][Interface.BIDCOS_WIRED] = {
             CONF_PORT: interface_input[CONF_BIDCOS_WIRED_PORT],
         }
-    if ENABLE_EXPERIMENTAL_FEATURES:
-        if interface_input[CONF_CCU_JACK_ENABLED] is True:
-            data[CONF_INTERFACE][Interface.CCU_JACK] = {}
-        if interface_input[CONF_CUXD_ENABLED] is True:
-            data[CONF_INTERFACE][Interface.CUXD] = {}
+
+    if interface_input[CONF_CCU_JACK_ENABLED] is True:
+        data[CONF_INTERFACE][Interface.CCU_JACK] = {}
+    if interface_input[CONF_CUXD_ENABLED] is True:
+        data[CONF_INTERFACE][Interface.CUXD] = {}
 
     if interface_input[CONF_ADVANCED_CONFIG] is False:
         data[CONF_ADVANCED_CONFIG] = {}
@@ -593,10 +585,8 @@ def _update_advanced_input(data: ConfigType, advanced_input: ConfigType) -> None
         CONF_ENABLE_SYSTEM_NOTIFICATIONS
     ]
     data[CONF_ADVANCED_CONFIG][CONF_LISTEN_ON_ALL_IP] = advanced_input[CONF_LISTEN_ON_ALL_IP]
-
-    if ENABLE_EXPERIMENTAL_FEATURES:
-        data[CONF_ADVANCED_CONFIG][CONF_MQTT_ENABLED] = advanced_input[CONF_MQTT_ENABLED]
-        data[CONF_ADVANCED_CONFIG][CONF_MQTT_PREFIX] = advanced_input[CONF_MQTT_PREFIX]
+    data[CONF_ADVANCED_CONFIG][CONF_MQTT_ENABLED] = advanced_input[CONF_MQTT_ENABLED]
+    data[CONF_ADVANCED_CONFIG][CONF_MQTT_PREFIX] = advanced_input[CONF_MQTT_PREFIX]
 
     if advanced_input.get(CONF_UN_IGNORE):
         data[CONF_ADVANCED_CONFIG][CONF_UN_IGNORE] = advanced_input[CONF_UN_IGNORE]
