@@ -16,6 +16,7 @@ from hahomematic.const import (
     CALLBACK_TYPE,
     CONF_PASSWORD,
     CONF_USERNAME,
+    INTERFACES_REQUIRING_PERIODIC_REFRESH,
     IP_ANY_V4,
     PORT_ANY,
     BackendSystemEvent,
@@ -198,6 +199,9 @@ class BaseControlUnit:
             default_callback_port=self._default_callback_port,
             host=self._config.host,
             interface_configs=interface_configs,
+            interfaces_requiring_periodic_refresh=()
+            if self._config.mqtt_enabled
+            else INTERFACES_REQUIRING_PERIODIC_REFRESH,
             json_port=self._config.json_port,
             max_read_workers=1,
             name=self._instance_name,

@@ -10,7 +10,7 @@
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/danielperna84/hahomematic/issues",
   "loggers": ["hahomematic"],
-  "requirements": ["hahomematic==2024.11.2"],
+  "requirements": ["hahomematic==2024.11.3"],
   "ssdp": [
     {
       "manufacturer": "EQ3",
