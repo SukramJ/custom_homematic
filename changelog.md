@@ -17,12 +17,14 @@
   - Extend DP_KEY with interface_id
   - Fix returned version of client
   - Ignore unknown interfaces
+  - Improve store tmp value
   - Maintain data_cache by interface
   - Reduce MAX_CACHE_AGE to 15s
   - Remove clients for not available interfaces
   - Rename event to data_point_event
   - Run periodic tasks with an individual interval
-  - Store tmp value for polling client data points
+  - Store temporary value for polling client data points
+  - Store temporary value for sysvar data points
 - Add mqtt support
 - Add new option to UI (but disabled)
 - Remove sysvar/program refresh from scheduler
