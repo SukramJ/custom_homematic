@@ -401,3 +401,17 @@ class HaHomematicGenericSysvarEntity(
         )
         self._data_point: GenericSysvarDataPoint = data_point
         self._attr_extra_state_attributes = {ATTR_NAME: self._data_point.ccu_var_name}
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the state attributes of the generic entity."""
+        attributes: dict[str, Any] = {ATTR_NAME: self._data_point.ccu_var_name}
+        if self._data_point.is_valid:
+            attributes[ATTR_VALUE_STATE] = (
+                HmEntityState.UNCERTAIN
+                if self._data_point.state_uncertain
+                else HmEntityState.VALID
+            )
+        else:
+            attributes[ATTR_VALUE_STATE] = HmEntityState.NOT_VALID
+        return attributes
