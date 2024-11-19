@@ -12,7 +12,7 @@ from homeassistant.const import Platform
 DOMAIN: Final = "homematicip_local"
 HMIP_LOCAL_MIN_HA_VERSION: Final = "2024.10.0dev0"
 ENABLE_EXPERIMENTAL_FEATURES: Final = False
-HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.11.3"
+HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.11.4"
 
 DEFAULT_DEVICE_FIRMWARE_CHECK_ENABLED: Final = True
 DEFAULT_DEVICE_FIRMWARE_CHECK_INTERVAL: Final = 21600  # 6h
@@ -22,10 +22,6 @@ DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS: Final = True
 DEFAULT_LISTEN_ON_ALL_IP: Final = False
 DEFAULT_MQTT_ENABLED: Final = False
 DEFAULT_MQTT_PREFIX: Final = ""
-DEFAULT_PROGRAM_SCAN_ENABLED: Final = True
-DEFAULT_SYSVAR_SCAN_ENABLED: Final = True
-DEFAULT_SYS_SCAN_INTERVAL: Final = 30
-DEFAULT_UN_IGNORE: Final[list[str]] = []
 
 LEARN_MORE_URL_XMLRPC_SERVER_RECEIVES_NO_EVENTS: Final = "https://github.com/danielperna84/custom_homematic?tab=readme-ov-file#what-is-the-meaning-of-xmlrpc-server-received-no-events--xmlrpc-server-empf%C3%A4ngt-keine-ereignisse"
 LEARN_MORE_URL_PONG_MISMATCH: Final = "https://github.com/danielperna84/custom_homematic#what-is-the-meaning-of-pending-pong-mismatch-on-interface--austehende-pong-ereignisse-auf-interface"
@@ -47,7 +43,7 @@ CONF_SUBTYPE: Final = "subtype"
 CONF_SYSVAR_SCAN_ENABLED: Final = "sysvar_scan_enabled"
 CONF_SYS_SCAN_INTERVAL: Final = "sysvar_scan_interval"
 CONF_TLS: Final = "tls"
-CONF_UN_IGNORE: Final = "un_ignore"
+CONF_UN_IGNORES: Final = "un_ignore"
 CONF_VERIFY_TLS: Final = "verify_tls"
 
 EVENT_DEVICE_ID: Final = "device_id"

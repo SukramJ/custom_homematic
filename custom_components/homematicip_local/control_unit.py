@@ -16,6 +16,10 @@ from hahomematic.const import (
     CALLBACK_TYPE,
     CONF_PASSWORD,
     CONF_USERNAME,
+    DEFAULT_PROGRAM_SCAN_ENABLED,
+    DEFAULT_SYS_SCAN_INTERVAL,
+    DEFAULT_SYSVAR_SCAN_ENABLED,
+    DEFAULT_UN_IGNORES,
     INTERFACES_REQUIRING_PERIODIC_REFRESH,
     IP_ANY_V4,
     PORT_ANY,
@@ -61,7 +65,7 @@ from .const import (
     CONF_SYS_SCAN_INTERVAL,
     CONF_SYSVAR_SCAN_ENABLED,
     CONF_TLS,
-    CONF_UN_IGNORE,
+    CONF_UN_IGNORES,
     CONF_VERIFY_TLS,
     DEFAULT_DEVICE_FIRMWARE_CHECK_ENABLED,
     DEFAULT_DEVICE_FIRMWARE_CHECK_INTERVAL,
@@ -71,10 +75,6 @@ from .const import (
     DEFAULT_LISTEN_ON_ALL_IP,
     DEFAULT_MQTT_ENABLED,
     DEFAULT_MQTT_PREFIX,
-    DEFAULT_PROGRAM_SCAN_ENABLED,
-    DEFAULT_SYS_SCAN_INTERVAL,
-    DEFAULT_SYSVAR_SCAN_ENABLED,
-    DEFAULT_UN_IGNORE,
     DOMAIN,
     EVENT_DEVICE_ID,
     EVENT_ERROR,
@@ -210,6 +210,7 @@ class BaseControlUnit:
             start_direct=self._start_direct,
             storage_folder=get_storage_folder(self._hass),
             sysvar_scan_enabled=self._config.sysvar_scan_enabled,
+            sys_scan_interval=self._config.sys_scan_interval,
             tls=self._config.tls,
             un_ignore_list=self._config.un_ignore,
             username=self._config.username,
@@ -520,14 +521,6 @@ class ControlUnit(BaseControlUnit):
             }
         )
 
-    async def fetch_all_system_variables(self) -> None:
-        """Fetch all system variables from CCU / Homegear."""
-        if not self._scheduler.initialized:
-            _LOGGER.debug("Hub scheduler for %s is not initialized", self._instance_name)
-            return
-
-        await self._scheduler.fetch_sysvars()
-
     def get_new_data_points(
         self,
         data_point_type: type[_DATA_POINT_T] | UnionType,
@@ -633,7 +626,7 @@ class ControlConfig:
         )
         self.mqtt_enabled: Final = advanced_config.get(CONF_MQTT_ENABLED, DEFAULT_MQTT_ENABLED)
         self.mqtt_prefix: Final = advanced_config.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)
-        self.un_ignore: Final = advanced_config.get(CONF_UN_IGNORE, DEFAULT_UN_IGNORE)
+        self.un_ignore: Final = advanced_config.get(CONF_UN_IGNORES, DEFAULT_UN_IGNORES)
 
     def check_config(self) -> None:
         """Check config. Throws BaseHomematicException on failure."""
@@ -687,7 +680,6 @@ class HmScheduler:
         self._remove_device_firmware_check_listener: Callable | None = None
         self._remove_device_firmware_delivering_check_listener: Callable | None = None
         self._remove_device_firmware_updating_check_listener: Callable | None = None
-        self._remove_sys_listener: Callable | None = None
         self._sema_init: Final = asyncio.Semaphore()
 
     @property
@@ -701,17 +693,6 @@ class HmScheduler:
             if self._initialized:
                 return
             self._initialized = True
-            if (
-                self._control.config.sysvar_scan_enabled
-                or self._control.config.program_scan_enabled
-            ):
-                # sys_scan_interval == 0 means sysvar scanning is disabled
-                self._remove_sys_listener = async_track_time_interval(
-                    hass=self._hass,
-                    action=self._fetch_sys_data,
-                    interval=timedelta(seconds=self._control.config.sys_scan_interval),
-                    cancel_on_shutdown=True,
-                )
 
             if self._control.config.device_firmware_check_enabled:
                 self._remove_device_firmware_check_listener = async_track_time_interval(
@@ -741,8 +722,6 @@ class HmScheduler:
 
     def de_init(self) -> None:
         """De_init the hub scheduler."""
-        if self._remove_sys_listener and callable(self._remove_sys_listener):
-            self._remove_sys_listener()
         if self._remove_device_firmware_check_listener and callable(
             self._remove_device_firmware_check_listener
         ):
@@ -756,15 +735,6 @@ class HmScheduler:
         ):
             self._remove_device_firmware_updating_check_listener()
         self._initialized = False
-
-    async def _fetch_sys_data(self, now: datetime) -> None:
-        """Fetch data from backend."""
-        await self._central.fetch_program_data(scheduled=True)
-        await self._central.fetch_sysvar_data(scheduled=True)
-
-    async def fetch_sysvars(self) -> None:
-        """Fetch sysvars from backend."""
-        await self._central.fetch_sysvar_data(scheduled=False)
 
     async def _fetch_device_firmware_update_data(self, now: datetime) -> None:
         """Fetch device firmware update data from backend."""

@@ -7,7 +7,15 @@ from pprint import pformat
 from typing import Any, Final, cast
 from urllib.parse import urlparse
 
-from hahomematic.const import DEFAULT_TLS, Interface, SystemInformation
+from hahomematic.const import (
+    DEFAULT_PROGRAM_SCAN_ENABLED,
+    DEFAULT_SYS_SCAN_INTERVAL,
+    DEFAULT_SYSVAR_SCAN_ENABLED,
+    DEFAULT_TLS,
+    DEFAULT_UN_IGNORES,
+    Interface,
+    SystemInformation,
+)
 from hahomematic.exceptions import AuthFailure, BaseHomematicException
 import voluptuous as vol
 from voluptuous.schema_builder import UNDEFINED, Schema
@@ -58,16 +66,12 @@ from .const import (
     CONF_SYS_SCAN_INTERVAL,
     CONF_SYSVAR_SCAN_ENABLED,
     CONF_TLS,
-    CONF_UN_IGNORE,
+    CONF_UN_IGNORES,
     CONF_VERIFY_TLS,
     DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS,
     DEFAULT_LISTEN_ON_ALL_IP,
     DEFAULT_MQTT_ENABLED,
     DEFAULT_MQTT_PREFIX,
-    DEFAULT_PROGRAM_SCAN_ENABLED,
-    DEFAULT_SYS_SCAN_INTERVAL,
-    DEFAULT_SYSVAR_SCAN_ENABLED,
-    DEFAULT_UN_IGNORE,
     DOMAIN,
     ENABLE_EXPERIMENTAL_FEATURES,
 )
@@ -232,7 +236,7 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
     """Return the advanced schema."""
     existing_parameters: list[str] = [
         p
-        for p in data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_UN_IGNORE, DEFAULT_UN_IGNORE)
+        for p in data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_UN_IGNORES, DEFAULT_UN_IGNORES)
         if p in all_un_ignore_parameters
     ]
 
@@ -281,7 +285,7 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
                 ),
             ): TEXT_SELECTOR,
             vol.Optional(
-                CONF_UN_IGNORE,
+                CONF_UN_IGNORES,
                 default=existing_parameters,
             ): SelectSelector(
                 config=SelectSelectorConfig(
@@ -294,7 +298,7 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
         }
     )
     if not all_un_ignore_parameters:
-        del advanced_schema.schema[CONF_UN_IGNORE]
+        del advanced_schema.schema[CONF_UN_IGNORES]
     if not ENABLE_EXPERIMENTAL_FEATURES:
         del advanced_schema.schema[CONF_MQTT_ENABLED]
         del advanced_schema.schema[CONF_MQTT_PREFIX]
@@ -598,8 +602,8 @@ def _update_advanced_input(data: ConfigType, advanced_input: ConfigType) -> None
         data[CONF_ADVANCED_CONFIG][CONF_MQTT_ENABLED] = advanced_input[CONF_MQTT_ENABLED]
         data[CONF_ADVANCED_CONFIG][CONF_MQTT_PREFIX] = advanced_input[CONF_MQTT_PREFIX]
 
-    if advanced_input.get(CONF_UN_IGNORE):
-        data[CONF_ADVANCED_CONFIG][CONF_UN_IGNORE] = advanced_input[CONF_UN_IGNORE]
+    if advanced_input.get(CONF_UN_IGNORES):
+        data[CONF_ADVANCED_CONFIG][CONF_UN_IGNORES] = advanced_input[CONF_UN_IGNORES]
 
 
 def _get_instance_name(friendly_name: Any | None) -> str | None:

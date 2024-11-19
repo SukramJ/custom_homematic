@@ -607,7 +607,8 @@ async def _async_service_fetch_system_variables(hass: HomeAssistant, service: Se
     """Service to fetch system variables from backend."""
     entry_id = service.data[CONF_ENTRY_ID]
     if control := _async_get_control_unit(hass=hass, entry_id=entry_id):
-        await control.fetch_all_system_variables()
+        await control.central.fetch_program_data(scheduled=False)
+        await control.central.fetch_sysvar_data(scheduled=False)
 
 
 async def _async_service_put_link_paramset(hass: HomeAssistant, service: ServiceCall) -> None:

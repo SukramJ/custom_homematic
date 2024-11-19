@@ -1,7 +1,7 @@
 # Version 1.71.0 (2024-11-18)
 
 ## What's Changed
-- Bump hahomematic to 2024.11.3
+- Bump hahomematic to 2024.11.4
   - Add basic support for json clients
   - Add data_point_path event
   - Add getDeviceDescription, getParamsetDescription, listDevices, getValue, setValue, getParamset, putParamset to json_rpc
@@ -10,6 +10,7 @@
   - Add interfaces_requiring_periodic_refresh to config
   - Add option to refresh data by interface
   - Add periodic data refresh to CentralUnitChecker for some interfaces
+  - Add sysvar/program refresh to scheduler
   - Add xml_rpc support flag to client
   - Allow empty port for some interfaces
   - Do reconnect/reload only for affected interfaces
@@ -19,8 +20,11 @@
   - Reduce MAX_CACHE_AGE to 15s
   - Remove clients for not available interfaces
   - Rename event to data_point_event
+  - Run periodic tasks with an individual interval
+  - Store tmp value for polling client data points
 - Add mqtt support
 - Add new option to UI (but disabled)
+- Remove sysvar/program refresh from scheduler
 
 # Version 1.70.0 (2024-11-06)
 
