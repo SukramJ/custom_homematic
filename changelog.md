@@ -1,7 +1,7 @@
 # Version 1.71.0 (2024-11-19)
 
 ## What's Changed
-- Bump hahomematic to 2024.11.6
+- Bump hahomematic to 2024.11.7
   - Add basic support for json clients
   - Add data_point_path event
   - Add getDeviceDescription, getParamsetDescription, listDevices, getValue, setValue, getParamset, putParamset to json_rpc
