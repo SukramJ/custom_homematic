@@ -1,3 +1,9 @@
+# Version 1.71.1 (2024-11-20)
+
+## New Features
+- Add CUxD and CCU-Jack support
+- Add mqtt support for CUxD and CCU-Jack
+
 # Version 1.71.0 (2024-11-19)
 
 ## What's Changed
