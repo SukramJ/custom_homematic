@@ -1,3 +1,7 @@
+# Version 1.7x.0 (2024-11-xx)
+
+- Expand list of unrecorded attributes
+
 # Version 1.71.0 (2024-11-19)
 
 ## What's Changed

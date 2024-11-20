@@ -312,7 +312,12 @@ class HaHomematicGenericHubEntity(Entity):
     _attr_should_poll = False
     _attr_entity_registry_enabled_default = False
 
-    _unrecorded_attributes = frozenset({ATTR_NAME})
+    NO_RECORED_ATTRIBUTES = {
+        ATTR_NAME,
+        ATTR_VALUE_STATE,
+    }
+
+    _unrecorded_attributes = frozenset(NO_RECORED_ATTRIBUTES)
 
     def __init__(
         self,
