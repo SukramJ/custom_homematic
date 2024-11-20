@@ -1,5 +1,9 @@
 # Version 1.73.0 (2024-12-06)
 
+## New Features
+- Add CUxD and CCU-Jack support
+- Add mqtt support for CUxD and CCU-Jack
+
 ## What's Changed
 - Bump hahomematic to 2024.12.0
   - Add BidCos-Wired to list of primary interface candidates
