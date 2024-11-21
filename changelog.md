@@ -1,5 +1,12 @@
-# Version 1.7x.0 (2024-11-xx)
+# Version 1.72.0 (2024-11-21)
 
+## What's Changed
+- Bump hahomematic to 2024.11.8
+  - Add missing @service annotations
+  - Add performance measurement to @service
+  - Don't re-raise exception on internal services
+  - Move @service
+  - Remove @service from abstract methods
 - Expand list of unrecorded attributes
 
 # Version 1.71.0 (2024-11-19)
