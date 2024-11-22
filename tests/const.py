@@ -18,6 +18,7 @@ USERNAME = "user"
 
 SYSVAR_DATA: list[SystemVariableData] = [
     SystemVariableData(
+        vid="1",
         name="sv_alarm",
         data_type=SysvarType.ALARM,
         unit=None,
@@ -28,6 +29,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=False,
     ),
     SystemVariableData(
+        vid="2",
         name="sv_alarm_ext",
         data_type=SysvarType.ALARM,
         unit=None,
@@ -38,6 +40,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=True,
     ),
     SystemVariableData(
+        vid="3",
         name="sv_logic",
         data_type=SysvarType.LOGIC,
         unit=None,
@@ -48,6 +51,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=False,
     ),
     SystemVariableData(
+        vid="4",
         name="sv_logic_ext",
         data_type=SysvarType.LOGIC,
         unit=None,
@@ -58,6 +62,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=True,
     ),
     SystemVariableData(
+        vid="5",
         name="sv_list",
         data_type=SysvarType.LIST,
         unit=None,
@@ -68,6 +73,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=False,
     ),
     SystemVariableData(
+        vid="6",
         name="sv_list_ext",
         data_type=SysvarType.LIST,
         unit=None,
@@ -78,6 +84,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=True,
     ),
     SystemVariableData(
+        vid="7",
         name="sv_string",
         data_type=SysvarType.STRING,
         unit=None,
@@ -88,6 +95,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=False,
     ),
     SystemVariableData(
+        vid="8",
         name="sv_string_ext",
         data_type=SysvarType.STRING,
         unit=None,
@@ -98,6 +106,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=True,
     ),
     SystemVariableData(
+        vid="9",
         name="sv_float",
         data_type=SysvarType.FLOAT,
         unit=None,
@@ -108,6 +117,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=False,
     ),
     SystemVariableData(
+        vid="10",
         name="sv_float_ext",
         data_type=SysvarType.FLOAT,
         unit="°C",
@@ -118,6 +128,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=True,
     ),
     SystemVariableData(
+        vid="11",
         name="sv_integer",
         data_type=SysvarType.INTEGER,
         unit=None,
@@ -128,6 +139,7 @@ SYSVAR_DATA: list[SystemVariableData] = [
         extended_sysvar=False,
     ),
     SystemVariableData(
+        vid="12",
         name="sv_integer_ext",
         data_type=SysvarType.INTEGER,
         unit=None,
