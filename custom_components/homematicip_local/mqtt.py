@@ -6,6 +6,7 @@ import logging
 from typing import Any, Final, cast
 
 from hahomematic.central import CentralUnit
+from hahomematic.const import SYSVAR_STATE_PATH_ROOT
 
 from homeassistant.components.mqtt.models import ReceiveMessage
 from homeassistant.components.mqtt.subscription import (
@@ -46,9 +47,22 @@ class MQTTConsumer:
             async_unsubscribe_topics(self._hass, self._sub_state)
 
     @callback
-    def _on_mqtt_msg_receive(self, msg: ReceiveMessage) -> None:
+    def _on_device_mqtt_msg_receive(self, msg: ReceiveMessage) -> None:
         """Do something on message receive."""
-        _LOGGER.debug("MQTT Message received: %s", msg.payload)
+        _LOGGER.debug("Device MQTT Message received: %s", msg.payload)
+        state_path = (
+            msg.topic[len(self._mqtt_prefix) :]
+            if msg.topic.startswith(self._mqtt_prefix)
+            else msg.topic
+        )
+        payload_dict = json_loads(msg.payload)
+        if (payload_value := cast(dict, payload_dict).get("v")) is not None:
+            self._central.data_point_path_event(state_path=state_path, value=payload_value)
+
+    @callback
+    def _on_sysvar_mqtt_msg_receive(self, msg: ReceiveMessage) -> None:
+        """Do something on message receive."""
+        _LOGGER.debug("Sysvar MQTT Message received: %s", msg.payload)
         state_path = (
             msg.topic[len(self._mqtt_prefix) :]
             if msg.topic.startswith(self._mqtt_prefix)
@@ -68,7 +82,13 @@ class MQTTConsumer:
         for state_path in self._central.get_data_point_path():
             topics[state_path.replace("/", "_")] = {
                 "topic": f"{self._mqtt_prefix}{state_path}",
-                "msg_callback": lambda msg: self._on_mqtt_msg_receive(msg=msg),
+                "msg_callback": lambda msg: self._on_device_mqtt_msg_receive(msg=msg),
                 "qos": 0,
             }
+        topics["sysvar_topics"] = {
+            "topic": f"{SYSVAR_STATE_PATH_ROOT}/#",
+            "msg_callback": lambda msg: self._on_sysvar_mqtt_msg_receive(msg=msg),
+            "qos": 0,
+        }
+
         return topics

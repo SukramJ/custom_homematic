@@ -3,6 +3,7 @@
 ## What's Changed
 - Bump hahomematic to 2024.11.9
   - Make sysvars eventable
+- Add option to receive sysvar changes over mqtt
 
 # Version 1.72.0 (2024-11-21)
 
