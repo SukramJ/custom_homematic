@@ -70,7 +70,7 @@ class MQTTConsumer:
         )
         payload_dict = json_loads(msg.payload)
         if (payload_value := cast(dict, payload_dict).get("v")) is not None:
-            self._central.data_point_path_event(state_path=state_path, value=payload_value)
+            self._central.sysvar_data_point_path_event(state_path=state_path, value=payload_value)
 
     def _mqtt_is_configured(self) -> bool:
         """Check if mqtt is configured."""
@@ -86,7 +86,7 @@ class MQTTConsumer:
                 "qos": 0,
             }
         topics["sysvar_topics"] = {
-            "topic": f"{SYSVAR_STATE_PATH_ROOT}/#",
+            "topic": f"{self._mqtt_prefix}{SYSVAR_STATE_PATH_ROOT}/+",
             "msg_callback": lambda msg: self._on_sysvar_mqtt_msg_receive(msg=msg),
             "qos": 0,
         }
