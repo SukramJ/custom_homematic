@@ -384,6 +384,14 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         state_class=SensorStateClass.TOTAL_INCREASING,
         translation_key="sunshineduration",
     ),
+    "TIME_OF_OPERATION": HmSensorEntityDescription(
+        key="TIME_OF_OPERATION",
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.SECONDS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
     "VALUE": HmSensorEntityDescription(
         key="VALUE",
         state_class=SensorStateClass.MEASUREMENT,
