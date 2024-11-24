@@ -521,6 +521,9 @@
             "temperature": {
                 "name": "Temperatur"
             },
+            "time_of_operation": {
+                "name": "Betriebszeit"
+            },
             "typical_particle_size": {
                 "name": "Tyische Partikelgröße"
             },

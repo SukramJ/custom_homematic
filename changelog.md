@@ -1,9 +1,11 @@
 # Version 1.73.0 (2024-11-22)
 
 ## What's Changed
-- Bump hahomematic to 2024.11.9
+- Bump hahomematic to 2024.11.10
+  - Add TIME_OF_OPERATION to smoke detector
   - Make sysvars eventable
 - Add option to receive sysvar changes over mqtt
+- Add translations for TIME_OF_OPERATION
 
 # Version 1.72.0 (2024-11-21)
 
