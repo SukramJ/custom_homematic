@@ -7,7 +7,7 @@ from decimal import Decimal
 import logging
 from typing import Any
 
-from hahomematic.const import DataPointCategory, ParameterType, SysvarType
+from hahomematic.const import DEFAULT_MULTIPLIER, DataPointCategory, ParameterType, SysvarType
 from hahomematic.model.generic import DpSensor
 from hahomematic.model.hub import SysvarDpSensor
 
@@ -110,7 +110,7 @@ class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
             control_unit=control_unit,
             data_point=data_point,
         )
-        self._multiplier: int = (
+        self._multiplier: float = (
             self.entity_description.multiplier
             if hasattr(self, "entity_description")
             and self.entity_description
@@ -131,9 +131,14 @@ class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
             if (
                 self._data_point.value is not None
                 and self._data_point.hmtype in (ParameterType.FLOAT, ParameterType.INTEGER)
-                and self._multiplier != 1
+                and self._multiplier != DEFAULT_MULTIPLIER
             ):
-                return self._data_point.value * self._multiplier  # type: ignore[no-any-return]
+                new_value = self._data_point.value * self._multiplier
+                return (
+                    int(new_value)
+                    if self._data_point.hmtype == ParameterType.INTEGER
+                    else new_value
+                )
             # Strings and enums with custom device class must be lowercase
             # to be translatable.
             if (

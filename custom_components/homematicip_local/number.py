@@ -106,7 +106,7 @@ class HaHomematicNumber(HaHomematicGenericEntity[BaseDpNumber], RestoreNumber):
             control_unit=control_unit,
             data_point=data_point,
         )
-        self._multiplier: int = (
+        self._multiplier: float = (
             self.entity_description.multiplier
             if hasattr(self, "entity_description")
             and self.entity_description

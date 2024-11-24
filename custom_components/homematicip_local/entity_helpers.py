@@ -83,7 +83,7 @@ class HmEntityDescription:
 class HmNumberEntityDescription(HmEntityDescription, NumberEntityDescription):
     """Class describing Homematic(IP) Local number entities."""
 
-    multiplier: int | None = None
+    multiplier: float | None = None
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -95,7 +95,7 @@ class HmSelectEntityDescription(HmEntityDescription, SelectEntityDescription):
 class HmSensorEntityDescription(HmEntityDescription, SensorEntityDescription):
     """Class describing Homematic(IP) Local sensor entities."""
 
-    multiplier: int | None = None
+    multiplier: float | None = None
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -387,10 +387,10 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     "TIME_OF_OPERATION": HmSensorEntityDescription(
         key="TIME_OF_OPERATION",
         device_class=SensorDeviceClass.DURATION,
-        native_unit_of_measurement=UnitOfTime.SECONDS,
+        multiplier=1 / 86400,
+        native_unit_of_measurement=UnitOfTime.DAYS,
         state_class=SensorStateClass.TOTAL_INCREASING,
         entity_category=EntityCategory.DIAGNOSTIC,
-        entity_registry_enabled_default=False,
     ),
     "VALUE": HmSensorEntityDescription(
         key="VALUE",

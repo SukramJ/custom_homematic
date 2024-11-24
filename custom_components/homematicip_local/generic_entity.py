@@ -89,6 +89,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
             isinstance(data_point, GenericDataPoint)
             and hasattr(self, "entity_description")
             and hasattr(self.entity_description, "native_unit_of_measurement")
+            and data_point.unit is not None
             and self.entity_description.native_unit_of_measurement != data_point.unit
         ):
             _LOGGER.debug(

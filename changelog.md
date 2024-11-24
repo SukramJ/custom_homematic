@@ -4,6 +4,8 @@
 - Bump hahomematic to 2024.11.10
   - Add TIME_OF_OPERATION to smoke detector
   - Make sysvars eventable
+  - Switch multiplier from int to float
+  - Use more constants for cover and light
 - Add option to receive sysvar changes over mqtt
 - Add translations for TIME_OF_OPERATION
 
