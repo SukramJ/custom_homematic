@@ -1,8 +1,9 @@
-# Version 1.73.0 (2024-11-22)
+# Version 1.73.0 (2024-11-25)
 
 ## What's Changed
-- Bump hahomematic to 2024.11.10
+- Bump hahomematic to 2024.11.11
   - Add TIME_OF_OPERATION to smoke detector
+  - Enable central link management for HmIP-wired
   - Make sysvars eventable
   - Switch multiplier from int to float
   - Use more constants for cover and light
