@@ -384,14 +384,6 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         state_class=SensorStateClass.TOTAL_INCREASING,
         translation_key="sunshineduration",
     ),
-    "TIME_OF_OPERATION": HmSensorEntityDescription(
-        key="TIME_OF_OPERATION",
-        device_class=SensorDeviceClass.DURATION,
-        multiplier=1 / 86400,
-        native_unit_of_measurement=UnitOfTime.DAYS,
-        state_class=SensorStateClass.TOTAL_INCREASING,
-        entity_category=EntityCategory.DIAGNOSTIC,
-    ),
     "VALUE": HmSensorEntityDescription(
         key="VALUE",
         state_class=SensorStateClass.MEASUREMENT,
@@ -540,6 +532,15 @@ _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[
         key="FREQUENCY",
         native_unit_of_measurement="mHz",
         translation_key="frequency",
+    ),
+    (("HmIP-SWSD",), "TIME_OF_OPERATION"): HmSensorEntityDescription(
+        key="TIME_OF_OPERATION",
+        device_class=SensorDeviceClass.DURATION,
+        multiplier=1 / 86400,
+        native_unit_of_measurement=UnitOfTime.DAYS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
     ),
     (("HM-CC-RT-DN", "HM-CC-VD"), "VALVE_STATE"): HmSensorEntityDescription(
         key="VALVE_STATE",
