@@ -15,7 +15,12 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import ATTR_NAME, HaHomematicGenericEntity, HaHomematicGenericHubEntity
+from .generic_entity import (
+    ATTR_DESCRIPTION,
+    ATTR_NAME,
+    HaHomematicGenericEntity,
+    HaHomematicGenericHubEntity,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -102,7 +107,10 @@ class HaHomematicProgramButton(HaHomematicGenericHubEntity, ButtonEntity):
             data_point=data_point,
         )
         self._data_point: ProgramDpButton = data_point
-        self._attr_extra_state_attributes = {ATTR_NAME: self._data_point.ccu_program_name}
+        self._attr_extra_state_attributes = {
+            ATTR_NAME: self._data_point.ccu_program_name,
+            ATTR_DESCRIPTION: self._data_point.description,
+        }
 
     async def async_press(self) -> None:
         """Execute a button press."""

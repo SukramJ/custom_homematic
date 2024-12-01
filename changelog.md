@@ -1,7 +1,8 @@
 # Version 1.73.0 (2024-11-30)
 
 ## What's Changed
-- Bump hahomematic to 2024.11.11
+- Bump hahomematic to 2024.12.0
+  - Add description to sysvar and program
   - Add TIME_OF_OPERATION to smoke detector
   - Enable central link management for HmIP-wired
   - Make sysvars eventable
