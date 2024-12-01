@@ -1,6 +1,5 @@
 {
     "config": {
-        "abort": {},
         "error": {
             "cannot_connect": "Verbindung fehlgeschlagen. Weitere Details finden Sie im HA-Protokoll",
             "invalid_auth": "Ung\u00fcltige Authentifizierung",
@@ -597,7 +596,6 @@
         }
     },
     "options": {
-        "abort": {},
         "error": {
             "cannot_connect": "Verbindung fehlgeschlagen. Weitere Details finden Sie im HA-Protokoll",
             "invalid_auth": "Ung\u00fcltige Authentifizierung",
