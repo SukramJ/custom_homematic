@@ -1,14 +1,18 @@
-# Version 1.73.0 (2024-11-30)
+# Version 1.73.0 (2024-12-06)
 
 ## What's Changed
 - Bump hahomematic to 2024.12.0
-  - Add description to sysvar and program
+  - Add BidCos-Wired to list of primary interface candidates
   - Add TIME_OF_OPERATION to smoke detector
+  - Add description to sysvar and program
+  - Add description to sysvar and program
   - Enable central link management for HmIP-wired
   - Make sysvars eventable
+  - Remove obsolete try/except in homegear client
   - Reset temporary values before write
   - Switch multiplier from int to float
   - Use more constants for cover and light
+- Add action get_variable_value
 - Add option to receive sysvar changes over mqtt
 - Add translations for TIME_OF_OPERATION
 

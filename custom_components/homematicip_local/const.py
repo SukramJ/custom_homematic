@@ -76,6 +76,7 @@ class HmipLocalServices(StrEnum):
     GET_PARAMSET = "get_paramset"
     GET_SCHEDULE_PROFILE = "get_schedule_profile"
     GET_SCHEDULE_PROFILE_WEEKDAY = "get_schedule_profile_weekday"
+    GET_VARIABLE_VALUE = "get_variable_value"
     LIGHT_SET_ON_TIME = "light_set_on_time"
     PUT_LINK_PARAMSET = "put_link_paramset"
     PUT_PARAMSET = "put_paramset"

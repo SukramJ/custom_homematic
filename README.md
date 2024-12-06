@@ -464,6 +464,10 @@ __Disclaimer: To much writing to the device could kill your device's storage.__
 Sends the schedule of a climate profile for a certain weekday to a device.
 This is a simplified version of `homematicip_local.set_schedule_profile_weekday` 
 
+### `homematicip_local.get_variable_value`
+
+Get the value variable from your HomeMatic hub.
+
 ### `homematicip_local.set_variable_value`
 
 Set the value of a variable on your HomeMatic hub.

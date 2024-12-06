@@ -885,6 +885,20 @@
             },
             "name": "Get schedule profile weekday"
         },
+        "get_variable_value": {
+            "description": "Read a value of a variable",
+            "fields": {
+                "entry_id": {
+                    "description": "Name(s) of homematic central to read",
+                    "name": "Central"
+                },
+                "name": {
+                    "description": "Name of the variable to read",
+                    "name": "Name"
+                }
+            },
+            "name": "Get variable value"
+        },
         "light_set_on_time": {
             "description": "Set on time for a light entity. Must be followed by a light.turn_on",
             "fields": {
