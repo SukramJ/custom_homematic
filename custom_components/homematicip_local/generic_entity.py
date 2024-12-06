@@ -26,6 +26,7 @@ from .support import HmGenericDataPoint, HmGenericSysvarDataPoint, get_data_poin
 
 _LOGGER = logging.getLogger(__name__)
 ATTR_ADDRESS: Final = "address"
+ATTR_DESCRIPTION: Final = "description"
 ATTR_FUNCTION: Final = "function"
 ATTR_INTERFACE_ID: Final = "interface_id"
 ATTR_MODEL: Final = "model"
@@ -314,6 +315,7 @@ class HaHomematicGenericHubEntity(Entity):
     _attr_entity_registry_enabled_default = False
 
     NO_RECORED_ATTRIBUTES = {
+        ATTR_DESCRIPTION,
         ATTR_NAME,
         ATTR_VALUE_STATE,
     }
@@ -406,12 +408,16 @@ class HaHomematicGenericSysvarEntity(
             data_point=data_point,
         )
         self._data_point: GenericSysvarDataPoint = data_point
-        self._attr_extra_state_attributes = {ATTR_NAME: self._data_point.ccu_var_name}
+        self._static_state_attributes = {
+            ATTR_NAME: self._data_point.ccu_var_name,
+            ATTR_DESCRIPTION: self._data_point.description,
+        }
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return the state attributes of the generic entity."""
-        attributes: dict[str, Any] = {ATTR_NAME: self._data_point.ccu_var_name}
+        attributes: dict[str, Any] = {}
+        attributes.update(self._static_state_attributes)
         if self._data_point.is_valid:
             attributes[ATTR_VALUE_STATE] = (
                 HmEntityState.UNCERTAIN

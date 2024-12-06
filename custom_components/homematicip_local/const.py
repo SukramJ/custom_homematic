@@ -10,9 +10,9 @@ from hahomematic.const import CATEGORIES
 from homeassistant.const import Platform
 
 DOMAIN: Final = "homematicip_local"
-HMIP_LOCAL_MIN_HA_VERSION: Final = "2024.10.0dev0"
+HMIP_LOCAL_MIN_HA_VERSION: Final = "2024.11.3"
 ENABLE_EXPERIMENTAL_FEATURES: Final = False
-HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.11.11"
+HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.12.0"
 
 DEFAULT_DEVICE_FIRMWARE_CHECK_ENABLED: Final = True
 DEFAULT_DEVICE_FIRMWARE_CHECK_INTERVAL: Final = 21600  # 6h
@@ -76,6 +76,7 @@ class HmipLocalServices(StrEnum):
     GET_PARAMSET = "get_paramset"
     GET_SCHEDULE_PROFILE = "get_schedule_profile"
     GET_SCHEDULE_PROFILE_WEEKDAY = "get_schedule_profile_weekday"
+    GET_VARIABLE_VALUE = "get_variable_value"
     LIGHT_SET_ON_TIME = "light_set_on_time"
     PUT_LINK_PARAMSET = "put_link_paramset"
     PUT_PARAMSET = "put_paramset"

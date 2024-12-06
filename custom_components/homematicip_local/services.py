@@ -140,6 +140,13 @@ SCHEMA_GET_PARAMSET = vol.All(
     ),
 )
 
+SCHEMA_GET_VARIABLE_VALUE = vol.Schema(
+    {
+        vol.Required(CONF_ENTRY_ID): cv.string,
+        vol.Required(CONF_NAME): cv.string,
+    }
+)
+
 SCHEMA_REMOVE_CENTRAL_LINKS = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_ENTRY_ID),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_ENTRY_ID),
@@ -243,6 +250,8 @@ async def async_setup_services(hass: HomeAssistant) -> None:
             return await _async_service_get_link_paramset(hass=hass, service=service)
         elif service_name == HmipLocalServices.GET_PARAMSET:
             return await _async_service_get_paramset(hass=hass, service=service)
+        elif service_name == HmipLocalServices.GET_VARIABLE_VALUE:
+            return await _async_service_get_variable_value(hass=hass, service=service)
         elif service_name == HmipLocalServices.PUT_LINK_PARAMSET:
             await _async_service_put_link_paramset(hass=hass, service=service)
         elif service_name == HmipLocalServices.PUT_PARAMSET:
@@ -328,6 +337,14 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         service=HmipLocalServices.GET_PARAMSET,
         service_func=async_call_hmip_local_service,
         schema=SCHEMA_GET_PARAMSET,
+        supports_response=SupportsResponse.OPTIONAL,
+    )
+
+    hass.services.async_register(
+        domain=DOMAIN,
+        service=HmipLocalServices.GET_VARIABLE_VALUE,
+        service_func=async_call_hmip_local_service,
+        schema=SCHEMA_GET_VARIABLE_VALUE,
         supports_response=SupportsResponse.OPTIONAL,
     )
 
@@ -530,6 +547,22 @@ async def _async_service_get_paramset(
                     paramset_key=paramset_key,
                 )
             )
+        except BaseHomematicException as ex:
+            raise HomeAssistantError(ex) from ex
+    return None
+
+
+async def _async_service_get_variable_value(
+    hass: HomeAssistant, service: ServiceCall
+) -> ServiceResponse:
+    """Service to call read value from Homematic(IP) Local system variable."""
+    entry_id = service.data[CONF_ENTRY_ID]
+    name = service.data[CONF_NAME]
+
+    if control := _async_get_control_unit(hass=hass, entry_id=entry_id):
+        try:
+            if (value := await control.central.get_system_variable(name=name)) is not None:
+                return {"result": value}
         except BaseHomematicException as ex:
             raise HomeAssistantError(ex) from ex
     return None

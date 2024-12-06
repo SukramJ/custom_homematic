@@ -39,6 +39,7 @@ EXCLUDE_METHODS_FROM_MOCKS: Final = [
     "unregister_data_point_updated_callback",
     "unregister_internal_data_point_updated_callback",
     "write_value",
+    "write_temporary_value",
 ]
 T = TypeVar("T")
 

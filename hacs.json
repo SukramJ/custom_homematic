@@ -1,6 +1,6 @@
 {
   "name": "Homematic(IP) Local",
   "hide_default_branch": false,
-  "homeassistant": "2024.10.0dev0",
+  "homeassistant": "2024.11.3",
   "hacs": "2.0.0"
 }

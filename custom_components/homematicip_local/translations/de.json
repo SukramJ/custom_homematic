@@ -1,6 +1,5 @@
 {
     "config": {
-        "abort": {},
         "error": {
             "cannot_connect": "Verbindung fehlgeschlagen. Weitere Details finden Sie im HA-Protokoll",
             "invalid_auth": "Ung\u00fcltige Authentifizierung",
@@ -597,7 +596,6 @@
         }
     },
     "options": {
-        "abort": {},
         "error": {
             "cannot_connect": "Verbindung fehlgeschlagen. Weitere Details finden Sie im HA-Protokoll",
             "invalid_auth": "Ung\u00fcltige Authentifizierung",
@@ -884,6 +882,20 @@
                 }
             },
             "name": "Zeitplan abrufen"
+        },
+        "get_variable_value": {
+            "description": "Wert einer Homematic Systemvariable lesen",
+            "fields": {
+                "entry_id": {
+                    "description": "Name der Homematic-Zentrale, um den Wert zu lesen",
+                    "name": "Zentrale"
+                },
+                "name": {
+                    "description": "Name der zu lesenden Systemvariable",
+                    "name": "Name"
+                }
+            },
+            "name": "Wert eines Systemvariable lesen"
         },
         "light_set_on_time": {
             "description": "Stellt die Einschaltdauer für ein Licht ein. Muss von einem light.turn_on gefolgt werden",

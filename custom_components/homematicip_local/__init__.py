@@ -68,7 +68,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: HomematicConfigEntry) ->
         _LOGGER.warning("Homematic(IP) Local setup blocked")
         return False
 
-    if AwesomeVersion(HMIP_LOCAL_MIN_HA_VERSION) >= HA_VERSION:
+    if AwesomeVersion(HMIP_LOCAL_MIN_HA_VERSION) > HA_VERSION:
         _LOGGER.warning(
             "This release of Homematic(IP) Local requires HA version %s and above",
             HMIP_LOCAL_MIN_HA_VERSION,

@@ -233,6 +233,19 @@ get_schedule_profile_weekday:
             - "SATURDAY"
             - "SUNDAY"
 
+get_variable_value:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: homematicip_local
+    name:
+      required: true
+      example: "testvariable"
+      selector:
+        text:
+
 remove_central_links:
   fields:
     entry_id:
