@@ -8,10 +8,12 @@
   - Please use the discussion forum for feedback
 
 ## What's Changed
-- Bump hahomematic to 2024.12.1
+- Bump hahomematic to 2024.12.2
   - Catch orjson.JSONDecodeError on faulthy json script response
+  - Use kelvin instead of mireds for color temp
 - Enable support for CuXD and CCU-Jack (15s polling interval)
 - Enable MQTT support for CuXD, CCU-Jack and system variable refresh (MQTT is needed in CCU description)
+- Return color temperature in kelvin
 
 # Version 1.73.0 (2024-12-06)
 

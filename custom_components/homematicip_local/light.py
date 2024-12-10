@@ -17,7 +17,7 @@ import voluptuous as vol
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
     ATTR_COLOR_MODE,
-    ATTR_COLOR_TEMP,
+    ATTR_COLOR_TEMP_KELVIN,
     ATTR_EFFECT,
     ATTR_HS_COLOR,
     ATTR_TRANSITION,
@@ -91,6 +91,9 @@ async def async_setup_entry(
 
 class HaHomematicLight(HaHomematicGenericRestoreEntity[CustomDpDimmer], LightEntity):
     """Representation of the HomematicIP light entity."""
+
+    _attr_min_color_temp_kelvin = 2000  # 500 Mireds
+    _attr_max_color_temp_kelvin = 6500  # 153 Mireds
 
     @property
     def color_mode(self) -> ColorMode | None:
@@ -175,12 +178,12 @@ class HaHomematicLight(HaHomematicGenericRestoreEntity[CustomDpDimmer], LightEnt
         return None
 
     @property
-    def color_temp(self) -> int | None:
-        """Return the color temperature of this light between 0..255."""
+    def color_temp_kelvin(self) -> int | None:
+        """Return the color temperature in kelvin."""
         if self._data_point.is_valid:
-            return self._data_point.color_temp
+            return self._data_point.color_temp_kelvin
         if self.is_restored and self._restored_state:
-            return self._restored_state.attributes.get(ATTR_COLOR_TEMP)
+            return self._restored_state.attributes.get(ATTR_COLOR_TEMP_KELVIN)
         return None
 
     @property
@@ -205,9 +208,9 @@ class HaHomematicLight(HaHomematicGenericRestoreEntity[CustomDpDimmer], LightEnt
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the light on."""
         hm_kwargs = LightOnArgs()
+        if color_temp_kelvin := kwargs.get(ATTR_COLOR_TEMP_KELVIN, self.color_temp_kelvin):
+            hm_kwargs["color_temp_kelvin"] = color_temp_kelvin
         # Use hs_color from kwargs, if not applicable use current hs_color.
-        if color_temp := kwargs.get(ATTR_COLOR_TEMP, self.color_temp):
-            hm_kwargs["color_temp"] = color_temp
         if hs_color := kwargs.get(ATTR_HS_COLOR, self.hs_color):
             hm_kwargs["hs_color"] = hs_color
         # Use brightness from kwargs, if not applicable use current brightness.
