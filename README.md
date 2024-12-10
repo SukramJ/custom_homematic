@@ -158,7 +158,7 @@ This page always displays the default values, also when reconfiguring the integr
 ```yaml
 hmip_rf_enabled:
   required: true
-  description: Enable HomematicIP (wiredless and wired).
+  description: Enable support for HomematicIP (wiredless and wired) devices.
   type: boolean
   default: true
 hmip_rf_port:
@@ -168,7 +168,7 @@ hmip_rf_port:
   default: 2010
 bidos_rf_enabled:
   required: true
-  description: Enable BidCos (HomeMatic wireless).
+  description: Enable support for BidCos (HomeMatic wireless) devices.
   type: boolean
   default: true
 bidos_rf_port:
@@ -178,7 +178,7 @@ bidos_rf_port:
   default: 2001
 virtual_devices_enabled:
   required: true
-  description: Enable heating groups.
+  description: Enable support for heating groups.
   type: boolean
   default: false
 virtual_devices_port:
@@ -193,7 +193,7 @@ virtual_devices_path:
   default: /groups
 hs485d_enabled:
   required: true
-  description: Enable HomeMatic wired.
+  description: Enable support for HomeMatic wired devices.
   type: boolean
   default: false
 hs485d_port:
@@ -201,6 +201,16 @@ hs485d_port:
   description: Port for HomeMatic wired.
   type: integer
   default: 2000
+cuxd_enabled:
+  required: true
+  description: Enable support for CUxD devices.
+  type: boolean
+  default: false
+ccujack_enabled:
+  required: true
+  description: Enable support for CCU-Jack devices.
+  type: boolean
+  default: false
 ```
 
 #### Advanced (optional)
@@ -250,7 +260,7 @@ mqtt_enabled:
 mqtt_prefix:
   required: false
   description:
-    Required if CCU-Jack uses and MQTT-Bridge
+    Required, if CCU-Jack uses and MQTT-Bridge
   type: string
   default: '' 
 un_ignore: (Only visible when reconfiguring the integration)
