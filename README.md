@@ -22,7 +22,8 @@ It uses an XML-RPC connection to set values on devices and subscribes to receive
 You can configure this integration multiple times if you want to integrate multiple HomeMatic hubs into Home Assistant.  
 If you are using Homegear with paired [Intertechno](https://intertechno.at/) devices, uni-directional communication is possible as well.
 
-Support for CUxD is not possible due to a missing Python library for BinRPC.
+Support for CUxD is not natively supported due to a missing Python library for BinRPC.
+More about CUxD below.
 
 **Please take the time to read the entire documentation before asking for help. It will answer the most common questions that come up while working with this integration.**
 
@@ -706,6 +707,17 @@ As soon as the firmware has been successfully transferred to the device, it can 
 Depending on whether an update command can be transmitted immediately or with a delay, either the updated firmware version is displayed after a short delay, or `in process`/`installing` is displayed again because a command transmission is being waited for. This state is now updated every **5 minutes** until the installation is finished.
 
 If shorter update cycles are desired, these can be triggered by the action `homeassistant.update_device_firmware_data`, but this might have a negative impact on you CCU!
+
+# CUxD and CCU-Jack support
+
+CUxD is not natively supported due to a missing Python library for BinRPC.
+The implemented solution for CuXD utilises the JSON-RPC-API (with 15s polling) and an optional setup with MQTT (no polling needed!).
+
+To enable the optional mqtt support the following requirements must be fulfilled:
+- Requires CCU-Jack installed on CCU.
+- Requires HA connected to CCU-Jack's MQTT Broker, and MQTT enabled in this integration. In this case no mqtt prefix must be configured in this integration.
+- Alternative MQTT setup:
+  Requires HA to be connected to an MQTT-Broker (other than CCU-Jack's) and CCU-Jack to use a MQTT-Bridge. Here the mqtt prefix (RemotePrefix) must be potentially configured in the integration.
 
 ## Frequently asked questions
 
