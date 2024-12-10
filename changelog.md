@@ -1,3 +1,18 @@
+# Version 1.74.0 (2024-12-10)
+
+## New Features
+- __Experimental__ support for CUxD and CCU-Jack devices
+  - The default setup uses a 15s polling interval
+  - Optional setup with MQTT for CuXD and CCU-Jack virtual Devices is possible to use push events.
+  - Please read the docs for more information.
+  - Please use the discussion forum for feedback
+
+## What's Changed
+- Bump hahomematic to 2024.12.1
+  - Catch orjson.JSONDecodeError on faulthy json script response
+- Enable support for CuXD and CCU-Jack (15s polling interval)
+- Enable MQTT support for CuXD, CCU-Jack and system variable refresh (MQTT is needed in CCU description)
+
 # Version 1.73.0 (2024-12-06)
 
 ## What's Changed

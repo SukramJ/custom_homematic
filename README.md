@@ -22,8 +22,6 @@ It uses an XML-RPC connection to set values on devices and subscribes to receive
 You can configure this integration multiple times if you want to integrate multiple HomeMatic hubs into Home Assistant.  
 If you are using Homegear with paired [Intertechno](https://intertechno.at/) devices, uni-directional communication is possible as well.
 
-Support for CUxD is not possible due to a missing Python library for BinRPC.
-
 **Please take the time to read the entire documentation before asking for help. It will answer the most common questions that come up while working with this integration.**
 
 ## Device support
@@ -160,7 +158,7 @@ This page always displays the default values, also when reconfiguring the integr
 ```yaml
 hmip_rf_enabled:
   required: true
-  description: Enable HomematicIP (wiredless and wired).
+  description: Enable support for HomematicIP (wiredless and wired) devices.
   type: boolean
   default: true
 hmip_rf_port:
@@ -170,7 +168,7 @@ hmip_rf_port:
   default: 2010
 bidos_rf_enabled:
   required: true
-  description: Enable BidCos (HomeMatic wireless).
+  description: Enable support for BidCos (HomeMatic wireless) devices.
   type: boolean
   default: true
 bidos_rf_port:
@@ -180,7 +178,7 @@ bidos_rf_port:
   default: 2001
 virtual_devices_enabled:
   required: true
-  description: Enable heating groups.
+  description: Enable support for heating groups.
   type: boolean
   default: false
 virtual_devices_port:
@@ -195,7 +193,7 @@ virtual_devices_path:
   default: /groups
 hs485d_enabled:
   required: true
-  description: Enable HomeMatic wired.
+  description: Enable support for HomeMatic wired devices.
   type: boolean
   default: false
 hs485d_port:
@@ -203,6 +201,16 @@ hs485d_port:
   description: Port for HomeMatic wired.
   type: integer
   default: 2000
+cuxd_enabled:
+  required: true
+  description: Enable support for CUxD devices.
+  type: boolean
+  default: false
+ccujack_enabled:
+  required: true
+  description: Enable support for CCU-Jack devices.
+  type: boolean
+  default: false
 ```
 
 #### Advanced (optional)
@@ -241,8 +249,20 @@ listen_on_all_ip:
     This works for most of the installations, but in rare cases, when double virtualization is used (Docker on Windows/Mac), this doesn't work.
     In those cases it is necessary, that the XMLRPC server listens an all ('0.0.0.0') ip addresses.
     If you have multiple instances running ensure that all are configured equally.
-  type: integer
+  type: bool
   default: false
+mqtt_enabled:
+  required: false
+  description:
+    Enable support for MQTT to receive events for CUxD and CCU-Jack devices. This also enables events for system variables with 'MQTT' in the description.
+  type: bool
+  default: false
+mqtt_prefix:
+  required: false
+  description:
+    Required, if CCU-Jack uses and MQTT-Bridge
+  type: string
+  default: '' 
 un_ignore: (Only visible when reconfiguring the integration)
   required: false
   description:
@@ -706,6 +726,24 @@ As soon as the firmware has been successfully transferred to the device, it can 
 Depending on whether an update command can be transmitted immediately or with a delay, either the updated firmware version is displayed after a short delay, or `in process`/`installing` is displayed again because a command transmission is being waited for. This state is now updated every **5 minutes** until the installation is finished.
 
 If shorter update cycles are desired, these can be triggered by the action `homeassistant.update_device_firmware_data`, but this might have a negative impact on you CCU!
+
+# CUxD , CCU-Jack and MQTT support
+
+CUxD is not natively supported due to a missing Python library for BinRPC.
+The implemented solution for CuXD utilises the JSON-RPC-API (with 15s polling) and an optional setup with MQTT (no polling needed!).
+
+To enable the optional MQTT support the following requirements must be fulfilled:
+- Requires CCU-Jack installed on CCU.
+- Requires HA connected to CCU-Jack's MQTT Broker, and MQTT enabled in this integration. In this case no mqtt prefix must be configured in this integration.
+- Alternative MQTT setup:
+  Requires HA to be connected to an MQTT-Broker (other than CCU-Jack's) and CCU-Jack to use a MQTT-Bridge. Here the mqtt prefix (RemotePrefix) must be potentially configured in the integration.
+
+Besides from receiving events for CUxD and CCU-Jack devices, the MQTT support also enables push events for CCU system variables, if they are correctly setup for CCU-Jack support. This requires `MQTT` as additional marker in the description.
+
+Important:
+- Please read the [MQTT related HA documentation](https://www.home-assistant.io/integrations/mqtt/) on how to setup MQTT in HA,
+- Please read the [CCU-Jack documentation](https://github.com/mdzio/ccu-jack/wiki) on Howto setup CCU-Jack and an optional [MQTT-Bridge](https://github.com/mdzio/ccu-jack/wiki/MQTT-Bridge)
+- Please use an MQTT-Explorer to ensure there are subscribable topics, and the event come in as expected before opening an issue for this integration.
 
 ## Frequently asked questions
 
