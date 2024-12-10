@@ -11,7 +11,7 @@ from homeassistant.const import Platform
 
 DOMAIN: Final = "homematicip_local"
 HMIP_LOCAL_MIN_HA_VERSION: Final = "2024.11.3"
-ENABLE_EXPERIMENTAL_FEATURES: Final = False
+ENABLE_EXPERIMENTAL_FEATURES: Final = True
 HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.12.0"
 
 DEFAULT_DEVICE_FIRMWARE_CHECK_ENABLED: Final = True
