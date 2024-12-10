@@ -208,6 +208,7 @@ class HaHomematicLight(HaHomematicGenericRestoreEntity[CustomDpDimmer], LightEnt
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the light on."""
         hm_kwargs = LightOnArgs()
+        # Use color_temp_kelvin from kwargs, if not applicable use current color_temp_kelvin.
         if color_temp_kelvin := kwargs.get(ATTR_COLOR_TEMP_KELVIN, self.color_temp_kelvin):
             hm_kwargs["color_temp_kelvin"] = color_temp_kelvin
         # Use hs_color from kwargs, if not applicable use current hs_color.
