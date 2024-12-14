@@ -1,7 +1,9 @@
 # Version 1.75.0 (2024-12-14)
-- Bump hahomematic to 2024.12.3
+- Bump hahomematic to 2024.12.4
   - Add method cleanup_text_from_html_tags
+  - Add missing encoding to unquote
   - Decode received sysvar/program descriptions
+  - Ensure default encoding is ISO-8859-1 where needed
   - Replace special character replacement by simple UriEncode() method use by @jens-maus
   
 # Version 1.74.0 (2024-12-10)
