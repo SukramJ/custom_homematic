@@ -889,7 +889,7 @@
             "description": "Read a value of a variable",
             "fields": {
                 "entry_id": {
-                    "description": "Name(s) of homematic central to set value",
+                    "description": "Name(s) of homematic central to read",
                     "name": "Central"
                 },
                 "name": {

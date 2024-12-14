@@ -1,3 +1,9 @@
+# Version 1.75.0 (2024-12-14)
+- Bump hahomematic to 2024.12.3
+  - Add method cleanup_text_from_html_tags
+  - Decode received sysvar/program descriptions
+  - Replace special character replacement by simple UriEncode() method use by @jens-maus
+  
 # Version 1.74.0 (2024-12-10)
 
 ## New Features
