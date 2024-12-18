@@ -1,7 +1,7 @@
 # Version 1.75.1 (2024-12-15)
 
 ## Noteworthy
-- The repositories hahomematic and pydevccu have been transferred from danielperna84 to sukramj
+- The repositories custom_homematic, hahomematic and pydevccu have been transferred from danielperna84 to sukramj
  - Old urls are automatically redirected
 
 ## What's Changed
