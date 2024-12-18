@@ -14,13 +14,17 @@
                     "listen_on_all_ip": "listen on all ip",
                     "mqtt_enabled": "enable MQTT",
                     "mqtt_prefix": "MQTT Prefix",
+                    "program_markers": "program markers",
                     "program_scan_enabled": "enable program scan",
+                    "sysvar_markers": "system variable markers",
                     "sysvar_scan_enabled": "enable system variable scan",
                     "sysvar_scan_interval": "Sysvar/Program scan interval"
                 },
                 "data_description": {
                     "mqtt_enabled": "Enable MQTT to support Callbacks for CCU-Jack and CUxD",
-                    "mqtt_prefix": "Define the mqtt prefix used for the CCU-Jack bridge"
+                    "mqtt_prefix": "Define the mqtt prefix used for the CCU-Jack bridge",
+                    "program_markers": "Comma separated list of markers for programs to enable fetching",
+                    "sysvar_markers": "Comma separated list of markers for system variables to enable fetching"
                 },
                 "description": "Configure the advanced parameters"
             },
@@ -605,7 +609,9 @@
                     "listen_on_all_ip": "listen on all ip",
                     "mqtt_enabled": "enable MQTT",
                     "mqtt_prefix": "MQTT Prefix",
+                    "program_markers": "program markers",
                     "program_scan_enabled": "enable program scan",
+                    "sysvar_markers": "system variable markers",
                     "sysvar_scan_enabled": "enable system variable scan",
                     "sysvar_scan_interval": "Sysvar/Program scan interval",
                     "un_ignore": "UN-IGNORE Parameters"
@@ -613,6 +619,8 @@
                 "data_description": {
                     "mqtt_enabled": "Enable MQTT to support Callbacks for CCU-Jack and CUxD",
                     "mqtt_prefix": "Define the mqtt prefix used for the CCU-Jack bridge",
+                    "program_markers": "Comma separated list of markers for programs to enable fetching",
+                    "sysvar_markers": "Comma separated list of markers for system variables to enable fetching",
                     "un_ignore": "Check the documentation for information about UN-IGNORE"
                 },
                 "description": "Configure the advanced parameters"

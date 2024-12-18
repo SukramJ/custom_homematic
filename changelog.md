@@ -1,3 +1,11 @@
+# Version 1.76.0 (2024-12-18)
+
+## What's Changed
+- Bump hahomematic to 2024.12.6
+  - Support markers for sysvar/program selection
+- Add advanced config options to define markers for programs and sysvars. 
+  This means that not all programs/sysvars are retrieved except the internal ones.
+
 # Version 1.75.1 (2024-12-15)
 
 ## Noteworthy

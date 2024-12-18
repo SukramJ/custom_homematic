@@ -8,8 +8,10 @@ from typing import Any, Final, cast
 from urllib.parse import urlparse
 
 from hahomematic.const import (
+    DEFAULT_PROGRAM_MARKERS,
     DEFAULT_PROGRAM_SCAN_ENABLED,
     DEFAULT_SYS_SCAN_INTERVAL,
+    DEFAULT_SYSVAR_MARKERS,
     DEFAULT_SYSVAR_SCAN_ENABLED,
     DEFAULT_TLS,
     DEFAULT_UN_IGNORES,
@@ -62,8 +64,10 @@ from .const import (
     CONF_LISTEN_ON_ALL_IP,
     CONF_MQTT_ENABLED,
     CONF_MQTT_PREFIX,
+    CONF_PROGRAM_MARKERS,
     CONF_PROGRAM_SCAN_ENABLED,
     CONF_SYS_SCAN_INTERVAL,
+    CONF_SYSVAR_MARKERS,
     CONF_SYSVAR_SCAN_ENABLED,
     CONF_TLS,
     CONF_UN_IGNORES,
@@ -238,11 +242,29 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
     advanced_schema = vol.Schema(
         {
             vol.Required(
+                CONF_PROGRAM_MARKERS,
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
+                    CONF_PROGRAM_MARKERS, DEFAULT_PROGRAM_MARKERS
+                ),
+            ): TEXT_SELECTOR,
+            vol.Required(
                 CONF_PROGRAM_SCAN_ENABLED,
                 default=data.get(CONF_ADVANCED_CONFIG, {}).get(
                     CONF_PROGRAM_SCAN_ENABLED, DEFAULT_PROGRAM_SCAN_ENABLED
                 ),
             ): BOOLEAN_SELECTOR,
+            vol.Required(
+                CONF_PROGRAM_SCAN_ENABLED,
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
+                    CONF_PROGRAM_SCAN_ENABLED, DEFAULT_PROGRAM_SCAN_ENABLED
+                ),
+            ): BOOLEAN_SELECTOR,
+            vol.Required(
+                CONF_SYSVAR_MARKERS,
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
+                    CONF_SYSVAR_MARKERS, DEFAULT_SYSVAR_MARKERS
+                ),
+            ): TEXT_SELECTOR,
             vol.Required(
                 CONF_SYSVAR_SCAN_ENABLED,
                 default=data.get(CONF_ADVANCED_CONFIG, {}).get(
@@ -578,9 +600,11 @@ def _update_advanced_input(data: ConfigType, advanced_input: ConfigType) -> None
         return
 
     data[CONF_ADVANCED_CONFIG] = {}
+    data[CONF_ADVANCED_CONFIG][CONF_PROGRAM_MARKERS] = advanced_input[CONF_PROGRAM_MARKERS]
     data[CONF_ADVANCED_CONFIG][CONF_PROGRAM_SCAN_ENABLED] = advanced_input[
         CONF_PROGRAM_SCAN_ENABLED
     ]
+    data[CONF_ADVANCED_CONFIG][CONF_SYSVAR_MARKERS] = advanced_input[CONF_SYSVAR_MARKERS]
     data[CONF_ADVANCED_CONFIG][CONF_SYSVAR_SCAN_ENABLED] = advanced_input[CONF_SYSVAR_SCAN_ENABLED]
     data[CONF_ADVANCED_CONFIG][CONF_SYS_SCAN_INTERVAL] = advanced_input[CONF_SYS_SCAN_INTERVAL]
     data[CONF_ADVANCED_CONFIG][CONF_ENABLE_SYSTEM_NOTIFICATIONS] = advanced_input[

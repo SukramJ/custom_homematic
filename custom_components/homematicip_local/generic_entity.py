@@ -334,6 +334,7 @@ class HaHomematicGenericHubEntity(Entity):
         if entity_description := get_entity_description(data_point=data_point):
             self.entity_description = entity_description
         self._attr_name = data_point.name
+        self._attr_entity_registry_enabled_default = data_point.has_markers
         self._attr_device_info = control_unit.device_info
         self._unregister_callbacks: list[CALLBACK_TYPE] = []
         _LOGGER.debug("init sysvar: Setting up %s", self.name)

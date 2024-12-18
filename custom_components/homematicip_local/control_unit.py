@@ -16,8 +16,10 @@ from hahomematic.const import (
     CALLBACK_TYPE,
     CONF_PASSWORD,
     CONF_USERNAME,
+    DEFAULT_PROGRAM_MARKERS,
     DEFAULT_PROGRAM_SCAN_ENABLED,
     DEFAULT_SYS_SCAN_INTERVAL,
+    DEFAULT_SYSVAR_MARKERS,
     DEFAULT_SYSVAR_SCAN_ENABLED,
     DEFAULT_UN_IGNORES,
     INTERFACES_REQUIRING_PERIODIC_REFRESH,
@@ -61,8 +63,10 @@ from .const import (
     CONF_LISTEN_ON_ALL_IP,
     CONF_MQTT_ENABLED,
     CONF_MQTT_PREFIX,
+    CONF_PROGRAM_MARKERS,
     CONF_PROGRAM_SCAN_ENABLED,
     CONF_SYS_SCAN_INTERVAL,
+    CONF_SYSVAR_MARKERS,
     CONF_SYSVAR_SCAN_ENABLED,
     CONF_TLS,
     CONF_UN_IGNORES,
@@ -206,9 +210,11 @@ class BaseControlUnit:
             max_read_workers=1,
             name=self._instance_name,
             password=self._config.password,
+            program_markers=self._config.program_markers,
             program_scan_enabled=self._config.program_scan_enabled,
             start_direct=self._start_direct,
             storage_folder=get_storage_folder(self._hass),
+            sysvar_markers=self._config.sysvar_markers,
             sysvar_scan_enabled=self._config.sysvar_scan_enabled,
             sys_scan_interval=self._config.sys_scan_interval,
             tls=self._config.tls,
@@ -611,9 +617,20 @@ class ControlConfig:
         self.enable_system_notifications = advanced_config.get(
             CONF_ENABLE_SYSTEM_NOTIFICATIONS, DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS
         )
+        if sysvar_markers := advanced_config.get(CONF_SYSVAR_MARKERS):
+            self.sysvar_markers = tuple(sysvar_markers.split(","))
+        else:
+            self.sysvar_markers = DEFAULT_SYSVAR_MARKERS
+
         self.sysvar_scan_enabled: Final = advanced_config.get(
             CONF_SYSVAR_SCAN_ENABLED, DEFAULT_SYSVAR_SCAN_ENABLED
         )
+
+        if program_markers := advanced_config.get(CONF_PROGRAM_MARKERS):
+            self.program_markers = tuple(program_markers.split(","))
+        else:
+            self.program_markers = DEFAULT_PROGRAM_MARKERS
+
         self.program_scan_enabled: Final = advanced_config.get(
             CONF_PROGRAM_SCAN_ENABLED, DEFAULT_PROGRAM_SCAN_ENABLED
         )
