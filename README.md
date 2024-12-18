@@ -5,13 +5,13 @@ Homematic(IP) [Integration for Home Assistant](https://www.home-assistant.io/get
 [Installation](https://github.com/danielperna84/custom_homematic/wiki/Installation)
 [Alternative Installation by J. Maus](https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration)
 
-[Wiki with additional information](https://github.com/danielperna84/hahomematic/wiki)
+[Wiki with additional information](https://github.com/sukramj/hahomematic/wiki)
 Please support the community by adding more valuable information to the wiki.
 
 # ISSUES and DISCUSSIONS
 
-Please report issues in [hahomamatic repo](https://github.com/danielperna84/hahomematic/issues).
-New discussions can be started and found in [hahomamatic repo](https://github.com/danielperna84/hahomematic/discussions).
+Please report issues in [hahomamatic repo](https://github.com/sukramj/hahomematic/issues).
+New discussions can be started and found in [hahomamatic repo](https://github.com/sukramj/hahomematic/discussions).
 Feature requests can be added as a discussion too.
 A good practice is to search in issues and discussions before starting a new one.
 
@@ -30,7 +30,7 @@ HomeMatic and HomematicIP devices are integrated by automatically detecting the 
 However, for more complex devices (thermostats, some cover-devices and more) we perform a custom mapping to better represent the devices features. This is an internal detail you usually don't have to care about.
 It may become relevant though if new hardware becomes available.
 In such a case the automatic mode will be active. Therefore f.ex. a new thermostat-model might not include the `climate` entity.
-In such a case you may report the missing customization in the [hahomematic](https://github.com/danielperna84/hahomematic) repository.
+In such a case you may report the missing customization in the [hahomematic](https://github.com/sukramj/hahomematic) repository.
 Please report missing devices **after** you installed the integration and ensured it is missing or faulty.
 
 ### Deactivated Entities
@@ -368,7 +368,7 @@ Exports a device definition (2 files) to
 - 'Your home-assistant config directory'/homematicip_local/export_device_descriptions/{device_type}.json
 - 'Your home-assistant config directory'/homematicip_local/export_paramset_descriptions/{device_type}.json
 
-Please create a pull request with both files at [pydevccu](https://github.com/danielperna84/pydevccu), if the device not exists, to support future development of this component.
+Please create a pull request with both files at [pydevccu](https://github.com/sukramj/pydevccu), if the device not exists, to support future development of this component.
 This data can be used by the developers to add customized entities for new devices.
 
 ### `homematicip_local.fetch_system_variables`
@@ -501,7 +501,7 @@ For booleans the following values can be used:
 
 ### `homematicip_local.turn_on_siren`
 
-Turn siren on. Siren can be disabled by siren.turn_off. Useful helpers for siren can be found [here](https://github.com/danielperna84/hahomematic/blob/devel/docs/input_select_helper.md#siren).
+Turn siren on. Siren can be disabled by siren.turn_off. Useful helpers for siren can be found [here](https://github.com/sukramj/hahomematic/blob/devel/docs/input_select_helper.md#siren).
 
 ### `homematicip_local.light_set_on_time`
 
@@ -534,7 +534,7 @@ Events fired by this integration that can be consumed by users.
 This event type is used when a key is pressed on a device,
 and can be used with device triggers or event entities in automation, so manual event listening is not necessary.
 
-In this context, the following must also be observed: [Events for Homematic(IP) devices](https://github.com/SukramJ/custom_homematic#events-for-homematicip-devices)
+In this context, the following must also be observed: [Events for Homematic(IP) devices](https://github.com/sukramj/custom_homematic#events-for-homematicip-devices)
 
 The `PRESS*` parameters are evaluated for this event type in the backend.
 
@@ -561,10 +561,10 @@ This will only delete the device from Home Assistant and not from the CCU.
 
 ### What is the meaning of `Error fetching initial data` / `Fehler beim Abrufen der Anfangsdaten`?
 
-This integration uses a [REGA script](https://github.com/danielperna84/hahomematic/blob/devel/hahomematic/rega_scripts/fetch_all_device_data.fn) to fetch as much data in a single call as possible, to avoid multiple request to get the required initial data.
+This integration uses a [REGA script](https://github.com/sukramj/hahomematic/blob/devel/hahomematic/rega_scripts/fetch_all_device_data.fn) to fetch as much data in a single call as possible, to avoid multiple request to get the required initial data.
 In rare cases the output of the script can be invalid, so a further processing is not possible, and the fallback solution is to fetch all required data with individual calls, that cause a higher duty cycle during the start phase of the integration.
 
-This problem can be analysed by executing the [REGA script](https://github.com/danielperna84/hahomematic/blob/devel/hahomematic/rega_scripts/fetch_all_device_data.fn) in the CCU. The parameter ##interface## (line 17) must be replaced with the interface mention from the poped-up issue. The expected result is a valid json. 
+This problem can be analysed by executing the [REGA script](https://github.com/sukramj/hahomematic/blob/devel/hahomematic/rega_scripts/fetch_all_device_data.fn) in the CCU. The parameter ##interface## (line 17) must be replaced with the interface mention from the poped-up issue. The expected result is a valid json. 
 Search (search for GET_ALL_DEVICE_DATA) within the issue tracker and discussion forum for related items.
 
 Please don't create an issue, because this is not an issue with the integration. 
@@ -646,7 +646,7 @@ If a device's channels are assigned to multiple rooms or nothing is set, the are
 
 ### Unignore device parameters
 
-Not all parameters of a HomeMatic or HomematicIP device are created as entity. These parameters are filtered out to provide a better user experience for the majority of the users. If you need more parameters as entities have a look at [this](https://github.com/danielperna84/hahomematic/blob/devel/docs/unignore.md) description. Starting with version 1.65.0 this can be configured in the reconfiguration flow under advanced options. You use this at your own risk!!!
+Not all parameters of a HomeMatic or HomematicIP device are created as entity. These parameters are filtered out to provide a better user experience for the majority of the users. If you need more parameters as entities have a look at [this](https://github.com/sukramj/hahomematic/blob/devel/docs/unignore.md) description. Starting with version 1.65.0 this can be configured in the reconfiguration flow under advanced options. You use this at your own risk!!!
 
 BUT remember: Some parameters are already created as entities, but are **[deactivated](https://github.com/danielperna84/custom_homematic#deactivated-entities)**.
 
@@ -656,7 +656,7 @@ Devices with buttons (e.g. HM-Sen-MDIR-WM55 and other remote controls) may not b
 
 ### Fixing RSSI values
 
-See this [explanation](https://github.com/danielperna84/hahomematic/blob/devel/docs/rssi_fix.md) how the RSSI values are fixed.
+See this [explanation](https://github.com/sukramj/hahomematic/blob/devel/docs/rssi_fix.md) how the RSSI values are fixed.
 
 ### Changing the default platform for some parameters
 

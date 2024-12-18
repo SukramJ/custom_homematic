@@ -1,3 +1,3 @@
 # ISSUES
 
-Please report issues in https://github.com/danielperna84/hahomematic/issues
+Please report issues in https://github.com/sukramj/hahomematic/issues

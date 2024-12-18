@@ -1,4 +1,17 @@
+# Version 1.75.1 (2024-12-15)
+
+## Noteworthy
+- The repositories hahomematic and pydevccu have been transferred from danielperna84 to sukramj
+ - Old urls are automatically redirected
+
+## What's Changed
+- Remove danielperna84 from links after repository transfer to sukramj
+
 # Version 1.75.0 (2024-12-15)
+## Noteworthy
+- Fixes issue with special characters in sysvar/program descriptions
+
+## What's Changed
 - Bump hahomematic to 2024.12.5
   - Add method cleanup_text_from_html_tags
   - Add missing encoding to unquote
