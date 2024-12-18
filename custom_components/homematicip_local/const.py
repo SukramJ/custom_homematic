@@ -23,8 +23,8 @@ DEFAULT_LISTEN_ON_ALL_IP: Final = False
 DEFAULT_MQTT_ENABLED: Final = False
 DEFAULT_MQTT_PREFIX: Final = ""
 
-LEARN_MORE_URL_XMLRPC_SERVER_RECEIVES_NO_EVENTS: Final = "https://github.com/danielperna84/custom_homematic?tab=readme-ov-file#what-is-the-meaning-of-xmlrpc-server-received-no-events--xmlrpc-server-empf%C3%A4ngt-keine-ereignisse"
-LEARN_MORE_URL_PONG_MISMATCH: Final = "https://github.com/danielperna84/custom_homematic#what-is-the-meaning-of-pending-pong-mismatch-on-interface--austehende-pong-ereignisse-auf-interface"
+LEARN_MORE_URL_XMLRPC_SERVER_RECEIVES_NO_EVENTS: Final = "https://github.com/sukramj/custom_homematic?tab=readme-ov-file#what-is-the-meaning-of-xmlrpc-server-received-no-events--xmlrpc-server-empf%C3%A4ngt-keine-ereignisse"
+LEARN_MORE_URL_PONG_MISMATCH: Final = "https://github.com/sukramj/custom_homematic#what-is-the-meaning-of-pending-pong-mismatch-on-interface--austehende-pong-ereignisse-auf-interface"
 
 CONF_ADVANCED_CONFIG: Final = "advanced_config"
 CONF_CALLBACK_HOST: Final = "callback_host"

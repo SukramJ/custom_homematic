@@ -8,7 +8,7 @@ blueprint:
     Tested with HmIP-BSM, HmIP-BDT, HmIP-BSL, HmIP-WRC2. Should work with other device too.
     v2022-10-28
   domain: automation
-  source_url: https://github.com/danielperna84/custom_homematic/blob/devel/blueprints/automation/homematicip_local-actions-for-2-button.yaml
+  source_url: https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local-actions-for-2-button.yaml
   input:
     remote:
       name: 2-Button Device

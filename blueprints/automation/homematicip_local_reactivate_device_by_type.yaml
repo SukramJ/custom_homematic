@@ -3,7 +3,7 @@ blueprint:
   description: Reactivate a device marked as not available by type.
     v2022-12-05
   domain: automation
-  source_url: https://github.com/danielperna84/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_device_by_type.yaml
+  source_url: https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_device_by_type.yaml
   input:
     device_type:
       name: Device Type
