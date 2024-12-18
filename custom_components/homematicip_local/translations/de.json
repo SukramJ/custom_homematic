@@ -14,13 +14,17 @@
                     "listen_on_all_ip": "Auf allen IP Adressen lauschen",
                     "mqtt_enabled": "MQTT aktivieren",
                     "mqtt_prefix": "MQTT Prefix",
+                    "program_markers": "Programm Marken",
                     "program_scan_enabled": "Programm Scan aktivieren",
+                    "sysvar_markers": "Systemvariablen Marken",
                     "sysvar_scan_enabled": "Systemvariablen Scan aktivieren",
                     "sysvar_scan_interval": "Sysvar/Program Scan Interval"
                 },
                 "data_description": {
                     "mqtt_enabled": "Aktiviere MQTT, um Callbacks für CCU-Jack und CUxD zu nutzen",
-                    "mqtt_prefix": "Das für die CCU-Jack-Brücke verwendete MQTT-Präfix"
+                    "mqtt_prefix": "Das für die CCU-Jack-Brücke verwendete MQTT-Präfix",
+                    "program_markers": "Kommaseparierte Liste mit Markern für Programme zum Abrufen. Zum Zurückzusetzen muss der Wert auf ein Leerzeichen gesetzt werden.",
+                    "sysvar_markers": "Kommaseparierte Liste mit Markern für Systemvariablen zum Abrufen. Zum Zurückzusetzen muss der Wert auf ein Leerzeichen gesetzt werden."
                 },
                 "description": "Konfiguration der erweiterten Parameter"
             },
@@ -609,7 +613,9 @@
                     "listen_on_all_ip": "Auf allen IP Adressen lauschen",
                     "mqtt_enabled": "MQTT aktivieren",
                     "mqtt_prefix": "MQTT Prefix",
+                    "program_markers": "Programm Marken",
                     "program_scan_enabled": "Programm Scan aktivieren",
+                    "sysvar_markers": "Systemvariablen Marken",
                     "sysvar_scan_enabled": "Systemvariablen Scan aktivieren",
                     "sysvar_scan_interval": "Sysvar/Program Scan Interval",
                     "un_ignore": "UN-IGNORE Parameter"
@@ -617,6 +623,8 @@
                 "data_description": {
                     "mqtt_enabled": "Aktiviere MQTT, um Callbacks für CCU-Jack und CUxD zu nutzen",
                     "mqtt_prefix": "Das für die CCU-Jack-Brücke verwendete MQTT-Präfix",
+                    "program_markers": "Kommaseparierte Liste mit Markern für Programme zum Abrufen. Zum Zurückzusetzen muss der Wert auf ein Leerzeichen gesetzt werden.",
+                    "sysvar_markers": "Kommaseparierte Liste mit Markern für Systemvariablen zum Abrufen. Zum Zurückzusetzen muss der Wert auf ein Leerzeichen gesetzt werden.",
                     "un_ignore": "Schauen Sie in die Dokumentation für Informationen über UN-IGNORE"
                 },
                 "description": "Konfiguration der erweiterten Parameter"

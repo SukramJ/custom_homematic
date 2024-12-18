@@ -216,11 +216,21 @@ ccujack_enabled:
 #### Advanced (optional)
 
 ```yaml
+program_markers:
+  required: true
+  description: Comma separated list of markers for system variables to enable fetching. This means that not all programs are retrieved except the internal ones.
+  type: string
+  default: ""
 program_scan_enabled:
   required: true
   description: Enable program scanning.
   type: boolean
   default: true
+sysvar_markers:
+  required: true
+  description: Comma separated list of markers for system variables to enable fetching. This means that not all system variables are retrieved except the internal ones.
+  type: string
+  default: ""
 sysvar_scan_enabled:
   required: true
   description: Enable system program scanning.
