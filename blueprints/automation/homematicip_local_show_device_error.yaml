@@ -4,7 +4,7 @@ blueprint:
     Display errors emitted by devices. This is an unfiltered blueprint. More filters should be added to the trigger.
     v2022-12-21
   domain: automation
-  source_url: https://github.com/danielperna84/custom_homematic/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml
+  source_url: https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml
 
 mode: restart
 max_exceeded: silent
