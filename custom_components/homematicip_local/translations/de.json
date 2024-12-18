@@ -23,8 +23,8 @@
                 "data_description": {
                     "mqtt_enabled": "Aktiviere MQTT, um Callbacks für CCU-Jack und CUxD zu nutzen",
                     "mqtt_prefix": "Das für die CCU-Jack-Brücke verwendete MQTT-Präfix",
-                    "program_markers": "Kommaseparierte Liste mit Markern für Programme zum Abrufen",
-                    "sysvar_markers": "Kommaseparierte Liste mit Markern für Systemvariablen zum Abrufen"
+                    "program_markers": "Kommaseparierte Liste mit Markern für Programme zum Abrufen. Zum Zurückzusetzen muss der Wert auf ein Leerzeichen gesetzt werden.",
+                    "sysvar_markers": "Kommaseparierte Liste mit Markern für Systemvariablen zum Abrufen. Zum Zurückzusetzen muss der Wert auf ein Leerzeichen gesetzt werden."
                 },
                 "description": "Konfiguration der erweiterten Parameter"
             },
@@ -623,8 +623,8 @@
                 "data_description": {
                     "mqtt_enabled": "Aktiviere MQTT, um Callbacks für CCU-Jack und CUxD zu nutzen",
                     "mqtt_prefix": "Das für die CCU-Jack-Brücke verwendete MQTT-Präfix",
-                    "program_markers": "Kommaseparierte Liste mit Markern für Programme zum Abrufen",
-                    "sysvar_markers": "Kommaseparierte Liste mit Markern für Systemvariablen zum Abrufen",
+                    "program_markers": "Kommaseparierte Liste mit Markern für Programme zum Abrufen. Zum Zurückzusetzen muss der Wert auf ein Leerzeichen gesetzt werden.",
+                    "sysvar_markers": "Kommaseparierte Liste mit Markern für Systemvariablen zum Abrufen. Zum Zurückzusetzen muss der Wert auf ein Leerzeichen gesetzt werden.",
                     "un_ignore": "Schauen Sie in die Dokumentation für Informationen über UN-IGNORE"
                 },
                 "description": "Konfiguration der erweiterten Parameter"

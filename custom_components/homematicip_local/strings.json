@@ -23,8 +23,8 @@
                 "data_description": {
                     "mqtt_enabled": "Enable MQTT to support Callbacks for CCU-Jack and CUxD",
                     "mqtt_prefix": "Define the mqtt prefix used for the CCU-Jack bridge",
-                    "program_markers": "Comma separated list of markers for programs to enable fetching",
-                    "sysvar_markers": "Comma separated list of markers for system variables to enable fetching"
+                    "program_markers": "Comma separated list of markers for programs to enable fetching. To reset, the value must be set to a space.",
+                    "sysvar_markers": "Comma separated list of markers for system variables to enable fetching, To reset, the value must be set to a space."
                 },
                 "description": "Configure the advanced parameters"
             },
@@ -619,8 +619,8 @@
                 "data_description": {
                     "mqtt_enabled": "Enable MQTT to support Callbacks for CCU-Jack and CUxD",
                     "mqtt_prefix": "Define the mqtt prefix used for the CCU-Jack bridge",
-                    "program_markers": "Comma separated list of markers for programs to enable fetching",
-                    "sysvar_markers": "Comma separated list of markers for system variables to enable fetching",
+                    "program_markers": "Comma separated list of markers for programs to enable fetching. To reset, the value must be set to a space.",
+                    "sysvar_markers": "Comma separated list of markers for system variables to enable fetching. To reset, the value must be set to a space.",
                     "un_ignore": "Check the documentation for information about UN-IGNORE"
                 },
                 "description": "Configure the advanced parameters"
