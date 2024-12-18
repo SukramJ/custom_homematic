@@ -2,11 +2,6 @@ name: Pylint
 
 # yamllint disable-line rule:truthy
 on:
-  push:
-    branches:
-      - "dev**"
-      - devel
-      - master
   pull_request: ~
   workflow_dispatch:
 jobs:
