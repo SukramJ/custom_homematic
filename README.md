@@ -341,7 +341,7 @@ To get a more customizable result it's possible to select markers in the advance
 
 These are the predefined markers that can be used for filtering:
 
-- HAHM : This marker is already used. A `hahm` (lower case) must be added to the description to enable extended variables. This marker is now also used for filtering.
+- hahm : This marker is already used. A `hahm` (lower case) must be added to the description to enable extended variables. This marker is now also used for filtering.
 - INTERNAL : system variables and programs can be marked as internal with a checkbox. There is no need something to the description.
 - MQTT: This is already used by CCU-Jack. Here an `MQTT` (upper case) must be added to the description.
 - HX : For all other cases you could add `HX` (upper case) to the description, if none of the above cases match.
