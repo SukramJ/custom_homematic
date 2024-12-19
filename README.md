@@ -334,6 +334,20 @@ Using `select`, `number`, `switch` and `text` results in the following advantage
 - The action `homematicip_local.set_variable_value` can, but no longer has to, be used to write system variables.
 - Use of device based automations (actions) is possible.
 
+### Filtering system variables and programs
+
+By default all system variables (incl. internals) and all program (excl. internals) are loaded and created as deactivated entity.
+To get a more customizable result it's possible to select markers in the advanced dialog of the configuration.
+
+These are the predefined markers that can be used for filtering:
+
+- HAHM : This marker is already used. A `hahm` (lower case) must be added to the description to enable extended variables. This marker is now also used for filtering.
+- INTERNAL : system variables and programs can be marked as internal with a checkbox. There is no need something to the description.
+- MQTT: This is already used by CCU-Jack. Here an `MQTT` (upper case) must be added to the description.
+- HX : For all other cases you could add `HX` (upper case) to the description, if none of the above cases match.
+
+These marked system variables and programs are created as activated in HA. The positive side effect is that activated entities can automatically be deleted by the integration.
+
 ## Actions
 
 The Homematic(IP) Local integration makes various custom actions available.
