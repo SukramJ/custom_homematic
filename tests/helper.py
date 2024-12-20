@@ -146,8 +146,6 @@ class Factory:
 
         control: ControlUnit = self.mock_config_entry.runtime_data
         await self._hass.async_block_till_done()
-        if control._scheduler:
-            control._scheduler.de_init()
         await self._hass.async_block_till_done()
         return self._hass, control
 

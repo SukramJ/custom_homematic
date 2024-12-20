@@ -12,15 +12,12 @@ from homeassistant.const import Platform
 DOMAIN: Final = "homematicip_local"
 HMIP_LOCAL_MIN_HA_VERSION: Final = "2024.12.0"
 ENABLE_EXPERIMENTAL_FEATURES: Final = False
-HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.12.8"
+HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.12.9"
 
-DEFAULT_DEVICE_FIRMWARE_CHECK_ENABLED: Final = True
-DEFAULT_DEVICE_FIRMWARE_CHECK_INTERVAL: Final = 21600  # 6h
-DEFAULT_DEVICE_FIRMWARE_DELIVERING_CHECK_INTERVAL: Final = 3600  # 1h
-DEFAULT_DEVICE_FIRMWARE_UPDATING_CHECK_INTERVAL: Final = 300  # 5m
+DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK: Final = True
 DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS: Final = True
 DEFAULT_LISTEN_ON_ALL_IP: Final = False
-DEFAULT_MQTT_ENABLED: Final = False
+DEFAULT_ENABLE_MQTT: Final = False
 DEFAULT_MQTT_PREFIX: Final = ""
 
 LEARN_MORE_URL_XMLRPC_SERVER_RECEIVES_NO_EVENTS: Final = "https://github.com/sukramj/custom_homematic?tab=readme-ov-file#what-is-the-meaning-of-xmlrpc-server-received-no-events--xmlrpc-server-empf%C3%A4ngt-keine-ereignisse"
@@ -29,20 +26,20 @@ LEARN_MORE_URL_PONG_MISMATCH: Final = "https://github.com/sukramj/custom_homemat
 CONF_ADVANCED_CONFIG: Final = "advanced_config"
 CONF_CALLBACK_HOST: Final = "callback_host"
 CONF_CALLBACK_PORT: Final = "callback_port"
+CONF_ENABLE_MQTT: Final = "mqtt_enabled"
+CONF_ENABLE_PROGRAM_SCAN: Final = "program_scan_enabled"
 CONF_ENABLE_SYSTEM_NOTIFICATIONS: Final = "enable_system_notifications"
+CONF_ENABLE_SYSVAR_SCAN: Final = "sysvar_scan_enabled"
 CONF_EVENT_TYPE: Final = "event_type"
 CONF_INSTANCE_NAME: Final = "instance_name"
 CONF_INTERFACE: Final = "interface"
 CONF_INTERFACE_ID: Final = "interface_id"
 CONF_JSON_PORT: Final = "json_port"
 CONF_LISTEN_ON_ALL_IP: Final = "listen_on_all_ip"
-CONF_MQTT_ENABLED: Final = "mqtt_enabled"
 CONF_MQTT_PREFIX: Final = "mqtt_prefix"
 CONF_PROGRAM_MARKERS: Final = "program_markers"
-CONF_PROGRAM_SCAN_ENABLED: Final = "program_scan_enabled"
 CONF_SUBTYPE: Final = "subtype"
 CONF_SYSVAR_MARKERS: Final = "sysvar_markers"
-CONF_SYSVAR_SCAN_ENABLED: Final = "sysvar_scan_enabled"
 CONF_SYS_SCAN_INTERVAL: Final = "sysvar_scan_interval"
 CONF_TLS: Final = "tls"
 CONF_UN_IGNORES: Final = "un_ignore"

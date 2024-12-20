@@ -310,18 +310,18 @@ The types of system variables in the CCU are:
 - _alert_ (Alarm)
 
 System variables have a description that can be added in the CCU's UI.
-If you add the marker `hahm` to the description extended features for this system variable can be used in HA.
-This `hahm` marker is used to control the entity creation in HA.
+If you add the marker `HAHM` (before 1.76.0 it was `hahm`)to the description extended features for this system variable can be used in HA.
+This `HAHM` marker is used to control the entity creation in HA.
 Switching system variables from DEFAULT -> EXTENDED or EXTENDED -> DEFAULT requires a restart of HA or a reload of the integration.
 
 When using Homegear system variables are handled like the DEFAULT.
 
 ### This is how entities are created from system variables:
 
-- DEFAULT: system variables that do **not** have the **marker** `hahm` in description:
+- DEFAULT: system variables that do **not** have the **marker** `HAHM` in description:
   - _character string_, _list of values_, _number_ --> `sensor` entity
   - _alert_, _logic value_ --> `binary_sensor` entity
-- EXTENDED: system variables that do have the **marker** `hahm` in description:
+- EXTENDED: system variables that do have the **marker** `HAHM` in description:
   - _list of values_ --> `select` entity
   - _number_ --> `number` entity
   - _alarm_, _logic value_ —> `switch` entity
@@ -341,7 +341,7 @@ To get a more customizable result it's possible to select markers in the advance
 
 These are the predefined markers that can be used for filtering:
 
-- hahm : This marker is already used. A `hahm` (lower case) must be added to the description to enable extended variables. This marker is now also used for filtering.
+- HAHM : This marker is already used. A `HAHM` (upper case) must be added to the description to enable extended variables. This marker is now also used for filtering.
 - INTERNAL : system variables and programs can be marked as internal with a checkbox. There is no need something to the description.
 - MQTT: This is already used by CCU-Jack. Here an `MQTT` (upper case) must be added to the description.
 - HX : For all other cases you could add `HX` (upper case) to the description, if none of the above cases match.

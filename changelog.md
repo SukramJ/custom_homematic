@@ -2,6 +2,7 @@
 
 ## What's Changed
 - Bump hahomematic to 2024.12.8
+  - Add periodic checks for device firmware updates
   - Extend element_matches_key search
   - Log debug if variable is too long
   - Remove default markers from description
@@ -10,6 +11,7 @@
   - Support markers for sysvar/program selection
 - Add advanced config options to define markers for programs and sysvars. 
   This means that not all programs/sysvars are retrieved except the internal ones.
+- Move periodic checks for device firmware updates to lib
 
 # Version 1.75.1 (2024-12-15)
 
