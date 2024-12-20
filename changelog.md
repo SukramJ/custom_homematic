@@ -1,12 +1,14 @@
 # Version 1.76.0 (2024-12-20)
 
 ## What's Changed
-- Bump hahomematic to 2024.12.8
+- Bump hahomematic to 2024.12.9
   - Add periodic checks for device firmware updates
   - Extend element_matches_key search
   - Log debug if variable is too long
+  - Refactor scheduler to use just one task
   - Remove default markers from description
   - Rename create methods
+  - Rename marker for extended system variables from hahm to HAHM to better align with other markers
   - Start json_rpc client only for ccu
   - Support markers for sysvar/program selection
 - Add advanced config options to define markers for programs and sysvars. 
