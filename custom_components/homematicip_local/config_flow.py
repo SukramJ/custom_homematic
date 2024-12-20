@@ -8,11 +8,11 @@ from typing import Any, Final, cast
 from urllib.parse import urlparse
 
 from hahomematic.const import (
+    DEFAULT_ENABLE_PROGRAM_SCAN,
+    DEFAULT_ENABLE_SYSVAR_SCAN,
     DEFAULT_PROGRAM_MARKERS,
-    DEFAULT_PROGRAM_SCAN_ENABLED,
     DEFAULT_SYS_SCAN_INTERVAL,
     DEFAULT_SYSVAR_MARKERS,
-    DEFAULT_SYSVAR_SCAN_ENABLED,
     DEFAULT_TLS,
     DEFAULT_UN_IGNORES,
     DescriptionMarker,
@@ -58,24 +58,24 @@ from .const import (
     CONF_ADVANCED_CONFIG,
     CONF_CALLBACK_HOST,
     CONF_CALLBACK_PORT,
+    CONF_ENABLE_MQTT,
+    CONF_ENABLE_PROGRAM_SCAN,
     CONF_ENABLE_SYSTEM_NOTIFICATIONS,
+    CONF_ENABLE_SYSVAR_SCAN,
     CONF_INSTANCE_NAME,
     CONF_INTERFACE,
     CONF_JSON_PORT,
     CONF_LISTEN_ON_ALL_IP,
-    CONF_MQTT_ENABLED,
     CONF_MQTT_PREFIX,
     CONF_PROGRAM_MARKERS,
-    CONF_PROGRAM_SCAN_ENABLED,
     CONF_SYS_SCAN_INTERVAL,
     CONF_SYSVAR_MARKERS,
-    CONF_SYSVAR_SCAN_ENABLED,
     CONF_TLS,
     CONF_UN_IGNORES,
     CONF_VERIFY_TLS,
+    DEFAULT_ENABLE_MQTT,
     DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS,
     DEFAULT_LISTEN_ON_ALL_IP,
-    DEFAULT_MQTT_ENABLED,
     DEFAULT_MQTT_PREFIX,
     DOMAIN,
 )
@@ -84,15 +84,15 @@ from .support import InvalidConfig
 
 _LOGGER = logging.getLogger(__name__)
 
-CONF_BIDCOS_RF_ENABLED: Final = "bidcos_rf_enabled"
 CONF_BIDCOS_RF_PORT: Final = "bidcos_rf_port"
-CONF_BIDCOS_WIRED_ENABLED: Final = "bidcos_wired_enabled"
 CONF_BIDCOS_WIRED_PORT: Final = "bidcos_wired_port"
-CONF_CCU_JACK_ENABLED: Final = "ccu_jack_enabled"
-CONF_CUXD_ENABLED: Final = "cuxd_enabled"
-CONF_HMIP_RF_ENABLED: Final = "hmip_rf_enabled"
+CONF_ENABLE_BIDCOS_RF: Final = "bidcos_rf_enabled"
+CONF_ENABLE_BIDCOS_WIRED: Final = "bidcos_wired_enabled"
+CONF_ENABLE_CCU_JACK: Final = "ccu_jack_enabled"
+CONF_ENABLE_CUXD: Final = "cuxd_enabled"
+CONF_ENABLE_HMIP_RF: Final = "hmip_rf_enabled"
+CONF_ENABLE_VIRTUAL_DEVICES: Final = "virtual_devices_enabled"
 CONF_HMIP_RF_PORT: Final = "hmip_rf_port"
-CONF_VIRTUAL_DEVICES_ENABLED: Final = "virtual_devices_enabled"
 CONF_VIRTUAL_DEVICES_PATH: Final = "virtual_devices_path"
 CONF_VIRTUAL_DEVICES_PORT: Final = "virtual_devices_port"
 
@@ -166,64 +166,62 @@ def get_interface_schema(use_tls: bool, data: ConfigType, from_config_flow: bool
     interfaces = data.get(CONF_INTERFACE, {})
     # HmIP-RF
     if Interface.HMIP_RF in interfaces:
-        hmip_rf_enabled = interfaces.get(Interface.HMIP_RF) is not None
+        enable_hmip_rf = interfaces.get(Interface.HMIP_RF) is not None
     else:
-        hmip_rf_enabled = True
+        enable_hmip_rf = True
     hmip_port = IF_HMIP_RF_TLS_PORT if use_tls else IF_HMIP_RF_PORT
 
     # BidCos-RF
     if Interface.BIDCOS_RF in interfaces:
-        bidcos_rf_enabled = interfaces.get(Interface.BIDCOS_RF) is not None
+        enable_bidcos_rf = interfaces.get(Interface.BIDCOS_RF) is not None
     else:
-        bidcos_rf_enabled = True
+        enable_bidcos_rf = True
     bidcos_rf_port = IF_BIDCOS_RF_TLS_PORT if use_tls else IF_BIDCOS_RF_PORT
 
     # Virtual devices
     if Interface.VIRTUAL_DEVICES in interfaces:
-        virtual_devices_enabled = interfaces.get(Interface.VIRTUAL_DEVICES) is not None
+        enable_virtual_devices = interfaces.get(Interface.VIRTUAL_DEVICES) is not None
     else:
-        virtual_devices_enabled = False
+        enable_virtual_devices = False
     virtual_devices_port = IF_VIRTUAL_DEVICES_TLS_PORT if use_tls else IF_VIRTUAL_DEVICES_PORT
 
     # BidCos-Wired
     if Interface.BIDCOS_WIRED in interfaces:
-        bidcos_wired_enabled = interfaces.get(Interface.BIDCOS_WIRED) is not None
+        enable_bidcos_wired = interfaces.get(Interface.BIDCOS_WIRED) is not None
     else:
-        bidcos_wired_enabled = False
+        enable_bidcos_wired = False
     bidcos_wired_port = IF_BIDCOS_WIRED_TLS_PORT if use_tls else IF_BIDCOS_WIRED_PORT
 
     # CCU-Jack
     if Interface.CCU_JACK in interfaces:
-        ccu_jack_enabled = interfaces.get(Interface.CCU_JACK) is not None
+        enable_ccu_jack = interfaces.get(Interface.CCU_JACK) is not None
     else:
-        ccu_jack_enabled = False
+        enable_ccu_jack = False
 
     # CUxD
     if Interface.CUXD in interfaces:
-        cuxd_enabled = interfaces.get(Interface.CUXD) is not None
+        enable_cuxd = interfaces.get(Interface.CUXD) is not None
     else:
-        cuxd_enabled = False
+        enable_cuxd = False
 
     advanced_config = bool(data.get(CONF_ADVANCED_CONFIG))
     interface_schema = vol.Schema(
         {
-            vol.Required(CONF_HMIP_RF_ENABLED, default=hmip_rf_enabled): BOOLEAN_SELECTOR,
+            vol.Required(CONF_ENABLE_HMIP_RF, default=enable_hmip_rf): BOOLEAN_SELECTOR,
             vol.Required(CONF_HMIP_RF_PORT, default=hmip_port): PORT_SELECTOR,
-            vol.Required(CONF_BIDCOS_RF_ENABLED, default=bidcos_rf_enabled): BOOLEAN_SELECTOR,
+            vol.Required(CONF_ENABLE_BIDCOS_RF, default=enable_bidcos_rf): BOOLEAN_SELECTOR,
             vol.Required(CONF_BIDCOS_RF_PORT, default=bidcos_rf_port): PORT_SELECTOR,
             vol.Required(
-                CONF_VIRTUAL_DEVICES_ENABLED, default=virtual_devices_enabled
+                CONF_ENABLE_VIRTUAL_DEVICES, default=enable_virtual_devices
             ): BOOLEAN_SELECTOR,
             vol.Required(CONF_VIRTUAL_DEVICES_PORT, default=virtual_devices_port): PORT_SELECTOR,
             vol.Required(
                 CONF_VIRTUAL_DEVICES_PATH, default=IF_VIRTUAL_DEVICES_PATH
             ): TEXT_SELECTOR,
-            vol.Required(
-                CONF_BIDCOS_WIRED_ENABLED, default=bidcos_wired_enabled
-            ): BOOLEAN_SELECTOR,
+            vol.Required(CONF_ENABLE_BIDCOS_WIRED, default=enable_bidcos_wired): BOOLEAN_SELECTOR,
             vol.Required(CONF_BIDCOS_WIRED_PORT, default=bidcos_wired_port): PORT_SELECTOR,
-            vol.Required(CONF_CCU_JACK_ENABLED, default=ccu_jack_enabled): BOOLEAN_SELECTOR,
-            vol.Required(CONF_CUXD_ENABLED, default=cuxd_enabled): BOOLEAN_SELECTOR,
+            vol.Required(CONF_ENABLE_CCU_JACK, default=enable_ccu_jack): BOOLEAN_SELECTOR,
+            vol.Required(CONF_ENABLE_CUXD, default=enable_cuxd): BOOLEAN_SELECTOR,
             vol.Required(CONF_ADVANCED_CONFIG, default=advanced_config): BOOLEAN_SELECTOR,
         }
     )
@@ -243,9 +241,9 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
     advanced_schema = vol.Schema(
         {
             vol.Required(
-                CONF_PROGRAM_SCAN_ENABLED,
+                CONF_ENABLE_PROGRAM_SCAN,
                 default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_PROGRAM_SCAN_ENABLED, DEFAULT_PROGRAM_SCAN_ENABLED
+                    CONF_ENABLE_PROGRAM_SCAN, DEFAULT_ENABLE_PROGRAM_SCAN
                 ),
             ): BOOLEAN_SELECTOR,
             vol.Required(
@@ -262,9 +260,9 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
                 )
             ),
             vol.Required(
-                CONF_SYSVAR_SCAN_ENABLED,
+                CONF_ENABLE_SYSVAR_SCAN,
                 default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_SYSVAR_SCAN_ENABLED, DEFAULT_SYSVAR_SCAN_ENABLED
+                    CONF_ENABLE_SYSVAR_SCAN, DEFAULT_ENABLE_SYSVAR_SCAN
                 ),
             ): BOOLEAN_SELECTOR,
             vol.Required(
@@ -299,9 +297,9 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
                 ),
             ): BOOLEAN_SELECTOR,
             vol.Required(
-                CONF_MQTT_ENABLED,
+                CONF_ENABLE_MQTT,
                 default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_MQTT_ENABLED, DEFAULT_MQTT_ENABLED
+                    CONF_ENABLE_MQTT, DEFAULT_ENABLE_MQTT
                 ),
             ): BOOLEAN_SELECTOR,
             vol.Optional(
@@ -579,26 +577,26 @@ def _update_interface_input(data: ConfigType, interface_input: ConfigType) -> No
         return
 
     data[CONF_INTERFACE] = {}
-    if interface_input[CONF_HMIP_RF_ENABLED] is True:
+    if interface_input[CONF_ENABLE_HMIP_RF] is True:
         data[CONF_INTERFACE][Interface.HMIP_RF] = {
             CONF_PORT: interface_input[CONF_HMIP_RF_PORT],
         }
-    if interface_input[CONF_BIDCOS_RF_ENABLED] is True:
+    if interface_input[CONF_ENABLE_BIDCOS_RF] is True:
         data[CONF_INTERFACE][Interface.BIDCOS_RF] = {
             CONF_PORT: interface_input[CONF_BIDCOS_RF_PORT],
         }
-    if interface_input[CONF_VIRTUAL_DEVICES_ENABLED] is True:
+    if interface_input[CONF_ENABLE_VIRTUAL_DEVICES] is True:
         data[CONF_INTERFACE][Interface.VIRTUAL_DEVICES] = {
             CONF_PORT: interface_input[CONF_VIRTUAL_DEVICES_PORT],
             CONF_PATH: interface_input.get(CONF_VIRTUAL_DEVICES_PATH),
         }
-    if interface_input[CONF_BIDCOS_WIRED_ENABLED] is True:
+    if interface_input[CONF_ENABLE_BIDCOS_WIRED] is True:
         data[CONF_INTERFACE][Interface.BIDCOS_WIRED] = {
             CONF_PORT: interface_input[CONF_BIDCOS_WIRED_PORT],
         }
-    if interface_input[CONF_CCU_JACK_ENABLED] is True:
+    if interface_input[CONF_ENABLE_CCU_JACK] is True:
         data[CONF_INTERFACE][Interface.CCU_JACK] = {}
-    if interface_input[CONF_CUXD_ENABLED] is True:
+    if interface_input[CONF_ENABLE_CUXD] is True:
         data[CONF_INTERFACE][Interface.CUXD] = {}
     if interface_input[CONF_ADVANCED_CONFIG] is False:
         data[CONF_ADVANCED_CONFIG] = {}
@@ -610,17 +608,15 @@ def _update_advanced_input(data: ConfigType, advanced_input: ConfigType) -> None
 
     data[CONF_ADVANCED_CONFIG] = {}
     data[CONF_ADVANCED_CONFIG][CONF_PROGRAM_MARKERS] = advanced_input[CONF_PROGRAM_MARKERS]
-    data[CONF_ADVANCED_CONFIG][CONF_PROGRAM_SCAN_ENABLED] = advanced_input[
-        CONF_PROGRAM_SCAN_ENABLED
-    ]
+    data[CONF_ADVANCED_CONFIG][CONF_ENABLE_PROGRAM_SCAN] = advanced_input[CONF_ENABLE_PROGRAM_SCAN]
     data[CONF_ADVANCED_CONFIG][CONF_SYSVAR_MARKERS] = advanced_input[CONF_SYSVAR_MARKERS]
-    data[CONF_ADVANCED_CONFIG][CONF_SYSVAR_SCAN_ENABLED] = advanced_input[CONF_SYSVAR_SCAN_ENABLED]
+    data[CONF_ADVANCED_CONFIG][CONF_ENABLE_SYSVAR_SCAN] = advanced_input[CONF_ENABLE_SYSVAR_SCAN]
     data[CONF_ADVANCED_CONFIG][CONF_SYS_SCAN_INTERVAL] = advanced_input[CONF_SYS_SCAN_INTERVAL]
     data[CONF_ADVANCED_CONFIG][CONF_ENABLE_SYSTEM_NOTIFICATIONS] = advanced_input[
         CONF_ENABLE_SYSTEM_NOTIFICATIONS
     ]
     data[CONF_ADVANCED_CONFIG][CONF_LISTEN_ON_ALL_IP] = advanced_input[CONF_LISTEN_ON_ALL_IP]
-    data[CONF_ADVANCED_CONFIG][CONF_MQTT_ENABLED] = advanced_input[CONF_MQTT_ENABLED]
+    data[CONF_ADVANCED_CONFIG][CONF_ENABLE_MQTT] = advanced_input[CONF_ENABLE_MQTT]
     data[CONF_ADVANCED_CONFIG][CONF_MQTT_PREFIX] = advanced_input[CONF_MQTT_PREFIX]
     if advanced_input.get(CONF_UN_IGNORES):
         data[CONF_ADVANCED_CONFIG][CONF_UN_IGNORES] = advanced_input[CONF_UN_IGNORES]

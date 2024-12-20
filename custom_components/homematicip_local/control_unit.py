@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import asyncio
-from collections.abc import Callable, Mapping
+from collections.abc import Mapping
 from copy import deepcopy
-from datetime import datetime, timedelta
 import logging
 from types import UnionType
 from typing import Any, Final, TypeVar, cast
@@ -16,18 +14,17 @@ from hahomematic.const import (
     CALLBACK_TYPE,
     CONF_PASSWORD,
     CONF_USERNAME,
+    DEFAULT_ENABLE_PROGRAM_SCAN,
+    DEFAULT_ENABLE_SYSVAR_SCAN,
     DEFAULT_PROGRAM_MARKERS,
-    DEFAULT_PROGRAM_SCAN_ENABLED,
     DEFAULT_SYS_SCAN_INTERVAL,
     DEFAULT_SYSVAR_MARKERS,
-    DEFAULT_SYSVAR_SCAN_ENABLED,
     DEFAULT_UN_IGNORES,
     INTERFACES_REQUIRING_PERIODIC_REFRESH,
     IP_ANY_V4,
     PORT_ANY,
     BackendSystemEvent,
     DataPointCategory,
-    DeviceFirmwareState,
     EventKey,
     EventType,
     Interface,
@@ -45,7 +42,6 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import aiohttp_client, device_registry as dr
 from homeassistant.helpers.device_registry import DeviceEntry, DeviceEntryType, DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_send
-from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.issue_registry import (
     IssueSeverity,
     async_create_issue,
@@ -56,28 +52,25 @@ from .const import (
     CONF_ADVANCED_CONFIG,
     CONF_CALLBACK_HOST,
     CONF_CALLBACK_PORT,
+    CONF_ENABLE_MQTT,
+    CONF_ENABLE_PROGRAM_SCAN,
     CONF_ENABLE_SYSTEM_NOTIFICATIONS,
+    CONF_ENABLE_SYSVAR_SCAN,
     CONF_INSTANCE_NAME,
     CONF_INTERFACE,
     CONF_JSON_PORT,
     CONF_LISTEN_ON_ALL_IP,
-    CONF_MQTT_ENABLED,
     CONF_MQTT_PREFIX,
     CONF_PROGRAM_MARKERS,
-    CONF_PROGRAM_SCAN_ENABLED,
     CONF_SYS_SCAN_INTERVAL,
     CONF_SYSVAR_MARKERS,
-    CONF_SYSVAR_SCAN_ENABLED,
     CONF_TLS,
     CONF_UN_IGNORES,
     CONF_VERIFY_TLS,
-    DEFAULT_DEVICE_FIRMWARE_CHECK_ENABLED,
-    DEFAULT_DEVICE_FIRMWARE_CHECK_INTERVAL,
-    DEFAULT_DEVICE_FIRMWARE_DELIVERING_CHECK_INTERVAL,
-    DEFAULT_DEVICE_FIRMWARE_UPDATING_CHECK_INTERVAL,
+    DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK,
+    DEFAULT_ENABLE_MQTT,
     DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS,
     DEFAULT_LISTEN_ON_ALL_IP,
-    DEFAULT_MQTT_ENABLED,
     DEFAULT_MQTT_PREFIX,
     DOMAIN,
     EVENT_DEVICE_ID,
@@ -199,23 +192,24 @@ class BaseControlUnit:
             else None,
             central_id=central_id,
             client_session=aiohttp_client.async_get_clientsession(self._hass),
+            enable_device_firmware_check=DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK,
+            enable_program_scan=self._config.enable_program_scan,
+            enable_sysvar_scan=self._config.enable_sysvar_scan,
             listen_ip_addr=IP_ANY_V4 if self._config.listen_on_all_ip else None,
             default_callback_port=self._default_callback_port,
             host=self._config.host,
             interface_configs=interface_configs,
             interfaces_requiring_periodic_refresh=()
-            if self._config.mqtt_enabled
+            if self._config.enable_mqtt
             else INTERFACES_REQUIRING_PERIODIC_REFRESH,
             json_port=self._config.json_port,
             max_read_workers=1,
             name=self._instance_name,
             password=self._config.password,
             program_markers=self._config.program_markers,
-            program_scan_enabled=self._config.program_scan_enabled,
             start_direct=self._start_direct,
             storage_folder=get_storage_folder(self._hass),
             sysvar_markers=self._config.sysvar_markers,
-            sysvar_scan_enabled=self._config.sysvar_scan_enabled,
             sys_scan_interval=self._config.sys_scan_interval,
             tls=self._config.tls,
             un_ignore_list=self._config.un_ignore,
@@ -230,10 +224,6 @@ class ControlUnit(BaseControlUnit):
     def __init__(self, control_config: ControlConfig) -> None:
         """Init the control unit."""
         super().__init__(control_config=control_config)
-        self._scheduler = HmScheduler(
-            hass=self._hass,
-            control_unit=self,
-        )
         self._mqtt_consumer: MQTTConsumer | None = None
 
     async def start_central(self) -> None:
@@ -247,7 +237,7 @@ class ControlUnit(BaseControlUnit):
         )
         await super().start_central()
         self._async_add_central_to_device_registry()
-        if self.config.mqtt_enabled:
+        if self.config.enable_mqtt:
             self._mqtt_consumer = MQTTConsumer(
                 hass=self._hass, central=self._central, mqtt_prefix=self.config.mqtt_prefix
             )
@@ -257,8 +247,6 @@ class ControlUnit(BaseControlUnit):
         """Stop the central unit."""
         if self._mqtt_consumer:
             self._mqtt_consumer.unsubscribe()
-        if self._scheduler.initialized:
-            self._scheduler.de_init()
 
         for unregister in self._unregister_callbacks:
             if unregister is not None:
@@ -344,9 +332,6 @@ class ControlUnit(BaseControlUnit):
                 )
             self._async_add_virtual_remotes_to_device_registry()
         elif system_event == BackendSystemEvent.HUB_REFRESHED:
-            if not self._scheduler.initialized:
-                self._hass.create_task(target=self._scheduler.init())
-
             # Handle event of new hub entity creation in Homematic(IP) Local.
             for platform, hub_data_points in kwargs["new_hub_data_points"].items():
                 if hub_data_points and len(hub_data_points) > 0:
@@ -579,10 +564,7 @@ class ControlConfig:
         data: Mapping[str, Any],
         default_port: int = PORT_ANY,
         start_direct: bool = False,
-        device_firmware_check_enabled: bool = DEFAULT_DEVICE_FIRMWARE_CHECK_ENABLED,
-        device_firmware_check_interval: int = DEFAULT_DEVICE_FIRMWARE_CHECK_INTERVAL,
-        device_firmware_delivering_check_interval: int = DEFAULT_DEVICE_FIRMWARE_DELIVERING_CHECK_INTERVAL,
-        device_firmware_updating_check_interval: int = DEFAULT_DEVICE_FIRMWARE_UPDATING_CHECK_INTERVAL,
+        enable_device_firmware_check: bool = DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK,
     ) -> None:
         """Create the required config for the ControlUnit."""
         self.hass: Final = hass
@@ -590,14 +572,7 @@ class ControlConfig:
         self._data: Final = data
         self.default_callback_port: Final = default_port
         self.start_direct: Final = start_direct
-        self.device_firmware_check_enabled: Final = device_firmware_check_enabled
-        self.device_firmware_check_interval: Final = device_firmware_check_interval
-        self.device_firmware_delivering_check_interval: Final = (
-            device_firmware_delivering_check_interval
-        )
-        self.device_firmware_updating_check_interval: Final = (
-            device_firmware_updating_check_interval
-        )
+        self.enable_device_firmware_check: Final = enable_device_firmware_check
 
         # central
         self.instance_name = data[CONF_INSTANCE_NAME]
@@ -622,8 +597,8 @@ class ControlConfig:
         else:
             self.sysvar_markers = DEFAULT_SYSVAR_MARKERS
 
-        self.sysvar_scan_enabled: Final = advanced_config.get(
-            CONF_SYSVAR_SCAN_ENABLED, DEFAULT_SYSVAR_SCAN_ENABLED
+        self.enable_sysvar_scan: Final = advanced_config.get(
+            CONF_ENABLE_SYSVAR_SCAN, DEFAULT_ENABLE_SYSVAR_SCAN
         )
 
         if program_markers := advanced_config.get(CONF_PROGRAM_MARKERS):
@@ -631,8 +606,8 @@ class ControlConfig:
         else:
             self.program_markers = DEFAULT_PROGRAM_MARKERS
 
-        self.program_scan_enabled: Final = advanced_config.get(
-            CONF_PROGRAM_SCAN_ENABLED, DEFAULT_PROGRAM_SCAN_ENABLED
+        self.enable_program_scan: Final = advanced_config.get(
+            CONF_ENABLE_PROGRAM_SCAN, DEFAULT_ENABLE_PROGRAM_SCAN
         )
         self.sys_scan_interval: Final = advanced_config.get(
             CONF_SYS_SCAN_INTERVAL, DEFAULT_SYS_SCAN_INTERVAL
@@ -641,7 +616,7 @@ class ControlConfig:
         self.listen_on_all_ip = advanced_config.get(
             CONF_LISTEN_ON_ALL_IP, DEFAULT_LISTEN_ON_ALL_IP
         )
-        self.mqtt_enabled: Final = advanced_config.get(CONF_MQTT_ENABLED, DEFAULT_MQTT_ENABLED)
+        self.enable_mqtt: Final = advanced_config.get(CONF_ENABLE_MQTT, DEFAULT_ENABLE_MQTT)
         self.mqtt_prefix: Final = advanced_config.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)
         self.un_ignore: Final = advanced_config.get(CONF_UN_IGNORES, DEFAULT_UN_IGNORES)
 
@@ -678,114 +653,6 @@ class ControlConfig:
             entry_id="hmip_local_temporary",
             data=temporary_data,
             start_direct=True,
-        )
-
-
-class HmScheduler:
-    """The Homematic(IP) Local hub scheduler. (CCU/HomeGear)."""
-
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        control_unit: ControlUnit,
-    ) -> None:
-        """Initialize Homematic(IP) Local hub scheduler."""
-        self._hass = hass
-        self._control: ControlUnit = control_unit
-        self._central: CentralUnit = control_unit.central
-        self._initialized = False
-        self._remove_device_firmware_check_listener: Callable | None = None
-        self._remove_device_firmware_delivering_check_listener: Callable | None = None
-        self._remove_device_firmware_updating_check_listener: Callable | None = None
-        self._sema_init: Final = asyncio.Semaphore()
-
-    @property
-    def initialized(self) -> bool:
-        """Return initialized state."""
-        return self._initialized
-
-    async def init(self) -> None:
-        """Execute the initial data refresh."""
-        async with self._sema_init:
-            if self._initialized:
-                return
-            self._initialized = True
-
-            if self._control.config.device_firmware_check_enabled:
-                self._remove_device_firmware_check_listener = async_track_time_interval(
-                    hass=self._hass,
-                    action=self._fetch_device_firmware_update_data,
-                    interval=timedelta(
-                        seconds=self._control.config.device_firmware_check_interval
-                    ),
-                    cancel_on_shutdown=True,
-                )
-                self._remove_device_firmware_delivering_check_listener = async_track_time_interval(
-                    hass=self._hass,
-                    action=self._fetch_device_firmware_update_data_in_delivery,
-                    interval=timedelta(
-                        seconds=self._control.config.device_firmware_delivering_check_interval
-                    ),
-                    cancel_on_shutdown=True,
-                )
-                self._remove_device_firmware_updating_check_listener = async_track_time_interval(
-                    hass=self._hass,
-                    action=self._fetch_device_firmware_update_data_in_update,
-                    interval=timedelta(
-                        seconds=self._control.config.device_firmware_updating_check_interval
-                    ),
-                )
-            await self._central.refresh_firmware_data()
-
-    def de_init(self) -> None:
-        """De_init the hub scheduler."""
-        if self._remove_device_firmware_check_listener and callable(
-            self._remove_device_firmware_check_listener
-        ):
-            self._remove_device_firmware_check_listener()
-        if self._remove_device_firmware_delivering_check_listener and callable(
-            self._remove_device_firmware_delivering_check_listener
-        ):
-            self._remove_device_firmware_delivering_check_listener()
-        if self._remove_device_firmware_updating_check_listener and callable(
-            self._remove_device_firmware_updating_check_listener
-        ):
-            self._remove_device_firmware_updating_check_listener()
-        self._initialized = False
-
-    async def _fetch_device_firmware_update_data(self, now: datetime) -> None:
-        """Fetch device firmware update data from backend."""
-        _LOGGER.debug(
-            "Scheduled fetching of device firmware update data for %s",
-            self._central.name,
-        )
-        await self._central.refresh_firmware_data()
-
-    async def _fetch_device_firmware_update_data_in_delivery(self, now: datetime) -> None:
-        """Fetch device firmware update data from backend for delivering devices."""
-        _LOGGER.debug(
-            "Scheduled fetching of device firmware update data for delivering devices for %s",
-            self._central.name,
-        )
-        await self._central.refresh_firmware_data_by_state(
-            device_firmware_states=(
-                DeviceFirmwareState.DELIVER_FIRMWARE_IMAGE,
-                DeviceFirmwareState.LIVE_DELIVER_FIRMWARE_IMAGE,
-            )
-        )
-
-    async def _fetch_device_firmware_update_data_in_update(self, now: datetime) -> None:
-        """Fetch device firmware update data from backend for updating devices."""
-        _LOGGER.debug(
-            "Scheduled fetching of device firmware update data for updating devices for %s",
-            self._central.name,
-        )
-        await self._central.refresh_firmware_data_by_state(
-            device_firmware_states=(
-                DeviceFirmwareState.READY_FOR_UPDATE,
-                DeviceFirmwareState.DO_UPDATE_PENDING,
-                DeviceFirmwareState.PERFORMING_UPDATE,
-            )
         )
 
 

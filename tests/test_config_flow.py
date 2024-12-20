@@ -11,12 +11,12 @@ import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.homematicip_local.config_flow import (
-    CONF_BIDCOS_RF_ENABLED,
     CONF_BIDCOS_RF_PORT,
-    CONF_BIDCOS_WIRED_ENABLED,
-    CONF_HMIP_RF_ENABLED,
+    CONF_ENABLE_BIDCOS_RF,
+    CONF_ENABLE_BIDCOS_WIRED,
+    CONF_ENABLE_HMIP_RF,
+    CONF_ENABLE_VIRTUAL_DEVICES,
     CONF_INSTANCE_NAME,
-    CONF_VIRTUAL_DEVICES_ENABLED,
     InvalidConfig,
     _async_validate_config_and_get_system_information,
     _get_instance_name,
@@ -201,7 +201,7 @@ async def test_options_form(hass: HomeAssistant, mock_config_entry_v2: MockConfi
 
 async def test_form_no_hmip_other_bidcos_port(hass: HomeAssistant) -> None:
     """Test we get the form."""
-    interface_data = {CONF_HMIP_RF_ENABLED: False, CONF_BIDCOS_RF_PORT: 5555}
+    interface_data = {CONF_ENABLE_HMIP_RF: False, CONF_BIDCOS_RF_PORT: 5555}
     data = await async_check_form(hass, interface_data=interface_data)
     interface = data["interface"]
     assert interface.get(Interface.HMIP_RF) is None
@@ -215,7 +215,7 @@ async def test_options_form_no_hmip_other_bidcos_port(
     hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry
 ) -> None:
     """Test we get the form."""
-    interface_data = {CONF_HMIP_RF_ENABLED: False, CONF_BIDCOS_RF_PORT: 5555}
+    interface_data = {CONF_ENABLE_HMIP_RF: False, CONF_BIDCOS_RF_PORT: 5555}
     data = await async_check_options_form(
         hass, mock_config_entry=mock_config_entry_v2, interface_data=interface_data
     )
@@ -230,10 +230,10 @@ async def test_options_form_no_hmip_other_bidcos_port(
 async def test_form_only_hs485(hass: HomeAssistant) -> None:
     """Test we get the form."""
     interface_data = {
-        CONF_HMIP_RF_ENABLED: False,
-        CONF_BIDCOS_RF_ENABLED: False,
-        CONF_VIRTUAL_DEVICES_ENABLED: False,
-        CONF_BIDCOS_WIRED_ENABLED: True,
+        CONF_ENABLE_HMIP_RF: False,
+        CONF_ENABLE_BIDCOS_RF: False,
+        CONF_ENABLE_VIRTUAL_DEVICES: False,
+        CONF_ENABLE_BIDCOS_WIRED: True,
     }
     data = await async_check_form(hass, interface_data=interface_data)
     interface = data["interface"]
@@ -246,10 +246,10 @@ async def test_form_only_hs485(hass: HomeAssistant) -> None:
 async def test_form_only_virtual(hass: HomeAssistant) -> None:
     """Test we get the form."""
     interface_data = {
-        CONF_HMIP_RF_ENABLED: False,
-        CONF_BIDCOS_RF_ENABLED: False,
-        CONF_VIRTUAL_DEVICES_ENABLED: True,
-        CONF_BIDCOS_WIRED_ENABLED: False,
+        CONF_ENABLE_HMIP_RF: False,
+        CONF_ENABLE_BIDCOS_RF: False,
+        CONF_ENABLE_VIRTUAL_DEVICES: True,
+        CONF_ENABLE_BIDCOS_WIRED: False,
     }
     data = await async_check_form(hass, interface_data=interface_data)
     interface = data["interface"]
