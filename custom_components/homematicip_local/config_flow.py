@@ -15,6 +15,7 @@ from hahomematic.const import (
     DEFAULT_SYSVAR_SCAN_ENABLED,
     DEFAULT_TLS,
     DEFAULT_UN_IGNORES,
+    DescriptionMarker,
     Interface,
     SystemInformation,
 )
@@ -242,21 +243,28 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
     advanced_schema = vol.Schema(
         {
             vol.Required(
-                CONF_PROGRAM_MARKERS,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_PROGRAM_MARKERS, DEFAULT_PROGRAM_MARKERS
-                ),
-            ): TEXT_SELECTOR,
-            vol.Required(
                 CONF_PROGRAM_SCAN_ENABLED,
                 default=data.get(CONF_ADVANCED_CONFIG, {}).get(
                     CONF_PROGRAM_SCAN_ENABLED, DEFAULT_PROGRAM_SCAN_ENABLED
                 ),
             ): BOOLEAN_SELECTOR,
             vol.Required(
-                CONF_PROGRAM_SCAN_ENABLED,
+                CONF_PROGRAM_MARKERS,
                 default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_PROGRAM_SCAN_ENABLED, DEFAULT_PROGRAM_SCAN_ENABLED
+                    CONF_PROGRAM_MARKERS, DEFAULT_PROGRAM_MARKERS
+                ),
+            ): SelectSelector(
+                config=SelectSelectorConfig(
+                    mode=SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                    sort=True,
+                    options=[str(v) for v in DescriptionMarker],
+                )
+            ),
+            vol.Required(
+                CONF_SYSVAR_SCAN_ENABLED,
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
+                    CONF_SYSVAR_SCAN_ENABLED, DEFAULT_SYSVAR_SCAN_ENABLED
                 ),
             ): BOOLEAN_SELECTOR,
             vol.Required(
@@ -264,13 +272,14 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
                 default=data.get(CONF_ADVANCED_CONFIG, {}).get(
                     CONF_SYSVAR_MARKERS, DEFAULT_SYSVAR_MARKERS
                 ),
-            ): TEXT_SELECTOR,
-            vol.Required(
-                CONF_SYSVAR_SCAN_ENABLED,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_SYSVAR_SCAN_ENABLED, DEFAULT_SYSVAR_SCAN_ENABLED
-                ),
-            ): BOOLEAN_SELECTOR,
+            ): SelectSelector(
+                config=SelectSelectorConfig(
+                    mode=SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                    sort=True,
+                    options=[str(v) for v in DescriptionMarker],
+                )
+            ),
             vol.Required(
                 CONF_SYS_SCAN_INTERVAL,
                 default=data.get(CONF_ADVANCED_CONFIG, {}).get(

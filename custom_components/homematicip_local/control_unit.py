@@ -283,7 +283,7 @@ class ControlUnit(BaseControlUnit):
             sw_version=self._central.version,
             name=self._central.name,
             entry_type=DeviceEntryType.SERVICE,
-            configuration_url=self._central.central_url,
+            configuration_url=self._central.url,
         )
 
     @callback
@@ -618,7 +618,7 @@ class ControlConfig:
             CONF_ENABLE_SYSTEM_NOTIFICATIONS, DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS
         )
         if sysvar_markers := advanced_config.get(CONF_SYSVAR_MARKERS):
-            self.sysvar_markers = self._cleanup_markers(markers=sysvar_markers)
+            self.sysvar_markers = sysvar_markers
         else:
             self.sysvar_markers = DEFAULT_SYSVAR_MARKERS
 
@@ -627,7 +627,7 @@ class ControlConfig:
         )
 
         if program_markers := advanced_config.get(CONF_PROGRAM_MARKERS):
-            self.program_markers = self._cleanup_markers(markers=program_markers)
+            self.program_markers = program_markers
         else:
             self.program_markers = DEFAULT_PROGRAM_MARKERS
 
@@ -644,14 +644,6 @@ class ControlConfig:
         self.mqtt_enabled: Final = advanced_config.get(CONF_MQTT_ENABLED, DEFAULT_MQTT_ENABLED)
         self.mqtt_prefix: Final = advanced_config.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)
         self.un_ignore: Final = advanced_config.get(CONF_UN_IGNORES, DEFAULT_UN_IGNORES)
-
-    @staticmethod
-    def _cleanup_markers(markers: str) -> tuple[str, ...]:
-        """Cleanup markers."""
-        markers = markers.strip()
-        if markers == "":
-            return ()
-        return tuple(markers.split(","))
 
     def check_config(self) -> None:
         """Check config. Throws BaseHomematicException on failure."""
