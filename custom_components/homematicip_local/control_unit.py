@@ -283,7 +283,7 @@ class ControlUnit(BaseControlUnit):
             sw_version=self._central.version,
             name=self._central.name,
             entry_type=DeviceEntryType.SERVICE,
-            configuration_url=self._central.central_url,
+            configuration_url=self._central.url,
         )
 
     @callback
