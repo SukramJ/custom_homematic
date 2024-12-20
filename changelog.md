@@ -1,10 +1,11 @@
-# Version 1.76.0 (2024-12-18)
+# Version 1.76.0 (2024-12-20)
 
 ## What's Changed
-- Bump hahomematic to 2024.12.7
+- Bump hahomematic to 2024.12.8
   - Extend element_matches_key search
   - Log debug if variable is too long
   - Remove default markers from description
+  - Rename create methods
   - Start json_rpc client only for ccu
   - Support markers for sysvar/program selection
 - Add advanced config options to define markers for programs and sysvars. 
