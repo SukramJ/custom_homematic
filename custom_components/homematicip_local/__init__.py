@@ -9,11 +9,7 @@ from typing import TypeAlias
 
 from awesomeversion import AwesomeVersion
 from hahomematic import __version__ as HAHM_VERSION
-from hahomematic.const import (
-    DEFAULT_ENABLE_SYSVAR_SCAN,
-    DEFAULT_SYS_SCAN_INTERVAL,
-    DEFAULT_UN_IGNORES,
-)
+from hahomematic.const import DEFAULT_ENABLE_SYSVAR_SCAN, DEFAULT_SYS_SCAN_INTERVAL, DEFAULT_UN_IGNORES
 from hahomematic.support import cleanup_cache_dirs, find_free_port
 
 from homeassistant.config_entries import ConfigEntry
@@ -111,9 +107,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: HomematicConfigEntry) -
 
 async def async_remove_entry(hass: HomeAssistant, entry: HomematicConfigEntry) -> None:
     """Handle removal of an entry."""
-    cleanup_cache_dirs(
-        instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass)
-    )
+    cleanup_cache_dirs(instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
 
 
 async def async_remove_config_entry_device(
@@ -121,20 +115,14 @@ async def async_remove_config_entry_device(
 ) -> bool:
     """Remove a config entry from a device."""
 
-    if (
-        address_data := get_device_address_at_interface_from_identifiers(
-            identifiers=device_entry.identifiers
-        )
-    ) is None:
+    if (address_data := get_device_address_at_interface_from_identifiers(identifiers=device_entry.identifiers)) is None:
         return False
 
     interface_id: str = address_data[0]
     device_address: str = address_data[1]
 
     if interface_id and device_address and (control_unit := entry.runtime_data):
-        await control_unit.central.delete_device(
-            interface_id=interface_id, device_address=device_address
-        )
+        await control_unit.central.delete_device(interface_id=interface_id, device_address=device_address)
         _LOGGER.debug(
             "Called delete_device: %s, %s",
             interface_id,
@@ -194,9 +182,7 @@ async def async_migrate_entry(hass: HomeAssistant, entry: HomematicConfigEntry) 
             CONF_ENABLE_SYSTEM_NOTIFICATIONS: DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS,
             CONF_UN_IGNORES: DEFAULT_UN_IGNORES,
         }
-        data[CONF_ADVANCED_CONFIG] = (
-            {} if advanced_config == default_advanced_config else advanced_config
-        )
+        data[CONF_ADVANCED_CONFIG] = {} if advanced_config == default_advanced_config else advanced_config
 
         def del_param(name: str) -> None:
             with contextlib.suppress(Exception):
@@ -207,22 +193,16 @@ async def async_migrate_entry(hass: HomeAssistant, entry: HomematicConfigEntry) 
         del_param(name=CONF_ENABLE_SYSTEM_NOTIFICATIONS)
         del_param(name=CONF_UN_IGNORES)
 
-        cleanup_cache_dirs(
-            instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass)
-        )
+        cleanup_cache_dirs(instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
         hass.config_entries.async_update_entry(entry, version=5, data=data)
     if entry.version == 5:
         data = dict(entry.data)
-        cleanup_cache_dirs(
-            instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass)
-        )
+        cleanup_cache_dirs(instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
         hass.config_entries.async_update_entry(entry, version=6, data=data)
     if entry.version == 6:
         data = dict(entry.data)
         if data.get(CONF_ADVANCED_CONFIG):
-            data[CONF_ADVANCED_CONFIG][CONF_ENABLE_PROGRAM_SCAN] = data[CONF_ADVANCED_CONFIG][
-                CONF_ENABLE_SYSVAR_SCAN
-            ]
+            data[CONF_ADVANCED_CONFIG][CONF_ENABLE_PROGRAM_SCAN] = data[CONF_ADVANCED_CONFIG][CONF_ENABLE_SYSVAR_SCAN]
         hass.config_entries.async_update_entry(entry, version=7, data=data)
     _LOGGER.info("Migration to version %s successful", entry.version)
     return True

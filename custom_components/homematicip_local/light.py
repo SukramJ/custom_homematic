@@ -6,12 +6,7 @@ import logging
 from typing import Any, Final
 
 from hahomematic.const import DataPointCategory
-from hahomematic.model.custom import (
-    CustomDpDimmer,
-    CustomDpIpFixedColorLight,
-    LightOffArgs,
-    LightOnArgs,
-)
+from hahomematic.model.custom import CustomDpDimmer, CustomDpIpFixedColorLight, LightOffArgs, LightOnArgs
 import voluptuous as vol
 
 from homeassistant.components.light import (
@@ -70,9 +65,7 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.LIGHT
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.LIGHT),
             target=async_add_light,
         )
     )

@@ -48,9 +48,7 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.UPDATE
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.UPDATE),
             target=async_add_update,
         )
     )
@@ -81,9 +79,7 @@ class HaHomematicUpdate(UpdateEntity):
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, data_point.device.identifier)},
         )
-        self._attr_extra_state_attributes = {
-            ATTR_FIRMWARE_UPDATE_STATE: data_point.device.firmware_update_state
-        }
+        self._attr_extra_state_attributes = {ATTR_FIRMWARE_UPDATE_STATE: data_point.device.firmware_update_state}
         self._unregister_callbacks: list[CALLBACK_TYPE] = []
         _LOGGER.debug("init: Setting up %s", data_point.full_name)
 

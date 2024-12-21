@@ -14,6 +14,7 @@
 - Add advanced config options to define markers for programs and sysvars. 
   This means that not all programs/sysvars are retrieved except the internal ones.
 - Move periodic checks for device firmware updates to lib
+- Reformat line length to 120
 
 # Version 1.75.1 (2024-12-15)
 

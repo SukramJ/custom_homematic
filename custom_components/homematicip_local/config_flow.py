@@ -24,21 +24,8 @@ import voluptuous as vol
 from voluptuous.schema_builder import UNDEFINED, Schema
 
 from homeassistant.components import ssdp
-from homeassistant.config_entries import (
-    CONN_CLASS_LOCAL_PUSH,
-    ConfigEntry,
-    ConfigFlow,
-    ConfigFlowResult,
-    OptionsFlow,
-)
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_NAME,
-    CONF_PASSWORD,
-    CONF_PATH,
-    CONF_PORT,
-    CONF_USERNAME,
-)
+from homeassistant.config_entries import CONN_CLASS_LOCAL_PUSH, ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
+from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PASSWORD, CONF_PATH, CONF_PORT, CONF_USERNAME
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.selector import (
     BooleanSelector,
@@ -118,11 +105,7 @@ PORT_SELECTOR_OPTIONAL = vol.All(
     vol.Coerce(int),
 )
 SCAN_INTERVAL_SELECTOR = vol.All(
-    NumberSelector(
-        NumberSelectorConfig(
-            mode=NumberSelectorMode.BOX, min=5, step="any", unit_of_measurement="sec"
-        )
-    ),
+    NumberSelector(NumberSelectorConfig(mode=NumberSelectorMode.BOX, min=5, step="any", unit_of_measurement="sec")),
     vol.Coerce(int),
 )
 
@@ -131,25 +114,15 @@ def get_domain_schema(data: ConfigType) -> Schema:
     """Return the interface schema with or without tls ports."""
     return vol.Schema(
         {
-            vol.Required(
-                CONF_INSTANCE_NAME, default=data.get(CONF_INSTANCE_NAME) or UNDEFINED
-            ): TEXT_SELECTOR,
+            vol.Required(CONF_INSTANCE_NAME, default=data.get(CONF_INSTANCE_NAME) or UNDEFINED): TEXT_SELECTOR,
             vol.Required(CONF_HOST, default=data.get(CONF_HOST)): TEXT_SELECTOR,
             vol.Required(CONF_USERNAME, default=data.get(CONF_USERNAME)): TEXT_SELECTOR,
             vol.Required(CONF_PASSWORD, default=data.get(CONF_PASSWORD)): PASSWORD_SELECTOR,
             vol.Required(CONF_TLS, default=data.get(CONF_TLS, DEFAULT_TLS)): BOOLEAN_SELECTOR,
-            vol.Required(
-                CONF_VERIFY_TLS, default=data.get(CONF_VERIFY_TLS, False)
-            ): BOOLEAN_SELECTOR,
-            vol.Optional(
-                CONF_CALLBACK_HOST, default=data.get(CONF_CALLBACK_HOST) or UNDEFINED
-            ): TEXT_SELECTOR,
-            vol.Optional(
-                CONF_CALLBACK_PORT, default=data.get(CONF_CALLBACK_PORT) or UNDEFINED
-            ): PORT_SELECTOR_OPTIONAL,
-            vol.Optional(
-                CONF_JSON_PORT, default=data.get(CONF_JSON_PORT) or UNDEFINED
-            ): PORT_SELECTOR_OPTIONAL,
+            vol.Required(CONF_VERIFY_TLS, default=data.get(CONF_VERIFY_TLS, False)): BOOLEAN_SELECTOR,
+            vol.Optional(CONF_CALLBACK_HOST, default=data.get(CONF_CALLBACK_HOST) or UNDEFINED): TEXT_SELECTOR,
+            vol.Optional(CONF_CALLBACK_PORT, default=data.get(CONF_CALLBACK_PORT) or UNDEFINED): PORT_SELECTOR_OPTIONAL,
+            vol.Optional(CONF_JSON_PORT, default=data.get(CONF_JSON_PORT) or UNDEFINED): PORT_SELECTOR_OPTIONAL,
         }
     )
 
@@ -165,44 +138,25 @@ def get_interface_schema(use_tls: bool, data: ConfigType, from_config_flow: bool
     """Return the interface schema with or without tls ports."""
     interfaces = data.get(CONF_INTERFACE, {})
     # HmIP-RF
-    if Interface.HMIP_RF in interfaces:
-        enable_hmip_rf = interfaces.get(Interface.HMIP_RF) is not None
-    else:
-        enable_hmip_rf = True
+    enable_hmip_rf = interfaces.get(Interface.HMIP_RF) is not None if Interface.HMIP_RF in interfaces else True
     hmip_port = IF_HMIP_RF_TLS_PORT if use_tls else IF_HMIP_RF_PORT
-
     # BidCos-RF
-    if Interface.BIDCOS_RF in interfaces:
-        enable_bidcos_rf = interfaces.get(Interface.BIDCOS_RF) is not None
-    else:
-        enable_bidcos_rf = True
+    enable_bidcos_rf = interfaces.get(Interface.BIDCOS_RF) is not None if Interface.BIDCOS_RF in interfaces else True
     bidcos_rf_port = IF_BIDCOS_RF_TLS_PORT if use_tls else IF_BIDCOS_RF_PORT
-
     # Virtual devices
-    if Interface.VIRTUAL_DEVICES in interfaces:
-        enable_virtual_devices = interfaces.get(Interface.VIRTUAL_DEVICES) is not None
-    else:
-        enable_virtual_devices = False
+    enable_virtual_devices = (
+        interfaces.get(Interface.VIRTUAL_DEVICES) is not None if Interface.VIRTUAL_DEVICES in interfaces else False
+    )
     virtual_devices_port = IF_VIRTUAL_DEVICES_TLS_PORT if use_tls else IF_VIRTUAL_DEVICES_PORT
-
     # BidCos-Wired
-    if Interface.BIDCOS_WIRED in interfaces:
-        enable_bidcos_wired = interfaces.get(Interface.BIDCOS_WIRED) is not None
-    else:
-        enable_bidcos_wired = False
+    enable_bidcos_wired = (
+        interfaces.get(Interface.BIDCOS_WIRED) is not None if Interface.BIDCOS_WIRED in interfaces else False
+    )
     bidcos_wired_port = IF_BIDCOS_WIRED_TLS_PORT if use_tls else IF_BIDCOS_WIRED_PORT
-
     # CCU-Jack
-    if Interface.CCU_JACK in interfaces:
-        enable_ccu_jack = interfaces.get(Interface.CCU_JACK) is not None
-    else:
-        enable_ccu_jack = False
-
+    enable_ccu_jack = interfaces.get(Interface.CCU_JACK) is not None if Interface.CCU_JACK in interfaces else False
     # CUxD
-    if Interface.CUXD in interfaces:
-        enable_cuxd = interfaces.get(Interface.CUXD) is not None
-    else:
-        enable_cuxd = False
+    enable_cuxd = interfaces.get(Interface.CUXD) is not None if Interface.CUXD in interfaces else False
 
     advanced_config = bool(data.get(CONF_ADVANCED_CONFIG))
     interface_schema = vol.Schema(
@@ -211,13 +165,9 @@ def get_interface_schema(use_tls: bool, data: ConfigType, from_config_flow: bool
             vol.Required(CONF_HMIP_RF_PORT, default=hmip_port): PORT_SELECTOR,
             vol.Required(CONF_ENABLE_BIDCOS_RF, default=enable_bidcos_rf): BOOLEAN_SELECTOR,
             vol.Required(CONF_BIDCOS_RF_PORT, default=bidcos_rf_port): PORT_SELECTOR,
-            vol.Required(
-                CONF_ENABLE_VIRTUAL_DEVICES, default=enable_virtual_devices
-            ): BOOLEAN_SELECTOR,
+            vol.Required(CONF_ENABLE_VIRTUAL_DEVICES, default=enable_virtual_devices): BOOLEAN_SELECTOR,
             vol.Required(CONF_VIRTUAL_DEVICES_PORT, default=virtual_devices_port): PORT_SELECTOR,
-            vol.Required(
-                CONF_VIRTUAL_DEVICES_PATH, default=IF_VIRTUAL_DEVICES_PATH
-            ): TEXT_SELECTOR,
+            vol.Required(CONF_VIRTUAL_DEVICES_PATH, default=IF_VIRTUAL_DEVICES_PATH): TEXT_SELECTOR,
             vol.Required(CONF_ENABLE_BIDCOS_WIRED, default=enable_bidcos_wired): BOOLEAN_SELECTOR,
             vol.Required(CONF_BIDCOS_WIRED_PORT, default=bidcos_wired_port): PORT_SELECTOR,
             vol.Required(CONF_ENABLE_CCU_JACK, default=enable_ccu_jack): BOOLEAN_SELECTOR,
@@ -242,15 +192,11 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
         {
             vol.Required(
                 CONF_ENABLE_PROGRAM_SCAN,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_ENABLE_PROGRAM_SCAN, DEFAULT_ENABLE_PROGRAM_SCAN
-                ),
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_ENABLE_PROGRAM_SCAN, DEFAULT_ENABLE_PROGRAM_SCAN),
             ): BOOLEAN_SELECTOR,
             vol.Required(
                 CONF_PROGRAM_MARKERS,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_PROGRAM_MARKERS, DEFAULT_PROGRAM_MARKERS
-                ),
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_PROGRAM_MARKERS, DEFAULT_PROGRAM_MARKERS),
             ): SelectSelector(
                 config=SelectSelectorConfig(
                     mode=SelectSelectorMode.DROPDOWN,
@@ -261,15 +207,11 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
             ),
             vol.Required(
                 CONF_ENABLE_SYSVAR_SCAN,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_ENABLE_SYSVAR_SCAN, DEFAULT_ENABLE_SYSVAR_SCAN
-                ),
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_ENABLE_SYSVAR_SCAN, DEFAULT_ENABLE_SYSVAR_SCAN),
             ): BOOLEAN_SELECTOR,
             vol.Required(
                 CONF_SYSVAR_MARKERS,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_SYSVAR_MARKERS, DEFAULT_SYSVAR_MARKERS
-                ),
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_SYSVAR_MARKERS, DEFAULT_SYSVAR_MARKERS),
             ): SelectSelector(
                 config=SelectSelectorConfig(
                     mode=SelectSelectorMode.DROPDOWN,
@@ -280,9 +222,7 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
             ),
             vol.Required(
                 CONF_SYS_SCAN_INTERVAL,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_SYS_SCAN_INTERVAL, DEFAULT_SYS_SCAN_INTERVAL
-                ),
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_SYS_SCAN_INTERVAL, DEFAULT_SYS_SCAN_INTERVAL),
             ): SCAN_INTERVAL_SELECTOR,
             vol.Required(
                 CONF_ENABLE_SYSTEM_NOTIFICATIONS,
@@ -292,21 +232,15 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
             ): BOOLEAN_SELECTOR,
             vol.Required(
                 CONF_LISTEN_ON_ALL_IP,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_LISTEN_ON_ALL_IP, DEFAULT_LISTEN_ON_ALL_IP
-                ),
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_LISTEN_ON_ALL_IP, DEFAULT_LISTEN_ON_ALL_IP),
             ): BOOLEAN_SELECTOR,
             vol.Required(
                 CONF_ENABLE_MQTT,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_ENABLE_MQTT, DEFAULT_ENABLE_MQTT
-                ),
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_ENABLE_MQTT, DEFAULT_ENABLE_MQTT),
             ): BOOLEAN_SELECTOR,
             vol.Optional(
                 CONF_MQTT_PREFIX,
-                default=data.get(CONF_ADVANCED_CONFIG, {}).get(
-                    CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX
-                ),
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX),
             ): TEXT_SELECTOR,
             vol.Optional(
                 CONF_UN_IGNORES,
@@ -357,9 +291,7 @@ class DomainConfigFlow(ConfigFlow, domain=DOMAIN):
             self.data = _get_ccu_data(self.data, user_input=user_input)
             return await self.async_step_interface()
 
-        return self.async_show_form(
-            step_id="central", data_schema=get_domain_schema(data=self.data)
-        )
+        return self.async_show_form(step_id="central", data_schema=get_domain_schema(data=self.data))
 
     async def async_step_interface(
         self,
@@ -406,9 +338,7 @@ class DomainConfigFlow(ConfigFlow, domain=DOMAIN):
         description_placeholders = {}
 
         try:
-            system_information = await _async_validate_config_and_get_system_information(
-                self.hass, self.data
-            )
+            system_information = await _async_validate_config_and_get_system_information(self.hass, self.data)
             if system_information is not None:
                 await self.async_set_unique_id(system_information.serial)
             self._abort_if_unique_id_configured()
@@ -432,9 +362,7 @@ class DomainConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_ssdp(self, discovery_info: ssdp.SsdpServiceInfo) -> ConfigFlowResult:
         """Handle a discovered HomeMatic CCU."""
         _LOGGER.debug("Homematic(IP) Local SSDP discovery %s", pformat(discovery_info))
-        instance_name = (
-            _get_instance_name(friendly_name=discovery_info.upnp.get("friendlyName")) or "CCU"
-        )
+        instance_name = _get_instance_name(friendly_name=discovery_info.upnp.get("friendlyName")) or "CCU"
         serial = _get_serial(model_description=discovery_info.upnp.get("modelDescription"))
 
         host = cast(str, urlparse(discovery_info.ssdp_location).hostname)
@@ -509,9 +437,7 @@ class HomematicIPLocalOptionsFlowHandler(OptionsFlow):
                 step_id="advanced",
                 data_schema=get_advanced_schema(
                     data=self.data,
-                    all_un_ignore_parameters=self._control_unit.central.get_un_ignore_candidates(
-                        include_master=True
-                    ),
+                    all_un_ignore_parameters=self._control_unit.central.get_un_ignore_candidates(include_master=True),
                 ),
             )
         _update_advanced_input(data=self.data, advanced_input=advanced_input)
@@ -524,9 +450,7 @@ class HomematicIPLocalOptionsFlowHandler(OptionsFlow):
         description_placeholders = {}
 
         try:
-            system_information = await _async_validate_config_and_get_system_information(
-                self.hass, self.data
-            )
+            system_information = await _async_validate_config_and_get_system_information(self.hass, self.data)
         except AuthFailure:
             errors["base"] = "invalid_auth"
         except InvalidConfig as ic:
@@ -612,9 +536,7 @@ def _update_advanced_input(data: ConfigType, advanced_input: ConfigType) -> None
     data[CONF_ADVANCED_CONFIG][CONF_SYSVAR_MARKERS] = advanced_input[CONF_SYSVAR_MARKERS]
     data[CONF_ADVANCED_CONFIG][CONF_ENABLE_SYSVAR_SCAN] = advanced_input[CONF_ENABLE_SYSVAR_SCAN]
     data[CONF_ADVANCED_CONFIG][CONF_SYS_SCAN_INTERVAL] = advanced_input[CONF_SYS_SCAN_INTERVAL]
-    data[CONF_ADVANCED_CONFIG][CONF_ENABLE_SYSTEM_NOTIFICATIONS] = advanced_input[
-        CONF_ENABLE_SYSTEM_NOTIFICATIONS
-    ]
+    data[CONF_ADVANCED_CONFIG][CONF_ENABLE_SYSTEM_NOTIFICATIONS] = advanced_input[CONF_ENABLE_SYSTEM_NOTIFICATIONS]
     data[CONF_ADVANCED_CONFIG][CONF_LISTEN_ON_ALL_IP] = advanced_input[CONF_LISTEN_ON_ALL_IP]
     data[CONF_ADVANCED_CONFIG][CONF_ENABLE_MQTT] = advanced_input[CONF_ENABLE_MQTT]
     data[CONF_ADVANCED_CONFIG][CONF_MQTT_PREFIX] = advanced_input[CONF_MQTT_PREFIX]

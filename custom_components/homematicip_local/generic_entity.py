@@ -124,14 +124,12 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         attributes: dict[str, Any] = {}
         attributes.update(self._static_state_attributes)
 
-        if (
-            isinstance(self._data_point, GenericDataPoint) and self._data_point.is_readable
-        ) or isinstance(self._data_point, CustomDataPoint):
+        if (isinstance(self._data_point, GenericDataPoint) and self._data_point.is_readable) or isinstance(
+            self._data_point, CustomDataPoint
+        ):
             if self._data_point.is_valid:
                 attributes[ATTR_VALUE_STATE] = (
-                    HmEntityState.UNCERTAIN
-                    if self._data_point.state_uncertain
-                    else HmEntityState.VALID
+                    HmEntityState.UNCERTAIN if self._data_point.state_uncertain else HmEntityState.VALID
                 )
             else:
                 attributes[ATTR_VALUE_STATE] = HmEntityState.NOT_VALID
@@ -159,9 +157,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
             if self._do_remove_name():
                 translated_name = ""
             if isinstance(translated_name, str):
-                entity_name = entity_name.replace(
-                    self._data_point.parameter.replace("_", " ").title(), translated_name
-                )
+                entity_name = entity_name.replace(self._data_point.parameter.replace("_", " ").title(), translated_name)
 
         if isinstance(self._data_point, CustomDataPoint) and entity_name:
             translated_name = super().name
@@ -188,8 +184,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 self._name_translation_key
                 and hasattr(self, "platform")
                 and hasattr(self.platform, "platform_translations")
-                and (name := self.platform.platform_translations.get(self._name_translation_key))
-                is not None
+                and (name := self.platform.platform_translations.get(self._name_translation_key)) is not None
             ):
                 return bool(name == "")
         except Exception:  # pylint: disable=broad-exception-caught
@@ -233,11 +228,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
     def _async_data_point_updated(self, *args: Any, **kwargs: Any) -> None:
         """Handle device state changes."""
         # Don't update disabled entities
-        update_type = (
-            "updated"
-            if self._data_point.refreshed_at == self._data_point.modified_at
-            else "refreshed"
-        )
+        update_type = "updated" if self._data_point.refreshed_at == self._data_point.modified_at else "refreshed"
         if self.enabled:
             _LOGGER.debug("Device %s event fired for %s", update_type, self._data_point.full_name)
             self.async_schedule_update_ha_state()
@@ -251,9 +242,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
     async def async_update(self) -> None:
         """Update entities."""
         if isinstance(self._data_point, GenericDataPoint | CustomDataPoint):
-            await self._data_point.load_data_point_value(
-                call_source=CallSource.MANUAL_OR_SCHEDULED
-            )
+            await self._data_point.load_data_point_value(call_source=CallSource.MANUAL_OR_SCHEDULED)
 
     async def async_will_remove_from_hass(self) -> None:
         """Run when hmip device will be removed from hass."""
@@ -353,9 +342,7 @@ class HaHomematicGenericHubEntity(Entity):
                 )
             )
             self._unregister_callbacks.append(
-                self._data_point.register_device_removed_callback(
-                    cb=self._async_hub_device_removed
-                )
+                self._data_point.register_device_removed_callback(cb=self._async_hub_device_removed)
             )
 
     async def async_will_remove_from_hass(self) -> None:
@@ -392,9 +379,7 @@ class HaHomematicGenericHubEntity(Entity):
                 entity_registry.async_remove(entity_id)
 
 
-class HaHomematicGenericSysvarEntity(
-    Generic[HmGenericSysvarDataPoint], HaHomematicGenericHubEntity
-):
+class HaHomematicGenericSysvarEntity(Generic[HmGenericSysvarDataPoint], HaHomematicGenericHubEntity):
     """Representation of the HomematicIP generic sysvar entity."""
 
     def __init__(
@@ -420,9 +405,7 @@ class HaHomematicGenericSysvarEntity(
         attributes.update(self._static_state_attributes)
         if self._data_point.is_valid:
             attributes[ATTR_VALUE_STATE] = (
-                HmEntityState.UNCERTAIN
-                if self._data_point.state_uncertain
-                else HmEntityState.VALID
+                HmEntityState.UNCERTAIN if self._data_point.state_uncertain else HmEntityState.VALID
             )
         else:
             attributes[ATTR_VALUE_STATE] = HmEntityState.NOT_VALID

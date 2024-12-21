@@ -56,26 +56,21 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_SWITCH: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarSwitch(control_unit=control_unit, data_point=data_point)
-            for data_point in data_points
+            HaHomematicSysvarSwitch(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.SWITCH
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.SWITCH),
             target=async_add_switch,
         )
     )
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.HUB_SWITCH
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.HUB_SWITCH),
             target=async_add_hub_switch,
         )
     )
@@ -86,9 +81,7 @@ async def async_setup_entry(
         )
     )
 
-    async_add_hub_switch(
-        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSwitch)
-    )
+    async_add_hub_switch(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSwitch))
 
     platform = entity_platform.async_get_current_platform()
     platform.async_register_entity_service(
@@ -108,8 +101,7 @@ class HaHomematicSwitch(HaHomematicGenericRestoreEntity[CustomDpSwitch | DpSwitc
         """Return the state attributes of the generic entity."""
         attributes = super().extra_state_attributes
         if isinstance(self._data_point, CustomDpSwitch) and (
-            self._data_point.channel_value
-            and self._data_point.value != self._data_point.channel_value
+            self._data_point.channel_value and self._data_point.value != self._data_point.channel_value
         ):
             attributes[ATTR_CHANNEL_STATE] = self._data_point.channel_value
         return attributes

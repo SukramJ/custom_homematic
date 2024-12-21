@@ -52,12 +52,8 @@ async def test_hmsysvarswitch(factory: helper.Factory) -> None:
     entity_name = "CentralTest sv_alarm_ext"
 
     hass, control = await factory.setup_environment({}, add_sysvars=True)
-    ha_state, _ = helper.get_and_check_state(
-        hass=hass, control=control, entity_id=entity_id, entity_name=entity_name
-    )
-    data_point: SysvarDpSwitch = cast(
-        SysvarDpSwitch, helper.get_data_point(control=control, entity_id=entity_id)
-    )
+    ha_state, _ = helper.get_and_check_state(hass=hass, control=control, entity_id=entity_id, entity_name=entity_name)
+    data_point: SysvarDpSwitch = cast(SysvarDpSwitch, helper.get_data_point(control=control, entity_id=entity_id))
     assert ha_state.state == STATE_OFF
 
     assert data_point.send_variable.call_count == 0

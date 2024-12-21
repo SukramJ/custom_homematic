@@ -117,16 +117,12 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.CLIMATE
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.CLIMATE),
             target=async_add_climate,
         )
     )
 
-    async_add_climate(
-        data_points=control_unit.get_new_data_points(data_point_type=BaseCustomDpClimate)
-    )
+    async_add_climate(data_points=control_unit.get_new_data_points(data_point_type=BaseCustomDpClimate))
 
     platform = entity_platform.async_get_current_platform()
 
@@ -135,9 +131,7 @@ async def async_setup_entry(
         schema={
             vol.Optional(ATTR_AWAY_START): cv.datetime,
             vol.Required(ATTR_AWAY_END): cv.datetime,
-            vol.Required(ATTR_AWAY_TEMPERATURE, default=18.0): vol.All(
-                vol.Coerce(float), vol.Range(min=5.0, max=30.5)
-            ),
+            vol.Required(ATTR_AWAY_TEMPERATURE, default=18.0): vol.All(vol.Coerce(float), vol.Range(min=5.0, max=30.5)),
         },
         func="async_enable_away_mode_by_calendar",
     )
@@ -145,9 +139,7 @@ async def async_setup_entry(
         name=HmipLocalServices.ENABLE_AWAY_MODE_BY_DURATION,
         schema={
             vol.Required(ATTR_AWAY_HOURS): cv.positive_int,
-            vol.Required(ATTR_AWAY_TEMPERATURE, default=18.0): vol.All(
-                vol.Coerce(float), vol.Range(min=5.0, max=30.5)
-            ),
+            vol.Required(ATTR_AWAY_TEMPERATURE, default=18.0): vol.All(vol.Coerce(float), vol.Range(min=5.0, max=30.5)),
         },
         func="async_enable_away_mode_by_duration",
     )
@@ -314,11 +306,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
     @property
     def hvac_modes(self) -> list[HVACMode]:
         """Return the list of available hvac modes."""
-        return [
-            HM_TO_HA_HVAC_MODE[mode]
-            for mode in self._data_point.modes
-            if mode in HM_TO_HA_HVAC_MODE
-        ]
+        return [HM_TO_HA_HVAC_MODE[mode] for mode in self._data_point.modes if mode in HM_TO_HA_HVAC_MODE]
 
     @property
     def min_temp(self) -> float:
@@ -358,9 +346,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
     def supported_features(self) -> ClimateEntityFeature:
         """Return the list of supported features."""
         supported_features = (
-            ClimateEntityFeature.TARGET_TEMPERATURE
-            | ClimateEntityFeature.TURN_OFF
-            | ClimateEntityFeature.TURN_ON
+            ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.TURN_OFF | ClimateEntityFeature.TURN_ON
         )
         if self._data_point.supports_profiles:
             supported_features |= ClimateEntityFeature.PRESET_MODE
@@ -414,17 +400,11 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
     ) -> None:
         """Enable the away mode by calendar on thermostat."""
         start = start or datetime.now() - timedelta(minutes=10)
-        await self._data_point.enable_away_mode_by_calendar(
-            start=start, end=end, away_temperature=away_temperature
-        )
+        await self._data_point.enable_away_mode_by_calendar(start=start, end=end, away_temperature=away_temperature)
 
-    async def async_enable_away_mode_by_duration(
-        self, hours: int, away_temperature: float
-    ) -> None:
+    async def async_enable_away_mode_by_duration(self, hours: int, away_temperature: float) -> None:
         """Enable the away mode by duration on thermostat."""
-        await self._data_point.enable_away_mode_by_duration(
-            hours=hours, away_temperature=away_temperature
-        )
+        await self._data_point.enable_away_mode_by_duration(hours=hours, away_temperature=away_temperature)
 
     async def async_disable_away_mode(self) -> None:
         """Disable the away mode on thermostat."""
@@ -434,13 +414,9 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
         """Copy a schedule from this entity to another."""
         if source_climate_data_point := cast(
             BaseCustomDpClimate,
-            self._data_point.device.central.get_data_point_by_custom_id(
-                custom_id=source_entity_id
-            ),
+            self._data_point.device.central.get_data_point_by_custom_id(custom_id=source_entity_id),
         ):
-            await source_climate_data_point.copy_schedule(
-                target_climate_data_point=self._data_point
-            )
+            await source_climate_data_point.copy_schedule(target_climate_data_point=self._data_point)
 
     async def async_copy_schedule_profile(
         self, source_profile: str, target_profile: str, source_entity_id: str | None = None
@@ -449,9 +425,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
         if source_entity_id and (
             source_climate_data_point := cast(
                 BaseCustomDpClimate,
-                self._data_point.device.central.get_data_point_by_custom_id(
-                    custom_id=source_entity_id
-                ),
+                self._data_point.device.central.get_data_point_by_custom_id(custom_id=source_entity_id),
             )
         ):
             await source_climate_data_point.copy_schedule_profile(
@@ -460,17 +434,13 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
                 target_climate_data_point=self._data_point,
             )
         else:
-            await self._data_point.copy_schedule_profile(
-                source_profile=source_profile, target_profile=target_profile
-            )
+            await self._data_point.copy_schedule_profile(source_profile=source_profile, target_profile=target_profile)
 
     async def async_get_schedule_profile(self, profile: str) -> ServiceResponse:
         """Return the schedule profile."""
         return await self._data_point.get_schedule_profile(profile=profile)  # type: ignore[no-any-return]
 
-    async def async_get_schedule_profile_weekday(
-        self, profile: str, weekday: str
-    ) -> ServiceResponse:
+    async def async_get_schedule_profile_weekday(self, profile: str, weekday: str) -> ServiceResponse:
         """Return the schedule profile weekday."""
         return await self._data_point.get_schedule_profile_weekday(  # type: ignore[no-any-return]
             profile=profile, weekday=weekday
@@ -492,14 +462,10 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
             simple_profile_data=simple_profile_data,
         )
 
-    async def async_set_schedule_profile_weekday(
-        self, profile: str, weekday: str, weekday_data: WEEKDAY_DICT
-    ) -> None:
+    async def async_set_schedule_profile_weekday(self, profile: str, weekday: str, weekday_data: WEEKDAY_DICT) -> None:
         """Set the schedule profile weekday."""
         weekday_data = {int(key): value for key, value in weekday_data.items()}
-        await self._data_point.set_schedule_profile_weekday(
-            profile=profile, weekday=weekday, weekday_data=weekday_data
-        )
+        await self._data_point.set_schedule_profile_weekday(profile=profile, weekday=weekday, weekday_data=weekday_data)
 
     async def async_set_schedule_simple_profile_weekday(
         self,

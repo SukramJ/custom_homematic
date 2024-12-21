@@ -15,13 +15,7 @@ import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_DEVICE_ID, CONF_MODE
-from homeassistant.core import (
-    HomeAssistant,
-    ServiceCall,
-    ServiceResponse,
-    SupportsResponse,
-    callback,
-)
+from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, SupportsResponse, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
 import homeassistant.helpers.config_validation as cv
@@ -133,9 +127,7 @@ SCHEMA_GET_PARAMSET = vol.All(
     BASE_SCHEMA_DEVICE.extend(
         {
             vol.Optional(CONF_CHANNEL): haval.channel_no,
-            vol.Required(CONF_PARAMSET_KEY): vol.All(
-                haval.paramset_key, vol.In(["MASTER", "VALUES"])
-            ),
+            vol.Required(CONF_PARAMSET_KEY): vol.All(haval.paramset_key, vol.In(["MASTER", "VALUES"])),
         }
     ),
 )
@@ -184,9 +176,7 @@ SCHEMA_SET_DEVICE_VALUE = vol.All(
             vol.Required(CONF_PARAMETER): vol.All(cv.string, vol.Upper),
             vol.Required(CONF_VALUE): cv.match_all,
             vol.Optional(CONF_WAIT_FOR_CALLBACK): haval.wait_for,
-            vol.Optional(CONF_VALUE_TYPE): vol.In(
-                ["boolean", "dateTime.iso8601", "double", "int", "string"]
-            ),
+            vol.Optional(CONF_VALUE_TYPE): vol.In(["boolean", "dateTime.iso8601", "double", "int", "string"]),
             vol.Optional(CONF_RX_MODE): vol.All(cv.string, vol.Upper),
         }
     ),
@@ -207,9 +197,7 @@ SCHEMA_PUT_PARAMSET = vol.All(
     BASE_SCHEMA_DEVICE.extend(
         {
             vol.Optional(CONF_CHANNEL): haval.channel_no,
-            vol.Required(CONF_PARAMSET_KEY): vol.All(
-                haval.paramset_key, vol.In(["MASTER", "VALUES"])
-            ),
+            vol.Required(CONF_PARAMSET_KEY): vol.All(haval.paramset_key, vol.In(["MASTER", "VALUES"])),
             vol.Required(CONF_PARAMSET): dict,
             vol.Optional(CONF_WAIT_FOR_CALLBACK): haval.wait_for,
             vol.Optional(CONF_RX_MODE): vol.All(cv.string, vol.Upper),
@@ -438,9 +426,7 @@ async def _async_service_remove_central_link(hass: HomeAssistant, service: Servi
     _LOGGER.debug("Called remove_central_links")
 
 
-async def _async_service_export_device_definition(
-    hass: HomeAssistant, service: ServiceCall
-) -> None:
+async def _async_service_export_device_definition(hass: HomeAssistant, service: ServiceCall) -> None:
     """Service to call setValue method for Homematic(IP) Local devices."""
     if hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
         try:
@@ -455,9 +441,7 @@ async def _async_service_export_device_definition(
         )
 
 
-async def _async_service_force_device_availability(
-    hass: HomeAssistant, service: ServiceCall
-) -> None:
+async def _async_service_force_device_availability(hass: HomeAssistant, service: ServiceCall) -> None:
     """Service to force device availability on a Homematic(IP) Local devices."""
     if hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
         hm_device.set_forced_availability(forced_availability=ForcedDeviceAvailability.FORCE_TRUE)
@@ -468,9 +452,7 @@ async def _async_service_force_device_availability(
         )
 
 
-async def _async_service_get_device_value(
-    hass: HomeAssistant, service: ServiceCall
-) -> ServiceResponse:
+async def _async_service_get_device_value(hass: HomeAssistant, service: ServiceCall) -> ServiceResponse:
     """Service to call getValue method for Homematic(IP) Local devices."""
     channel_no = service.data[CONF_CHANNEL]
     parameter = service.data[CONF_PARAMETER]
@@ -490,28 +472,20 @@ async def _async_service_get_device_value(
     return None
 
 
-async def _async_service_get_link_peers(
-    hass: HomeAssistant, service: ServiceCall
-) -> ServiceResponse:
+async def _async_service_get_link_peers(hass: HomeAssistant, service: ServiceCall) -> ServiceResponse:
     """Service to call the getLinkPeers method on a Homematic(IP) Local connection."""
     channel_no = service.data.get(CONF_CHANNEL)
 
     if hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
-        address = (
-            f"{hm_device.address}:{channel_no}" if channel_no is not None else hm_device.address
-        )
+        address = f"{hm_device.address}:{channel_no}" if channel_no is not None else hm_device.address
         try:
-            return cast(
-                ServiceResponse, {address: await hm_device.client.get_link_peers(address=address)}
-            )
+            return cast(ServiceResponse, {address: await hm_device.client.get_link_peers(address=address)})
         except BaseHomematicException as ex:
             raise HomeAssistantError(ex) from ex
     return None
 
 
-async def _async_service_get_link_paramset(
-    hass: HomeAssistant, service: ServiceCall
-) -> ServiceResponse:
+async def _async_service_get_link_paramset(hass: HomeAssistant, service: ServiceCall) -> ServiceResponse:
     """Service to call the getParamset method for links on a Homematic(IP) Local connection."""
     sender_channel_address = service.data[CONF_SENDER_CHANNEL_ADDRESS]
     receiver_channel_address = service.data[CONF_RECEIVER_CHANNEL_ADDRESS]
@@ -529,17 +503,13 @@ async def _async_service_get_link_paramset(
     return None
 
 
-async def _async_service_get_paramset(
-    hass: HomeAssistant, service: ServiceCall
-) -> ServiceResponse:
+async def _async_service_get_paramset(hass: HomeAssistant, service: ServiceCall) -> ServiceResponse:
     """Service to call the getParamset method on a Homematic(IP) Local connection."""
     channel_no = service.data.get(CONF_CHANNEL)
     paramset_key = ParamsetKey(service.data[CONF_PARAMSET_KEY])
 
     if hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
-        address = (
-            f"{hm_device.address}:{channel_no}" if channel_no is not None else hm_device.address
-        )
+        address = f"{hm_device.address}:{channel_no}" if channel_no is not None else hm_device.address
         try:
             return dict(
                 await hm_device.client.get_paramset(
@@ -552,9 +522,7 @@ async def _async_service_get_paramset(
     return None
 
 
-async def _async_service_get_variable_value(
-    hass: HomeAssistant, service: ServiceCall
-) -> ServiceResponse:
+async def _async_service_get_variable_value(hass: HomeAssistant, service: ServiceCall) -> ServiceResponse:
     """Service to call read value from Homematic(IP) Local system variable."""
     entry_id = service.data[CONF_ENTRY_ID]
     name = service.data[CONF_NAME]
@@ -624,9 +592,7 @@ async def _async_service_set_install_mode(hass: HomeAssistant, service: ServiceC
     device_address = service.data.get(CONF_ADDRESS)
 
     if control_unit := _async_get_cu_by_interface_id(hass=hass, interface_id=interface_id):
-        await control_unit.central.set_install_mode(
-            interface_id, t=time, mode=mode, device_address=device_address
-        )
+        await control_unit.central.set_install_mode(interface_id, t=time, mode=mode, device_address=device_address)
 
 
 async def _async_service_clear_cache(hass: HomeAssistant, service: ServiceCall) -> None:
@@ -679,9 +645,7 @@ async def _async_service_put_paramset(hass: HomeAssistant, service: ServiceCall)
     rx_mode = service.data.get(CONF_RX_MODE)
 
     if hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
-        channel_address = (
-            f"{hm_device.address}:{channel_no}" if channel_no is not None else hm_device.address
-        )
+        channel_address = f"{hm_device.address}:{channel_no}" if channel_no is not None else hm_device.address
         try:
             await hm_device.client.put_paramset(
                 channel_address=channel_address,
@@ -695,9 +659,7 @@ async def _async_service_put_paramset(hass: HomeAssistant, service: ServiceCall)
             raise HomeAssistantError(ex) from ex
 
 
-async def _async_service_update_device_firmware_data(
-    hass: HomeAssistant, service: ServiceCall
-) -> None:
+async def _async_service_update_device_firmware_data(hass: HomeAssistant, service: ServiceCall) -> None:
     """Service to clear the cache."""
     entry_id = service.data[CONF_ENTRY_ID]
     if control := _async_get_control_unit(hass=hass, entry_id=entry_id):
@@ -716,9 +678,7 @@ def _async_get_control_unit(hass: HomeAssistant, entry_id: str) -> ControlUnit |
 
 
 @callback
-def _async_get_hm_device_by_service_data(
-    hass: HomeAssistant, service: ServiceCall
-) -> Device | None:
+def _async_get_hm_device_by_service_data(hass: HomeAssistant, service: ServiceCall) -> Device | None:
     """Service to force device availability on a Homematic(IP) Local devices."""
     hm_device: Device | None = None
     message = "No device found"
@@ -730,13 +690,17 @@ def _async_get_hm_device_by_service_data(
     elif device_address := service.data.get(CONF_DEVICE_ADDRESS):
         hm_device = _async_get_hm_device_by_address(hass=hass, device_address=device_address)
         if not hm_device:
-            message = f"No device found by device_address {device_address} for service {service.domain}.{service.service}"
+            message = (
+                f"No device found by device_address {device_address} for service {service.domain}.{service.service}"
+            )
     elif channel_address := service.data.get(CONF_CHANNEL_ADDRESS):
         hm_device = _async_get_hm_device_by_address(
             hass=hass, device_address=get_device_address(address=channel_address)
         )
         if not hm_device:
-            message = f"No device found by channel_address {channel_address} for service {service.domain}.{service.service}"
+            message = (
+                f"No device found by channel_address {channel_address} for service {service.domain}.{service.service}"
+            )
     elif receiver_channel_address := service.data.get(CONF_RECEIVER_CHANNEL_ADDRESS):
         hm_device = _async_get_hm_device_by_address(
             hass=hass, device_address=get_device_address(address=receiver_channel_address)
@@ -752,9 +716,7 @@ def _async_get_hm_device_by_service_data(
 @callback
 def async_get_config_entries(hass: HomeAssistant) -> list[HomematicConfigEntry]:
     """Get config entries for HomematicIP local."""
-    return hass.config_entries.async_entries(
-        domain=DOMAIN, include_ignore=False, include_disabled=False
-    )
+    return hass.config_entries.async_entries(domain=DOMAIN, include_ignore=False, include_disabled=False)
 
 
 @callback
@@ -762,9 +724,7 @@ def async_get_loaded_config_entries(hass: HomeAssistant) -> list[HomematicConfig
     """Get config entries for HomematicIP local."""
     return [
         entry
-        for entry in hass.config_entries.async_entries(
-            domain=DOMAIN, include_ignore=False, include_disabled=False
-        )
+        for entry in hass.config_entries.async_entries(domain=DOMAIN, include_ignore=False, include_disabled=False)
         if entry.state == ConfigEntryState.LOADED
     ]
 
@@ -799,11 +759,7 @@ def _asnyc_get_hm_device_by_id(hass: HomeAssistant, device_id: str) -> Device | 
     device_entry: DeviceEntry | None = dr.async_get(hass).async_get(device_id)
     if not device_entry:
         return None
-    if (
-        data := get_device_address_at_interface_from_identifiers(
-            identifiers=device_entry.identifiers
-        )
-    ) is None:
+    if (data := get_device_address_at_interface_from_identifiers(identifiers=device_entry.identifiers)) is None:
         return None
     device_address, interface_id = data
     for control_unit in _async_get_control_units(hass=hass):

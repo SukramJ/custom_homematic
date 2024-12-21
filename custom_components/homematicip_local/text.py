@@ -49,8 +49,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_TEXT: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarText(control_unit=control_unit, data_point=data_point)
-            for data_point in data_points
+            HaHomematicSysvarText(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
@@ -64,18 +63,14 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.HUB_TEXT
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.HUB_TEXT),
             target=async_add_hub_text,
         )
     )
 
     async_add_text(data_points=control_unit.get_new_data_points(data_point_type=DpText))
 
-    async_add_hub_text(
-        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpText)
-    )
+    async_add_hub_text(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpText))
 
 
 class HaHomematicText(HaHomematicGenericRestoreEntity[DpText], TextEntity):

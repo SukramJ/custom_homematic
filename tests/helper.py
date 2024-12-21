@@ -99,9 +99,7 @@ class Factory:
             ),
             local_resources=LocalRessources(
                 address_device_translation=address_device_translation,
-                ignore_devices_on_create=ignore_devices_on_create
-                if ignore_devices_on_create
-                else [],
+                ignore_devices_on_create=ignore_devices_on_create if ignore_devices_on_create else [],
             ),
         )
         await client.init_client()
@@ -126,7 +124,7 @@ class Factory:
 
         patch("custom_components.homematicip_local.find_free_port", return_value=8765).start()
         patch(
-            "custom_components.homematicip_local.control_unit.ControlUnit._create_central",
+            "custom_components.homematicip_local.control_unit.ControlConfig.create_central",
             return_value=central,
         ).start()
         patch(
@@ -150,9 +148,7 @@ class Factory:
         return self._hass, control
 
 
-def get_and_check_state(
-    hass: HomeAssistant, control: ControlUnit, entity_id: str, entity_name: str
-):
+def get_and_check_state(hass: HomeAssistant, control: ControlUnit, entity_id: str, entity_name: str):
     """Get and test basic device."""
     ha_state = hass.states.get(entity_id)
     assert ha_state is not None

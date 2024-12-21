@@ -323,7 +323,7 @@ overgeneral-exceptions = [
 runtime-typing = false
 
 [tool.pylint.CODE_STYLE]
-max-line-length-suggestions = 99
+max-line-length-suggestions = 120
 
 [tool.pytest.ini_options]
 pythonpath = [
@@ -341,8 +341,8 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
-target-version = "py311"
-line-length = 99
+target-version = "py312"
+line-length = 120
 
 lint.select = [
     "B002", # Python does not support the unary prefix increment

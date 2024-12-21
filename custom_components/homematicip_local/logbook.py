@@ -28,9 +28,7 @@ def async_describe_events(
         error_name = event.data[EventKey.PARAMETER].replace("_", " ").title()
         error_value = event.data[EVENT_ERROR_VALUE]
         is_error = event.data[EVENT_ERROR]
-        error_message = (
-            f"{error_name} {error_value} occurred" if is_error else f"{error_name} resolved"
-        )
+        error_message = f"{error_name} {error_value} occurred" if is_error else f"{error_name} resolved"
 
         return {
             LOGBOOK_ENTRY_NAME: event.data[EVENT_NAME],
