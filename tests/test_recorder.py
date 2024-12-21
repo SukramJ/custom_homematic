@@ -4,9 +4,7 @@ from __future__ import annotations
 
 from hahomematic.const import DeviceFirmwareState, EventKey
 import pytest
-from pytest_homeassistant_custom_component.components.recorder.common import (
-    async_wait_recording_done,
-)
+from pytest_homeassistant_custom_component.components.recorder.common import async_wait_recording_done
 
 from custom_components.homematicip_local.const import EVENT_MODEL
 from custom_components.homematicip_local.generic_entity import (

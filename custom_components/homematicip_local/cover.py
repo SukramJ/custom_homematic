@@ -93,18 +93,12 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.COVER
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.COVER),
             target=async_add_cover,
         )
     )
 
-    async_add_cover(
-        data_points=control_unit.get_new_data_points(
-            data_point_type=CustomDpCover | CustomDpGarage
-        )
-    )
+    async_add_cover(data_points=control_unit.get_new_data_points(data_point_type=CustomDpCover | CustomDpGarage))
 
     platform = entity_platform.async_get_current_platform()
 
@@ -170,9 +164,7 @@ class HaHomematicBaseCover(HaHomematicGenericRestoreEntity[HmGenericCover], Cove
     ) -> None:
         """Move the cover to a specific position incl. tilt."""
         collector = CallParameterCollector(client=self._data_point.device.client)
-        await self._data_point.set_position(
-            position=position, tilt_position=tilt_position, collector=collector
-        )
+        await self._data_point.set_position(position=position, tilt_position=tilt_position, collector=collector)
         await collector.send_data(wait_for_callback=wait_for_callback)
 
     async def async_open_cover(self, **kwargs: Any) -> None:

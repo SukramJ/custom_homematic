@@ -11,12 +11,7 @@ from hahomematic.const import DEFAULT_MULTIPLIER, DataPointCategory, ParameterTy
 from hahomematic.model.generic import DpSensor
 from hahomematic.model.hub import SysvarDpSensor
 
-from homeassistant.components.sensor import (
-    RestoreSensor,
-    SensorDeviceClass,
-    SensorEntity,
-    SensorStateClass,
-)
+from homeassistant.components.sensor import RestoreSensor, SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -26,11 +21,7 @@ from . import HomematicConfigEntry
 from .const import TOTAL_SYSVAR, HmEntityState
 from .control_unit import ControlUnit, signal_new_data_point
 from .entity_helpers import HmSensorEntityDescription
-from .generic_entity import (
-    ATTR_VALUE_STATE,
-    HaHomematicGenericEntity,
-    HaHomematicGenericSysvarEntity,
-)
+from .generic_entity import ATTR_VALUE_STATE, HaHomematicGenericEntity, HaHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -63,35 +54,28 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_SENSOR: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarSensor(control_unit=control_unit, data_point=data_point)
-            for data_point in data_points
+            HaHomematicSysvarSensor(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.SENSOR
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.SENSOR),
             target=async_add_sensor,
         )
     )
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.HUB_SENSOR
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.HUB_SENSOR),
             target=async_add_hub_sensor,
         )
     )
 
     async_add_sensor(data_points=control_unit.get_new_data_points(data_point_type=DpSensor))
 
-    async_add_hub_sensor(
-        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSensor)
-    )
+    async_add_hub_sensor(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSensor))
 
 
 class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
@@ -120,9 +104,7 @@ class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
         if not hasattr(self, "entity_description") and data_point.unit:
             self._attr_native_unit_of_measurement = data_point.unit
         if self.device_class == SensorDeviceClass.ENUM:
-            self._attr_options = (
-                [item.lower() for item in data_point.values] if data_point.values else None
-            )
+            self._attr_options = [item.lower() for item in data_point.values] if data_point.values else None
 
     @property
     def native_value(self) -> StateType | date | datetime | Decimal:
@@ -134,11 +116,7 @@ class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
                 and self._multiplier != DEFAULT_MULTIPLIER
             ):
                 new_value = self._data_point.value * self._multiplier
-                return (
-                    int(new_value)
-                    if self._data_point.hmtype == ParameterType.INTEGER
-                    else new_value
-                )
+                return int(new_value) if self._data_point.hmtype == ParameterType.INTEGER else new_value
             # Strings and enums with custom device class must be lowercase
             # to be translatable.
             if (
@@ -169,9 +147,7 @@ class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
     async def async_added_to_hass(self) -> None:
         """Check, if state needs to be restored."""
         await super().async_added_to_hass()
-        if not self._data_point.is_valid and (
-            restored_sensor_data := await self.async_get_last_sensor_data()
-        ):
+        if not self._data_point.is_valid and (restored_sensor_data := await self.async_get_last_sensor_data()):
             self._restored_native_value = restored_sensor_data.native_value
 
 

@@ -15,12 +15,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import (
-    ATTR_DESCRIPTION,
-    ATTR_NAME,
-    HaHomematicGenericEntity,
-    HaHomematicGenericHubEntity,
-)
+from .generic_entity import ATTR_DESCRIPTION, ATTR_NAME, HaHomematicGenericEntity, HaHomematicGenericHubEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,17 +48,14 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_PROGRAM_BUTTON: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicProgramButton(control_unit=control_unit, data_point=data_point)
-            for data_point in data_points
+            HaHomematicProgramButton(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.BUTTON
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.BUTTON),
             target=async_add_button,
         )
     )
@@ -71,18 +63,14 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.HUB_BUTTON
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.HUB_BUTTON),
             target=async_add_program_button,
         )
     )
 
     async_add_button(data_points=control_unit.get_new_data_points(data_point_type=DpButton))
 
-    async_add_program_button(
-        data_points=control_unit.get_new_hub_data_points(data_point_type=ProgramDpButton)
-    )
+    async_add_program_button(data_points=control_unit.get_new_hub_data_points(data_point_type=ProgramDpButton))
 
 
 class HaHomematicButton(HaHomematicGenericEntity[DpButton], ButtonEntity):

@@ -9,12 +9,7 @@ from hahomematic.const import DataPointCategory
 from hahomematic.model.custom import BaseCustomDpSiren, SirenOnArgs
 import voluptuous as vol
 
-from homeassistant.components.siren import (
-    ATTR_DURATION,
-    ATTR_TONE,
-    SirenEntity,
-    SirenEntityFeature,
-)
+from homeassistant.components.siren import ATTR_DURATION, ATTR_TONE, SirenEntity, SirenEntityFeature
 from homeassistant.const import STATE_ON, STATE_UNAVAILABLE, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import entity_platform
@@ -68,16 +63,12 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.SIREN
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.SIREN),
             target=async_add_siren,
         )
     )
 
-    async_add_siren(
-        data_points=control_unit.get_new_data_points(data_point_type=BaseCustomDpSiren)
-    )
+    async_add_siren(data_points=control_unit.get_new_data_points(data_point_type=BaseCustomDpSiren))
 
 
 class HaHomematicSiren(HaHomematicGenericRestoreEntity[BaseCustomDpSiren], SirenEntity):

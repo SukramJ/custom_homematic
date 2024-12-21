@@ -49,17 +49,14 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_SELECT: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarSelect(control_unit=control_unit, data_point=data_point)
-            for data_point in data_points
+            HaHomematicSysvarSelect(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.SELECT
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.SELECT),
             target=async_add_select,
         )
     )
@@ -67,18 +64,14 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.HUB_SELECT
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.HUB_SELECT),
             target=async_add_hub_select,
         )
     )
 
     async_add_select(data_points=control_unit.get_new_data_points(data_point_type=DpSelect))
 
-    async_add_hub_select(
-        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSelect)
-    )
+    async_add_hub_select(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSelect))
 
 
 class HaHomematicSelect(HaHomematicGenericRestoreEntity[DpSelect], SelectEntity):

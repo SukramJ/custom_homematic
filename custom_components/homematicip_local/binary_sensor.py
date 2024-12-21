@@ -34,8 +34,7 @@ async def async_setup_entry(
         """Add binary_sensor from Homematic(IP) Local."""
         _LOGGER.debug("ASYNC_ADD_BINARY_SENSOR: Adding %i data points", len(data_points))
         if entities := [
-            HaHomematicBinarySensor(control_unit=control_unit, data_point=data_point)
-            for data_point in data_points
+            HaHomematicBinarySensor(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
@@ -52,9 +51,7 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.BINARY_SENSOR
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.BINARY_SENSOR),
             target=async_add_binary_sensor,
         )
     )
@@ -66,13 +63,9 @@ async def async_setup_entry(
         )
     )
 
-    async_add_binary_sensor(
-        data_points=control_unit.get_new_data_points(data_point_type=DpBinarySensor)
-    )
+    async_add_binary_sensor(data_points=control_unit.get_new_data_points(data_point_type=DpBinarySensor))
 
-    async_add_hub_binary_sensor(
-        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpBinarySensor)
-    )
+    async_add_hub_binary_sensor(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpBinarySensor))
 
 
 class HaHomematicBinarySensor(HaHomematicGenericRestoreEntity[DpBinarySensor], BinarySensorEntity):
@@ -86,16 +79,13 @@ class HaHomematicBinarySensor(HaHomematicGenericRestoreEntity[DpBinarySensor], B
         if (
             self.is_restored
             and self._restored_state
-            and (restored_state := self._restored_state.state)
-            not in (STATE_UNKNOWN, STATE_UNAVAILABLE)
+            and (restored_state := self._restored_state.state) not in (STATE_UNKNOWN, STATE_UNAVAILABLE)
         ):
             return restored_state == STATE_ON
         return self._data_point.default  # type: ignore[no-any-return]
 
 
-class HaHomematicSysvarBinarySensor(
-    HaHomematicGenericSysvarEntity[SysvarDpBinarySensor], BinarySensorEntity
-):
+class HaHomematicSysvarBinarySensor(HaHomematicGenericSysvarEntity[SysvarDpBinarySensor], BinarySensorEntity):
     """Representation of the HomematicIP hub binary_sensor entity."""
 
     @property

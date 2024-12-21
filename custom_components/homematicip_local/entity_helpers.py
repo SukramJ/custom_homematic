@@ -15,20 +15,13 @@ from hahomematic.model.generic import GenericDataPoint
 from hahomematic.model.hub import GenericHubDataPoint
 from hahomematic.support import element_matches_key
 
-from homeassistant.components.binary_sensor import (
-    BinarySensorDeviceClass,
-    BinarySensorEntityDescription,
-)
+from homeassistant.components.binary_sensor import BinarySensorDeviceClass, BinarySensorEntityDescription
 from homeassistant.components.button import ButtonEntityDescription
 from homeassistant.components.cover import CoverDeviceClass, CoverEntityDescription
 from homeassistant.components.lock import LockEntityDescription
 from homeassistant.components.number import NumberDeviceClass, NumberEntityDescription
 from homeassistant.components.select import SelectEntityDescription
-from homeassistant.components.sensor import (
-    SensorDeviceClass,
-    SensorEntityDescription,
-    SensorStateClass,
-)
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntityDescription, SensorStateClass
 from homeassistant.components.siren import SirenEntityDescription
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntityDescription
 from homeassistant.const import (
@@ -121,9 +114,7 @@ _NUMBER_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
 }
 
-_NUMBER_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[
-    tuple[str | tuple[str, ...], str], EntityDescription
-] = {
+_NUMBER_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], str], EntityDescription] = {
     (
         ("HmIP-eTRV", "HmIP-HEATING"),
         "LEVEL",
@@ -419,9 +410,7 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
 }
 
-_SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[
-    tuple[str | tuple[str, ...], str], EntityDescription
-] = {
+_SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], str], EntityDescription] = {
     (
         "HmIP-WKP",
         "CODE_STATE",
@@ -671,9 +660,7 @@ _BINARY_SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescr
     ),
 }
 
-_BINARY_SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[
-    tuple[str | tuple[str, ...], str], EntityDescription
-] = {
+_BINARY_SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], str], EntityDescription] = {
     ("HmIP-DSD-PCB", "STATE"): HmBinarySensorEntityDescription(
         key="STATE",
         device_class=BinarySensorDeviceClass.OCCUPANCY,
@@ -788,17 +775,13 @@ _LOCK_DESCRIPTIONS_BY_POSTFIX: Mapping[str | tuple[str, ...], EntityDescription]
     ),
 }
 
-_ENTITY_DESCRIPTION_BY_DEVICE: Mapping[
-    DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]
-] = {
+_ENTITY_DESCRIPTION_BY_DEVICE: Mapping[DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]] = {
     DataPointCategory.COVER: _COVER_DESCRIPTIONS_BY_DEVICE,
     DataPointCategory.SIREN: _SIREN_DESCRIPTIONS_BY_DEVICE,
     DataPointCategory.SWITCH: _SWITCH_DESCRIPTIONS_BY_DEVICE,
 }
 
-_ENTITY_DESCRIPTION_BY_PARAM: Mapping[
-    DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]
-] = {
+_ENTITY_DESCRIPTION_BY_PARAM: Mapping[DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]] = {
     DataPointCategory.BINARY_SENSOR: _BINARY_SENSOR_DESCRIPTIONS_BY_PARAM,
     DataPointCategory.BUTTON: _BUTTOM_DESCRIPTIONS_BY_PARAM,
     DataPointCategory.NUMBER: _NUMBER_DESCRIPTIONS_BY_PARAM,
@@ -807,9 +790,7 @@ _ENTITY_DESCRIPTION_BY_PARAM: Mapping[
     DataPointCategory.SWITCH: _SWITCH_DESCRIPTIONS_BY_PARAM,
 }
 
-_ENTITY_DESCRIPTION_BY_POSTFIX: Mapping[
-    DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]
-] = {
+_ENTITY_DESCRIPTION_BY_POSTFIX: Mapping[DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]] = {
     DataPointCategory.LOCK: _LOCK_DESCRIPTIONS_BY_POSTFIX,
 }
 
@@ -832,9 +813,7 @@ _DEFAULT_PLATFORM_DESCRIPTION: Mapping[DataPointCategory, EntityDescription] = {
         key="switch_default",
         device_class=SwitchDeviceClass.SWITCH,
     ),
-    DataPointCategory.SELECT: SelectEntityDescription(
-        key="select_default", entity_category=EntityCategory.CONFIG
-    ),
+    DataPointCategory.SELECT: SelectEntityDescription(key="select_default", entity_category=EntityCategory.CONFIG),
     DataPointCategory.HUB_BUTTON: HmButtonEntityDescription(
         key="hub_button_default",
         entity_registry_enabled_default=False,
@@ -852,12 +831,8 @@ def get_entity_description(
 ) -> EntityDescription | None:
     """Get the entity_description."""
     if entity_desc := _find_entity_description(data_point=data_point):
-        name, translation_key = get_name_and_translation_key(
-            data_point=data_point, entity_desc=entity_desc
-        )
-        enabled_default = (
-            entity_desc.entity_registry_enabled_default if data_point.enabled_default else False
-        )
+        name, translation_key = get_name_and_translation_key(data_point=data_point, entity_desc=entity_desc)
+        enabled_default = entity_desc.entity_registry_enabled_default if data_point.enabled_default else False
         return dataclasses.replace(
             entity_desc,
             name=name,

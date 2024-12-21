@@ -25,6 +25,7 @@ from hahomematic.const import (
     PORT_ANY,
     BackendSystemEvent,
     DataPointCategory,
+    DescriptionMarker,
     EventKey,
     EventType,
     Interface,
@@ -42,11 +43,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import aiohttp_client, device_registry as dr
 from homeassistant.helpers.device_registry import DeviceEntry, DeviceEntryType, DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_send
-from homeassistant.helpers.issue_registry import (
-    IssueSeverity,
-    async_create_issue,
-    async_delete_issue,
-)
+from homeassistant.helpers.issue_registry import IssueSeverity, async_create_issue, async_delete_issue
 
 from .const import (
     CONF_ADVANCED_CONFIG,
@@ -104,16 +101,37 @@ class BaseControlUnit:
 
     def __init__(self, control_config: ControlConfig) -> None:
         """Init the control unit."""
-        self._config: Final = control_config
-        self._hass = control_config.hass
-        self._entry_id = control_config.entry_id
-        self._default_callback_port = control_config.default_callback_port
-        self._start_direct = control_config.start_direct
-        self._instance_name = control_config.instance_name
-        self._enable_system_notifications = control_config.enable_system_notifications
-        self._central: CentralUnit = self._create_central()
-        self._attr_device_info: DeviceInfo | None = None
-        self._unregister_callbacks: list[CALLBACK_TYPE] = []
+        self._hass: Final = control_config.hass
+        self._entry_id: Final = control_config.entry_id
+        self._instance_name: Final = control_config.instance_name
+        self._enable_mqtt: Final = control_config.enable_mqtt
+        self._mqtt_prefix: Final = control_config.mqtt_prefix
+        self._enable_system_notifications: Final = control_config.enable_system_notifications
+        self._central: Final = control_config.create_central()
+        self._attr_device_info: Final = DeviceInfo(
+            identifiers={
+                (
+                    DOMAIN,
+                    self._central.name,
+                )
+            },
+            manufacturer=Manufacturer.EQ3,
+            model=self._central.model,
+            name=self._central.name,
+            serial_number=self._central.system_information.serial,
+            sw_version=self._central.version,
+        )
+        self._unregister_callbacks: Final[list[CALLBACK_TYPE]] = []
+
+    @property
+    def central(self) -> CentralUnit:
+        """Return the Homematic(IP) Local central unit instance."""
+        return self._central
+
+    @property
+    def device_info(self) -> DeviceInfo | None:
+        """Return device specific attributes."""
+        return self._attr_device_info
 
     async def start_central(self) -> None:
         """Start the central unit."""
@@ -125,9 +143,7 @@ class BaseControlUnit:
             await self._central.start()
             _LOGGER.info("Started central unit for %s", self._instance_name)
         except BaseHomematicException:
-            _LOGGER.warning(
-                "START_CENTRAL: Failed to start central unit for %s", self._instance_name
-            )
+            _LOGGER.warning("START_CENTRAL: Failed to start central unit for %s", self._instance_name)
 
     async def stop_central(self, *args: Any) -> None:
         """Stop the control unit."""
@@ -138,84 +154,6 @@ class BaseControlUnit:
         if self._central.started:
             await self._central.stop()
             _LOGGER.info("Stopped central unit for %s", self._instance_name)
-
-    @property
-    def central(self) -> CentralUnit:
-        """Return the Homematic(IP) Local central unit instance."""
-        return self._central
-
-    @property
-    def config(self) -> ControlConfig:
-        """Return the Homematic(IP) Local central unit instance."""
-        return self._config
-
-    @property
-    def device_info(self) -> DeviceInfo | None:
-        """Return device specific attributes."""
-        if not self._attr_device_info:
-            self._attr_device_info = DeviceInfo(
-                identifiers={
-                    (
-                        DOMAIN,
-                        self._central.name,
-                    )
-                },
-                manufacturer=Manufacturer.EQ3,
-                model=self._central.model,
-                name=self._central.name,
-                serial_number=self._central.system_information.serial,
-                sw_version=self._central.version,
-            )
-        return self._attr_device_info
-
-    def _create_central(self) -> CentralUnit:
-        """Create the central unit for ccu callbacks."""
-        interface_configs: set[InterfaceConfig] = set()
-        for interface_name in self._config.interface_config:
-            interface = self._config.interface_config[interface_name]
-            interface_configs.add(
-                InterfaceConfig(
-                    central_name=self._instance_name,
-                    interface=Interface(interface_name),
-                    port=interface.get(CONF_PORT),
-                    remote_path=interface.get(CONF_PATH),
-                )
-            )
-        # use last 10 chars of entry_id for central_id uniqueness
-        central_id = self._entry_id[-10:]
-        return CentralConfig(
-            callback_host=self._config.callback_host
-            if self._config.callback_host != IP_ANY_V4
-            else None,
-            callback_port=self._config.callback_port
-            if self._config.callback_port != PORT_ANY
-            else None,
-            central_id=central_id,
-            client_session=aiohttp_client.async_get_clientsession(self._hass),
-            enable_device_firmware_check=DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK,
-            enable_program_scan=self._config.enable_program_scan,
-            enable_sysvar_scan=self._config.enable_sysvar_scan,
-            listen_ip_addr=IP_ANY_V4 if self._config.listen_on_all_ip else None,
-            default_callback_port=self._default_callback_port,
-            host=self._config.host,
-            interface_configs=interface_configs,
-            interfaces_requiring_periodic_refresh=()
-            if self._config.enable_mqtt
-            else INTERFACES_REQUIRING_PERIODIC_REFRESH,
-            json_port=self._config.json_port,
-            max_read_workers=1,
-            name=self._instance_name,
-            password=self._config.password,
-            program_markers=self._config.program_markers,
-            start_direct=self._start_direct,
-            storage_folder=get_storage_folder(self._hass),
-            sysvar_markers=self._config.sysvar_markers,
-            sys_scan_interval=self._config.sys_scan_interval,
-            tls=self._config.tls,
-            un_ignore_list=self._config.un_ignore,
-            username=self._config.username,
-            verify_tls=self._config.verify_tls,
-        ).create_central()
 
 
 class ControlUnit(BaseControlUnit):
@@ -232,15 +170,11 @@ class ControlUnit(BaseControlUnit):
             self._central.register_backend_system_callback(cb=self._async_backend_system_callback)
         )
 
-        self._unregister_callbacks.append(
-            self._central.register_homematic_callback(cb=self._async_homematic_callback)
-        )
+        self._unregister_callbacks.append(self._central.register_homematic_callback(cb=self._async_homematic_callback))
         await super().start_central()
         self._async_add_central_to_device_registry()
-        if self.config.enable_mqtt:
-            self._mqtt_consumer = MQTTConsumer(
-                hass=self._hass, central=self._central, mqtt_prefix=self.config.mqtt_prefix
-            )
+        if self._enable_mqtt:
+            self._mqtt_consumer = MQTTConsumer(hass=self._hass, central=self._central, mqtt_prefix=self._mqtt_prefix)
             await self._mqtt_consumer.subscribe()
 
     async def stop_central(self, *args: Any) -> None:
@@ -303,9 +237,7 @@ class ControlUnit(BaseControlUnit):
             )
 
     @callback
-    def _async_backend_system_callback(
-        self, system_event: BackendSystemEvent, **kwargs: Any
-    ) -> None:
+    def _async_backend_system_callback(self, system_event: BackendSystemEvent, **kwargs: Any) -> None:
         """Execute the callback for system based events."""
         _LOGGER.debug(
             "callback_system_event: Received system event %s for event for %s",
@@ -325,9 +257,7 @@ class ControlUnit(BaseControlUnit):
             for channel_events in kwargs["new_channel_events"]:
                 async_dispatcher_send(
                     self._hass,
-                    signal_new_data_point(
-                        entry_id=self._entry_id, platform=DataPointCategory.EVENT
-                    ),
+                    signal_new_data_point(entry_id=self._entry_id, platform=DataPointCategory.EVENT),
                     channel_events,
                 )
             self._async_add_virtual_remotes_to_device_registry()
@@ -370,9 +300,7 @@ class ControlUnit(BaseControlUnit):
                         translation_key="xmlrpc_server_receives_no_events",
                         translation_placeholders={
                             EventKey.INTERFACE_ID: interface_id,
-                            EventKey.SECONDS_SINCE_LAST_EVENT: data[
-                                EventKey.SECONDS_SINCE_LAST_EVENT
-                            ],
+                            EventKey.SECONDS_SINCE_LAST_EVENT: data[EventKey.SECONDS_SINCE_LAST_EVENT],
                         },
                     )
             elif interface_event_type == InterfaceEventType.PENDING_PONG:
@@ -448,8 +376,7 @@ class ControlUnit(BaseControlUnit):
                         {
                             EVENT_IDENTIFIER: f"{device_address}_DEVICE_AVAILABILITY",
                             EVENT_TITLE: title,
-                            EVENT_MESSAGE: f"{name}/{device_address} "
-                            f"on interface {interface_id}",
+                            EVENT_MESSAGE: f"{name}/{device_address} " f"on interface {interface_id}",
                             EVENT_UNAVAILABLE: unavailable,
                         }
                     )
@@ -473,8 +400,7 @@ class ControlUnit(BaseControlUnit):
                 if isinstance(error_value, bool):
                     display_error = error_value
                     error_message = (
-                        f"{name}/{device_address} on interface {interface_id}: "
-                        f"{error_parameter_display}"
+                        f"{name}/{device_address} on interface {interface_id}: " f"{error_parameter_display}"
                     )
                 if isinstance(error_value, int):
                     display_error = error_value != 0
@@ -567,70 +493,86 @@ class ControlConfig:
         enable_device_firmware_check: bool = DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK,
     ) -> None:
         """Create the required config for the ControlUnit."""
-        self.hass: Final = hass
-        self.entry_id: Final = entry_id
+        self._hass: Final = hass
+        self._entry_id: Final = entry_id
         self._data: Final = data
-        self.default_callback_port: Final = default_port
-        self.start_direct: Final = start_direct
-        self.enable_device_firmware_check: Final = enable_device_firmware_check
+        self._default_callback_port: Final = default_port
+        self._start_direct: Final = start_direct
+        self._enable_device_firmware_check: Final = enable_device_firmware_check
 
         # central
-        self.instance_name = data[CONF_INSTANCE_NAME]
-        self.host = data[CONF_HOST]
-        self.username = data[CONF_USERNAME]
-        self.password = data[CONF_PASSWORD]
-        self.tls = data[CONF_TLS]
-        self.verify_tls = data[CONF_VERIFY_TLS]
-        self.callback_host = data.get(CONF_CALLBACK_HOST)
-        self.callback_port = data.get(CONF_CALLBACK_PORT)
-        self.json_port = data.get(CONF_JSON_PORT)
+        self._instance_name: Final[str] = data[CONF_INSTANCE_NAME]
+        self._host: Final[str] = data[CONF_HOST]
+        self._username: Final[str] = data[CONF_USERNAME]
+        self._password: Final[str] = data[CONF_PASSWORD]
+        self._tls: Final[bool] = data[CONF_TLS]
+        self._verify_tls: Final[bool] = data[CONF_VERIFY_TLS]
+        self._callback_host: Final[str | None] = data.get(CONF_CALLBACK_HOST)
+        self._callback_port: Final[int | None] = data.get(CONF_CALLBACK_PORT)
+        self._json_port: Final[int | None] = data.get(CONF_JSON_PORT)
 
         # interface_config
-        self.interface_config = data.get(CONF_INTERFACE, {})
+        self._interface_config = data.get(CONF_INTERFACE, {})
         # advanced_config
-        advanced_config = data.get(CONF_ADVANCED_CONFIG, {})
-        self.enable_system_notifications = advanced_config.get(
+        ac = data.get(CONF_ADVANCED_CONFIG, {})
+        self._enable_mqtt: Final[bool] = ac.get(CONF_ENABLE_MQTT, DEFAULT_ENABLE_MQTT)
+        self._enable_program_scan: Final[bool] = ac.get(CONF_ENABLE_PROGRAM_SCAN, DEFAULT_ENABLE_PROGRAM_SCAN)
+        self._enable_system_notifications: Final[bool] = ac.get(
             CONF_ENABLE_SYSTEM_NOTIFICATIONS, DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS
         )
-        if sysvar_markers := advanced_config.get(CONF_SYSVAR_MARKERS):
-            self.sysvar_markers = sysvar_markers
-        else:
-            self.sysvar_markers = DEFAULT_SYSVAR_MARKERS
-
-        self.enable_sysvar_scan: Final = advanced_config.get(
-            CONF_ENABLE_SYSVAR_SCAN, DEFAULT_ENABLE_SYSVAR_SCAN
+        self._enable_sysvar_scan: Final[bool] = ac.get(CONF_ENABLE_SYSVAR_SCAN, DEFAULT_ENABLE_SYSVAR_SCAN)
+        self._listen_on_all_ip: Final[bool] = ac.get(CONF_LISTEN_ON_ALL_IP, DEFAULT_LISTEN_ON_ALL_IP)
+        self._mqtt_prefix: Final[str] = ac.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)
+        self._program_markers: Final[tuple[DescriptionMarker | str, ...]] = (
+            program_markers if (program_markers := ac.get(CONF_PROGRAM_MARKERS)) else DEFAULT_PROGRAM_MARKERS
         )
-
-        if program_markers := advanced_config.get(CONF_PROGRAM_MARKERS):
-            self.program_markers = program_markers
-        else:
-            self.program_markers = DEFAULT_PROGRAM_MARKERS
-
-        self.enable_program_scan: Final = advanced_config.get(
-            CONF_ENABLE_PROGRAM_SCAN, DEFAULT_ENABLE_PROGRAM_SCAN
+        self._sys_scan_interval: Final[int] = ac.get(CONF_SYS_SCAN_INTERVAL, DEFAULT_SYS_SCAN_INTERVAL)
+        self._sysvar_markers: Final[tuple[DescriptionMarker | str, ...]] = (
+            sysvar_markers if (sysvar_markers := ac.get(CONF_SYSVAR_MARKERS)) else DEFAULT_SYSVAR_MARKERS
         )
-        self.sys_scan_interval: Final = advanced_config.get(
-            CONF_SYS_SCAN_INTERVAL, DEFAULT_SYS_SCAN_INTERVAL
-        )
+        self._un_ignore: Final[tuple[str, ...]] = ac.get(CONF_UN_IGNORES, DEFAULT_UN_IGNORES)
 
-        self.listen_on_all_ip = advanced_config.get(
-            CONF_LISTEN_ON_ALL_IP, DEFAULT_LISTEN_ON_ALL_IP
-        )
-        self.enable_mqtt: Final = advanced_config.get(CONF_ENABLE_MQTT, DEFAULT_ENABLE_MQTT)
-        self.mqtt_prefix: Final = advanced_config.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)
-        self.un_ignore: Final = advanced_config.get(CONF_UN_IGNORES, DEFAULT_UN_IGNORES)
+    @property
+    def hass(self) -> HomeAssistant:
+        """Return hass object."""
+        return self._hass
+
+    @property
+    def entry_id(self) -> str:
+        """Return the entry_id."""
+        return self._entry_id
+
+    @property
+    def enable_system_notifications(self) -> bool:
+        """Return the enable_system_notifications."""
+        return self._enable_system_notifications
+
+    @property
+    def enable_mqtt(self) -> bool:
+        """Return the enable_mqtt."""
+        return self._enable_mqtt
+
+    @property
+    def instance_name(self) -> str:
+        """Return the instance_name."""
+        return self._instance_name
+
+    @property
+    def mqtt_prefix(self) -> str:
+        """Return the mqtt_prefix."""
+        return self._mqtt_prefix
 
     def check_config(self) -> None:
         """Check config. Throws BaseHomematicException on failure."""
         if config_failures := check_config(
-            central_name=self.instance_name,
-            host=self.host,
-            username=self.username,
-            password=self.password,
-            callback_host=self.callback_host,
-            callback_port=self.callback_port,
-            json_port=self.json_port,
-            storage_folder=get_storage_folder(self.hass),
+            central_name=self._instance_name,
+            host=self._host,
+            username=self._username,
+            password=self._password,
+            callback_host=self._callback_host,
+            callback_port=self._callback_port,
+            json_port=self._json_port,
+            storage_folder=get_storage_folder(self._hass),
         ):
             failures = ", ".join(config_failures)
             raise InvalidConfig(failures)
@@ -642,6 +584,49 @@ class ControlConfig:
     def create_control_unit_temp(self) -> ControlUnitTemp:
         """Identify the used client."""
         return ControlUnitTemp(self._temporary_config)
+
+    def create_central(self) -> CentralUnit:
+        """Create the central unit for ccu callbacks."""
+        interface_configs: set[InterfaceConfig] = set()
+        for interface_name in self._interface_config:
+            interface = self._interface_config[interface_name]
+            interface_configs.add(
+                InterfaceConfig(
+                    central_name=self._instance_name,
+                    interface=Interface(interface_name),
+                    port=interface.get(CONF_PORT),
+                    remote_path=interface.get(CONF_PATH),
+                )
+            )
+        # use last 10 chars of entry_id for central_id uniqueness
+        central_id = self._entry_id[-10:]
+        return CentralConfig(
+            callback_host=self._callback_host if self._callback_host != IP_ANY_V4 else None,
+            callback_port=self._callback_port if self._callback_port != PORT_ANY else None,
+            central_id=central_id,
+            client_session=aiohttp_client.async_get_clientsession(self._hass),
+            enable_device_firmware_check=DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK,
+            enable_program_scan=self._enable_program_scan,
+            enable_sysvar_scan=self._enable_sysvar_scan,
+            listen_ip_addr=IP_ANY_V4 if self._listen_on_all_ip else None,
+            default_callback_port=self._default_callback_port,
+            host=self._host,
+            interface_configs=interface_configs,
+            interfaces_requiring_periodic_refresh=() if self._enable_mqtt else INTERFACES_REQUIRING_PERIODIC_REFRESH,
+            json_port=self._json_port,
+            max_read_workers=1,
+            name=self._instance_name,
+            password=self._password,
+            program_markers=self._program_markers,
+            start_direct=self._start_direct,
+            storage_folder=get_storage_folder(self._hass),
+            sysvar_markers=self._sysvar_markers,
+            sys_scan_interval=self._sys_scan_interval,
+            tls=self._tls,
+            un_ignore_list=self._un_ignore,
+            username=self._username,
+            verify_tls=self._verify_tls,
+        ).create_central()
 
     @property
     def _temporary_config(self) -> ControlConfig:

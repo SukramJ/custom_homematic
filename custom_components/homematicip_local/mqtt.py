@@ -50,11 +50,7 @@ class MQTTConsumer:
     def _on_device_mqtt_msg_receive(self, msg: ReceiveMessage) -> None:
         """Do something on message receive."""
         _LOGGER.debug("Device MQTT Message received: %s", msg.payload)
-        state_path = (
-            msg.topic[len(self._mqtt_prefix) :]
-            if msg.topic.startswith(self._mqtt_prefix)
-            else msg.topic
-        )
+        state_path = msg.topic[len(self._mqtt_prefix) :] if msg.topic.startswith(self._mqtt_prefix) else msg.topic
         payload_dict = json_loads(msg.payload)
         if (payload_value := cast(dict, payload_dict).get("v")) is not None:
             self._central.data_point_path_event(state_path=state_path, value=payload_value)
@@ -63,11 +59,7 @@ class MQTTConsumer:
     def _on_sysvar_mqtt_msg_receive(self, msg: ReceiveMessage) -> None:
         """Do something on message receive."""
         _LOGGER.debug("Sysvar MQTT Message received: %s", msg.payload)
-        state_path = (
-            msg.topic[len(self._mqtt_prefix) :]
-            if msg.topic.startswith(self._mqtt_prefix)
-            else msg.topic
-        )
+        state_path = msg.topic[len(self._mqtt_prefix) :] if msg.topic.startswith(self._mqtt_prefix) else msg.topic
         payload_dict = json_loads(msg.payload)
         if (payload_value := cast(dict, payload_dict).get("v")) is not None:
             self._central.sysvar_data_point_path_event(state_path=state_path, value=payload_value)

@@ -49,17 +49,13 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.EVENT
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.EVENT),
             target=async_add_event,
         )
     )
 
     for event_type in DATA_POINT_EVENTS:
-        async_add_event(
-            data_points=control_unit.central.get_events(event_type=event_type, registered=False)
-        )
+        async_add_event(data_points=control_unit.central.get_events(event_type=event_type, registered=False))
 
 
 class HaHomematicEvent(EventEntity):
@@ -117,13 +113,9 @@ class HaHomematicEvent(EventEntity):
 
         for event in self._hm_channel_events:
             self._unregister_callbacks.append(
-                event.register_data_point_updated_callback(
-                    cb=self._async_event_changed, custom_id=self.entity_id
-                )
+                event.register_data_point_updated_callback(cb=self._async_event_changed, custom_id=self.entity_id)
             )
-            self._unregister_callbacks.append(
-                event.register_device_removed_callback(cb=self._async_device_removed)
-            )
+            self._unregister_callbacks.append(event.register_device_removed_callback(cb=self._async_device_removed))
 
     @callback
     def _async_event_changed(self, *args: Any, **kwargs: Any) -> None:

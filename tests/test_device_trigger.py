@@ -106,14 +106,10 @@ async def no_test_if_fires_on_state_change(hass, calls):
     hass.states.async_set("homematicip_local.entity", STATE_ON)
     await hass.async_block_till_done()
     assert len(calls) == 1
-    assert calls[0].data["some"] == "turn_on - device - {} - off - on - None - 0".format(
-        "homematicip_local.entity"
-    )
+    assert calls[0].data["some"] == "turn_on - device - {} - off - on - None - 0".format("homematicip_local.entity")
 
     # Fake that the entity is turning off.
     hass.states.async_set("homematicip_local.entity", STATE_OFF)
     await hass.async_block_till_done()
     assert len(calls) == 2
-    assert calls[1].data["some"] == "turn_off - device - {} - on - off - None - 0".format(
-        "homematicip_local.entity"
-    )
+    assert calls[1].data["some"] == "turn_off - device - {} - on - off - None - 0".format("homematicip_local.entity")

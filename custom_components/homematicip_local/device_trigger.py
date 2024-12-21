@@ -38,17 +38,13 @@ async def async_get_triggers(hass: HomeAssistant, device_id: str) -> list[dict[s
     device_registry = dr.async_get(hass)
     if (device := device_registry.async_get(device_id)) is None:
         return []
-    if (
-        data := get_device_address_at_interface_from_identifiers(identifiers=device.identifiers)
-    ) is None:
+    if (data := get_device_address_at_interface_from_identifiers(identifiers=device.identifiers)) is None:
         return []
 
     device_address, interface_id = data
     triggers = []
     for entry_id in device.config_entries:
-        if (
-            entry := hass.config_entries.async_get_entry(entry_id=entry_id)
-        ) and entry.domain == DOMAIN:
+        if (entry := hass.config_entries.async_get_entry(entry_id=entry_id)) and entry.domain == DOMAIN:
             control_unit: ControlUnit = entry.runtime_data
             if control_unit.central.has_client(interface_id=interface_id) is False:
                 continue
@@ -66,9 +62,7 @@ async def async_get_triggers(hass: HomeAssistant, device_id: str) -> list[dict[s
                         CONF_DEVICE_ID: device_id,
                         CONF_EVENT_TYPE: action_event.event_type.value,
                     }
-                    trigger.update(
-                        cleanup_click_event_data(event_data=action_event.get_event_data())
-                    )
+                    trigger.update(cleanup_click_event_data(event_data=action_event.get_event_data()))
                     triggers.append(trigger)
 
     return triggers

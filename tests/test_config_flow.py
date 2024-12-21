@@ -51,9 +51,7 @@ async def async_check_form(
     if interface_data is None:
         interface_data = {}
 
-    result = await hass.config_entries.flow.async_init(
-        HMIP_DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
+    result = await hass.config_entries.flow.async_init(HMIP_DOMAIN, context={"source": config_entries.SOURCE_USER})
     assert result["type"] == FlowResultType.FORM
     assert result["errors"] is None
 
@@ -88,11 +86,7 @@ async def async_check_form(
         assert result2["handler"] == HMIP_DOMAIN
         assert result2["step_id"] == "interface"
 
-        next(
-            flow
-            for flow in hass.config_entries.flow.async_progress()
-            if flow["flow_id"] == result["flow_id"]
-        )
+        next(flow for flow in hass.config_entries.flow.async_progress() if flow["flow_id"] == result["flow_id"])
 
         result3 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
@@ -153,11 +147,7 @@ async def async_check_options_form(
         assert result2["handler"] == const.CONFIG_ENTRY_ID
         assert result2["step_id"] == "interface"
 
-        next(
-            flow
-            for flow in hass.config_entries.options.async_progress()
-            if flow["flow_id"] == result["flow_id"]
-        )
+        next(flow for flow in hass.config_entries.options.async_progress() if flow["flow_id"] == result["flow_id"])
 
         result3 = await hass.config_entries.options.async_configure(
             result["flow_id"],
@@ -186,9 +176,7 @@ async def test_form(hass: HomeAssistant) -> None:
 
 async def test_options_form(hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry) -> None:
     """Test we get the form."""
-    data = await async_check_options_form(
-        hass, mock_config_entry=mock_config_entry_v2, interface_data={}
-    )
+    data = await async_check_options_form(hass, mock_config_entry=mock_config_entry_v2, interface_data={})
     interface = data["interface"]
     if_hmip_rf = interface[Interface.HMIP_RF]
     assert if_hmip_rf[CONF_PORT] == 2010
@@ -216,9 +204,7 @@ async def test_options_form_no_hmip_other_bidcos_port(
 ) -> None:
     """Test we get the form."""
     interface_data = {CONF_ENABLE_HMIP_RF: False, CONF_BIDCOS_RF_PORT: 5555}
-    data = await async_check_options_form(
-        hass, mock_config_entry=mock_config_entry_v2, interface_data=interface_data
-    )
+    data = await async_check_options_form(hass, mock_config_entry=mock_config_entry_v2, interface_data=interface_data)
     interface = data["interface"]
     assert interface.get(Interface.HMIP_RF) is None
     if_bidcos_rf = interface[Interface.BIDCOS_RF]
@@ -259,9 +245,7 @@ async def test_form_only_virtual(hass: HomeAssistant) -> None:
     assert interface[Interface.VIRTUAL_DEVICES][CONF_PORT] == 9292
 
 
-async def test_options_form_all_interfaces_enabled(
-    hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry
-) -> None:
+async def test_options_form_all_interfaces_enabled(hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry) -> None:
     """Test we get the form."""
     mock_config_entry_v2.data["interface"][Interface.VIRTUAL_DEVICES] = {"port": 9292}
     mock_config_entry_v2.data["interface"][Interface.BIDCOS_WIRED] = {"port": 2000}
@@ -290,9 +274,7 @@ async def test_form_tls(hass: HomeAssistant) -> None:
 
 async def test_form_invalid_auth(hass: HomeAssistant) -> None:
     """Test we handle invalid auth."""
-    result = await hass.config_entries.flow.async_init(
-        HMIP_DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
+    result = await hass.config_entries.flow.async_init(HMIP_DOMAIN, context={"source": config_entries.SOURCE_USER})
     assert result["type"] == FlowResultType.FORM
     assert result["errors"] is None
 
@@ -321,11 +303,7 @@ async def test_form_invalid_auth(hass: HomeAssistant) -> None:
         assert result2["handler"] == HMIP_DOMAIN
         assert result2["step_id"] == "interface"
 
-        next(
-            flow
-            for flow in hass.config_entries.flow.async_progress()
-            if flow["flow_id"] == result["flow_id"]
-        )
+        next(flow for flow in hass.config_entries.flow.async_progress() if flow["flow_id"] == result["flow_id"])
 
         result3 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
@@ -337,9 +315,7 @@ async def test_form_invalid_auth(hass: HomeAssistant) -> None:
     assert result3["errors"] == {"base": "invalid_auth"}
 
 
-async def test_options_form_invalid_auth(
-    hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry
-) -> None:
+async def test_options_form_invalid_auth(hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry) -> None:
     """Test we handle invalid auth."""
     mock_config_entry_v2.add_to_hass(hass)
     result = await hass.config_entries.options.async_init(mock_config_entry_v2.entry_id)
@@ -370,11 +346,7 @@ async def test_options_form_invalid_auth(
         assert result2["handler"] == const.CONFIG_ENTRY_ID
         assert result2["step_id"] == "interface"
 
-        next(
-            flow
-            for flow in hass.config_entries.options.async_progress()
-            if flow["flow_id"] == result["flow_id"]
-        )
+        next(flow for flow in hass.config_entries.options.async_progress() if flow["flow_id"] == result["flow_id"])
 
         result3 = await hass.config_entries.options.async_configure(
             result["flow_id"],
@@ -388,9 +360,7 @@ async def test_options_form_invalid_auth(
 
 async def test_form_invalid_password(hass: HomeAssistant) -> None:
     """Test we handle invalid auth."""
-    result = await hass.config_entries.flow.async_init(
-        HMIP_DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
+    result = await hass.config_entries.flow.async_init(HMIP_DOMAIN, context={"source": config_entries.SOURCE_USER})
     assert result["type"] == FlowResultType.FORM
     assert result["errors"] is None
 
@@ -419,11 +389,7 @@ async def test_form_invalid_password(hass: HomeAssistant) -> None:
         assert result2["handler"] == HMIP_DOMAIN
         assert result2["step_id"] == "interface"
 
-        next(
-            flow
-            for flow in hass.config_entries.flow.async_progress()
-            if flow["flow_id"] == result["flow_id"]
-        )
+        next(flow for flow in hass.config_entries.flow.async_progress() if flow["flow_id"] == result["flow_id"])
 
         result3 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
@@ -435,9 +401,7 @@ async def test_form_invalid_password(hass: HomeAssistant) -> None:
     assert result3["errors"] == {"base": "invalid_config"}
 
 
-async def test_options_form_invalid_password(
-    hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry
-) -> None:
+async def test_options_form_invalid_password(hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry) -> None:
     """Test we handle invalid auth."""
     mock_config_entry_v2.add_to_hass(hass)
     result = await hass.config_entries.options.async_init(mock_config_entry_v2.entry_id)
@@ -468,11 +432,7 @@ async def test_options_form_invalid_password(
         assert result2["handler"] == const.CONFIG_ENTRY_ID
         assert result2["step_id"] == "interface"
 
-        next(
-            flow
-            for flow in hass.config_entries.options.async_progress()
-            if flow["flow_id"] == result["flow_id"]
-        )
+        next(flow for flow in hass.config_entries.options.async_progress() if flow["flow_id"] == result["flow_id"])
 
         result3 = await hass.config_entries.options.async_configure(
             result["flow_id"],
@@ -486,9 +446,7 @@ async def test_options_form_invalid_password(
 
 async def test_form_cannot_connect(hass: HomeAssistant) -> None:
     """Test we handle cannot connect error."""
-    result = await hass.config_entries.flow.async_init(
-        HMIP_DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
+    result = await hass.config_entries.flow.async_init(HMIP_DOMAIN, context={"source": config_entries.SOURCE_USER})
     assert result["type"] == FlowResultType.FORM
     assert result["errors"] is None
 
@@ -517,11 +475,7 @@ async def test_form_cannot_connect(hass: HomeAssistant) -> None:
         assert result2["handler"] == HMIP_DOMAIN
         assert result2["step_id"] == "interface"
 
-        next(
-            flow
-            for flow in hass.config_entries.flow.async_progress()
-            if flow["flow_id"] == result["flow_id"]
-        )
+        next(flow for flow in hass.config_entries.flow.async_progress() if flow["flow_id"] == result["flow_id"])
 
         result3 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
@@ -533,9 +487,7 @@ async def test_form_cannot_connect(hass: HomeAssistant) -> None:
     assert result3["errors"] == {"base": "cannot_connect"}
 
 
-async def test_options_form_cannot_connect(
-    hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry
-) -> None:
+async def test_options_form_cannot_connect(hass: HomeAssistant, mock_config_entry_v2: MockConfigEntry) -> None:
     """Test we handle cannot connect error."""
     mock_config_entry_v2.add_to_hass(hass)
     result = await hass.config_entries.options.async_init(mock_config_entry_v2.entry_id)
@@ -563,11 +515,7 @@ async def test_options_form_cannot_connect(
         assert result2["handler"] == const.CONFIG_ENTRY_ID
         assert result2["step_id"] == "interface"
 
-        next(
-            flow
-            for flow in hass.config_entries.options.async_progress()
-            if flow["flow_id"] == result["flow_id"]
-        )
+        next(flow for flow in hass.config_entries.options.async_progress() if flow["flow_id"] == result["flow_id"])
 
         result3 = await hass.config_entries.options.async_configure(
             result["flow_id"],
@@ -579,9 +527,7 @@ async def test_options_form_cannot_connect(
     assert result3["errors"] == {"base": "cannot_connect"}
 
 
-async def test_flow_hassio_discovery(
-    hass: HomeAssistant, discovery_info: ssdp.SsdpServiceInfo
-) -> None:
+async def test_flow_hassio_discovery(hass: HomeAssistant, discovery_info: ssdp.SsdpServiceInfo) -> None:
     """Test hassio discovery flow works."""
 
     result = await hass.config_entries.flow.async_init(
@@ -628,11 +574,7 @@ async def test_flow_hassio_discovery(
         assert result2["handler"] == HMIP_DOMAIN
         assert result2["step_id"] == "interface"
 
-        next(
-            flow
-            for flow in hass.config_entries.flow.async_progress()
-            if flow["flow_id"] == result["flow_id"]
-        )
+        next(flow for flow in hass.config_entries.flow.async_progress() if flow["flow_id"] == result["flow_id"])
 
         result3 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
@@ -677,9 +619,7 @@ def test_config_flow_helper() -> None:
     assert _get_serial(f"9876543210{const.SERIAL}") == const.SERIAL
 
 
-async def test_async_validate_config_and_get_system_information(
-    hass: HomeAssistant, entry_data_v5
-) -> None:
+async def test_async_validate_config_and_get_system_information(hass: HomeAssistant, entry_data_v5) -> None:
     """Test backend validation."""
     with patch(
         "custom_components.homematicip_local.config_flow.validate_config_and_get_system_information",

@@ -19,11 +19,7 @@ from . import HomematicConfigEntry
 from .const import HmEntityState
 from .control_unit import ControlUnit, signal_new_data_point
 from .entity_helpers import HmNumberEntityDescription
-from .generic_entity import (
-    ATTR_VALUE_STATE,
-    HaHomematicGenericEntity,
-    HaHomematicGenericSysvarEntity,
-)
+from .generic_entity import ATTR_VALUE_STATE, HaHomematicGenericEntity, HaHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -56,17 +52,14 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_NUMBER: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarNumber(control_unit=control_unit, data_point=data_point)
-            for data_point in data_points
+            HaHomematicSysvarNumber(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.NUMBER
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.NUMBER),
             target=async_add_number,
         )
     )
@@ -74,18 +67,14 @@ async def async_setup_entry(
     entry.async_on_unload(
         func=async_dispatcher_connect(
             hass=hass,
-            signal=signal_new_data_point(
-                entry_id=entry.entry_id, platform=DataPointCategory.HUB_NUMBER
-            ),
+            signal=signal_new_data_point(entry_id=entry.entry_id, platform=DataPointCategory.HUB_NUMBER),
             target=async_add_hub_number,
         )
     )
 
     async_add_number(data_points=control_unit.get_new_data_points(data_point_type=BaseDpNumber))
 
-    async_add_hub_number(
-        data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpNumber)
-    )
+    async_add_hub_number(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpNumber))
 
 
 class HaHomematicNumber(HaHomematicGenericEntity[BaseDpNumber], RestoreNumber):
@@ -148,9 +137,7 @@ class HaHomematicNumber(HaHomematicGenericEntity[BaseDpNumber], RestoreNumber):
     async def async_added_to_hass(self) -> None:
         """Check, if state needs to be restored."""
         await super().async_added_to_hass()
-        if not self._data_point.is_valid and (
-            restored_sensor_data := await self.async_get_last_number_data()
-        ):
+        if not self._data_point.is_valid and (restored_sensor_data := await self.async_get_last_number_data()):
             self._restored_native_value = restored_sensor_data.native_value
 
 

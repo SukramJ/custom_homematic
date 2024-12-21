@@ -91,9 +91,7 @@ async def test_migrate_entry(
         }
 
 
-async def test_unload_entry(
-    hass: HomeAssistant, mock_loaded_config_entry: MockConfigEntry
-) -> None:
+async def test_unload_entry(hass: HomeAssistant, mock_loaded_config_entry: MockConfigEntry) -> None:
     """Test unload entry."""
     assert hass.data[HMIP_DOMAIN]
     assert mock_loaded_config_entry.state == ConfigEntryState.LOADED
@@ -105,9 +103,7 @@ async def test_unload_entry(
     # assert await hass.config_entries.async_unload(mock_loaded_config_entry.entry_id) is False
 
 
-async def test_remove_entry(
-    hass: HomeAssistant, mock_loaded_config_entry: MockConfigEntry
-) -> None:
+async def test_remove_entry(hass: HomeAssistant, mock_loaded_config_entry: MockConfigEntry) -> None:
     """Test unload entry."""
     assert hass.data[HMIP_DOMAIN]
     assert mock_loaded_config_entry.state == ConfigEntryState.LOADED
@@ -117,9 +113,7 @@ async def test_remove_entry(
     # assert HMIP_DOMAIN not in hass.data
 
 
-async def test_reload_entry(
-    hass: HomeAssistant, mock_loaded_config_entry: MockConfigEntry
-) -> None:
+async def test_reload_entry(hass: HomeAssistant, mock_loaded_config_entry: MockConfigEntry) -> None:
     """Test unload entry."""
     assert mock_loaded_config_entry.title == const.INSTANCE_NAME
     assert hass.data[HMIP_DOMAIN]
