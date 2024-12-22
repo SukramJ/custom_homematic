@@ -108,24 +108,19 @@ Known cases are in combination with the rf-module `HM-MOD-RPI-PCB`.
 
 ```yaml
 instance_name:
-  required: true
   description: Name of the HA instance. Allowed characters are a-z and 0-9.
     If you want to connect to the same CCU instance from multiple HA installations this instance_name must be unique on every HA instance.
   type: string
 host:
-  required: true
   description: Hostname or IP address of your hub.
   type: string
 username:
-  required: true
   description: Case sensitive. Username of a user in admin-role on your hub.
   type: string
 password:
-  required: true
   description: Case sensitive. Password of the admin-user on your hub.
   type: string
 tls:
-  required: true
   description:
     Enable TLS encryption. This will change the default for json_port from 80 to 443.
     TLS must be enabled, if http to https forwarding is enabled in the CCU.
@@ -133,20 +128,16 @@ tls:
   type: boolean
   default: false
 verify_tls:
-  required: true
   description: Enable TLS verification.
   type: boolean
   default: false
 callback_host:
-  required: false
   description: Hostname or IP address for callback-connection (only required in special network conditions).
   type: string
 callback_port:
-  required: false
   description: Port for callback-connection (only required in special network conditions).
   type: integer
 json_port:
-  required: false
   description: Port used the access the JSON-RPC API.
   type: integer
 ```
@@ -157,57 +148,46 @@ This page always displays the default values, also when reconfiguring the integr
 
 ```yaml
 hmip_rf_enabled:
-  required: true
   description: Enable support for HomematicIP (wiredless and wired) devices.
   type: boolean
-  default: true
+  default: false
 hmip_rf_port:
-  required: false
   description: Port for HomematicIP (wireless and wired).
   type: integer
   default: 2010
 bidos_rf_enabled:
-  required: true
   description: Enable support for BidCos (HomeMatic wireless) devices.
   type: boolean
-  default: true
+  default: false
 bidos_rf_port:
-  required: false
   description: Port for BidCos (HomeMatic wireless).
   type: integer
   default: 2001
 virtual_devices_enabled:
-  required: true
   description: Enable support for heating groups.
   type: boolean
   default: false
 virtual_devices_port:
-  required: false
   description: Port for heating groups.
   type: integer
   default: 9292
 virtual_devices_path:
-  required: false
   description: Path for heating groups
   type: string
   default: /groups
 hs485d_enabled:
-  required: true
   description: Enable support for HomeMatic wired devices.
   type: boolean
   default: false
 hs485d_port:
-  required: false
   description: Port for HomeMatic wired.
   type: integer
   default: 2000
 cuxd_enabled:
-  required: true
   description: Enable support for CUxD devices.
   type: boolean
   default: false
 ccujack_enabled:
-  required: true
   description: Enable support for CCU-Jack devices.
   type: boolean
   default: false
@@ -217,27 +197,20 @@ ccujack_enabled:
 
 ```yaml
 program_markers:
-  required: true
   description: Comma separated list of markers for system variables to enable fetching. This means that not all programs are retrieved except the internal ones.
-  type: string
-  default: ""
+  type: select
 program_scan_enabled:
-  required: true
   description: Enable program scanning.
   type: boolean
   default: true
 sysvar_markers:
-  required: true
   description: Comma separated list of markers for system variables to enable fetching. This means that not all system variables are retrieved except the internal ones.
-  type: string
-  default: ""
+  type: select
 sysvar_scan_enabled:
-  required: true
   description: Enable system program scanning.
   type: boolean
   default: true
 sysvar_scan_interval:
-  required: true
   description:
     Interval in seconds between system variable/program scans. The minimum value is 5.
     Intervals of less than 15s are not recommended, and put a lot of strain on slow backend systems in particular.
@@ -245,7 +218,6 @@ sysvar_scan_interval:
   type: integer
   default: 30
 enable_system_notifications:
-  required: true
   description:
     Control if system notification should be displayed. Affects CALLBACK and PINGPONG notifications.
     It's not recommended to disable this option, because this would hide problems on your system.
@@ -253,7 +225,6 @@ enable_system_notifications:
   type: integer
   default: true
 listen_on_all_ip:
-  required: true
   description:
     By default the XMLRPC server only listens to the ip address, that is used for the communication to the CCU, because, for security reasons, it's better to only listen on needed ports.
     This works for most of the installations, but in rare cases, when double virtualization is used (Docker on Windows/Mac), this doesn't work.
@@ -262,23 +233,18 @@ listen_on_all_ip:
   type: bool
   default: false
 mqtt_enabled:
-  required: false
   description:
     Enable support for MQTT to receive events for CUxD and CCU-Jack devices. This also enables events for system variables with 'MQTT' in the description.
   type: bool
   default: false
 mqtt_prefix:
-  required: false
   description:
     Required, if CCU-Jack uses and MQTT-Bridge
   type: string
   default: '' 
 un_ignore: (Only visible when reconfiguring the integration)
-  required: false
-  description:
-    Add additional datapoints/parameters to your instance. See Unignore device parameters
-  type: list of strings
-  default: []
+  description: Add additional datapoints/parameters to your instance. See Unignore device parameters
+  type: select
 ```
 
 

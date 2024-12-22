@@ -138,25 +138,56 @@ def get_interface_schema(use_tls: bool, data: ConfigType, from_config_flow: bool
     """Return the interface schema with or without tls ports."""
     interfaces = data.get(CONF_INTERFACE, {})
     # HmIP-RF
-    enable_hmip_rf = interfaces.get(Interface.HMIP_RF) is not None if Interface.HMIP_RF in interfaces else True
-    hmip_port = IF_HMIP_RF_TLS_PORT if use_tls else IF_HMIP_RF_PORT
+    enable_hmip_rf = Interface.HMIP_RF in interfaces
+    hmip_port = (
+        custom_port
+        if (
+            enable_hmip_rf
+            and (custom_port := interfaces[Interface.HMIP_RF][CONF_PORT]) not in (IF_HMIP_RF_TLS_PORT, IF_HMIP_RF_PORT)
+        )
+        else (IF_HMIP_RF_TLS_PORT if use_tls else IF_HMIP_RF_PORT)
+    )
+
     # BidCos-RF
-    enable_bidcos_rf = interfaces.get(Interface.BIDCOS_RF) is not None if Interface.BIDCOS_RF in interfaces else True
-    bidcos_rf_port = IF_BIDCOS_RF_TLS_PORT if use_tls else IF_BIDCOS_RF_PORT
+    enable_bidcos_rf = Interface.BIDCOS_RF in interfaces
+    bidcos_rf_port = (
+        custom_port
+        if (
+            enable_bidcos_rf
+            and (custom_port := interfaces[Interface.BIDCOS_RF][CONF_PORT])
+            not in (IF_BIDCOS_RF_TLS_PORT, IF_BIDCOS_RF_PORT)
+        )
+        else (IF_BIDCOS_RF_TLS_PORT if use_tls else IF_BIDCOS_RF_PORT)
+    )
+
     # Virtual devices
-    enable_virtual_devices = (
-        interfaces.get(Interface.VIRTUAL_DEVICES) is not None if Interface.VIRTUAL_DEVICES in interfaces else False
+    enable_virtual_devices = Interface.VIRTUAL_DEVICES in interfaces
+    virtual_devices_port = (
+        custom_port
+        if (
+            enable_virtual_devices
+            and (custom_port := interfaces[Interface.VIRTUAL_DEVICES][CONF_PORT])
+            not in (IF_VIRTUAL_DEVICES_TLS_PORT, IF_VIRTUAL_DEVICES_PORT)
+        )
+        else (IF_VIRTUAL_DEVICES_TLS_PORT if use_tls else IF_VIRTUAL_DEVICES_PORT)
     )
-    virtual_devices_port = IF_VIRTUAL_DEVICES_TLS_PORT if use_tls else IF_VIRTUAL_DEVICES_PORT
+
     # BidCos-Wired
-    enable_bidcos_wired = (
-        interfaces.get(Interface.BIDCOS_WIRED) is not None if Interface.BIDCOS_WIRED in interfaces else False
+    enable_bidcos_wired = Interface.BIDCOS_WIRED in interfaces
+    bidcos_wired_port = (
+        custom_port
+        if (
+            enable_bidcos_wired
+            and (custom_port := interfaces[Interface.BIDCOS_WIRED][CONF_PORT])
+            not in (IF_BIDCOS_WIRED_TLS_PORT, IF_BIDCOS_WIRED_PORT)
+        )
+        else (IF_BIDCOS_WIRED_TLS_PORT if use_tls else IF_BIDCOS_WIRED_PORT)
     )
-    bidcos_wired_port = IF_BIDCOS_WIRED_TLS_PORT if use_tls else IF_BIDCOS_WIRED_PORT
+
     # CCU-Jack
-    enable_ccu_jack = interfaces.get(Interface.CCU_JACK) is not None if Interface.CCU_JACK in interfaces else False
+    enable_ccu_jack = Interface.CCU_JACK in interfaces
     # CUxD
-    enable_cuxd = interfaces.get(Interface.CUXD) is not None if Interface.CUXD in interfaces else False
+    enable_cuxd = Interface.CUXD in interfaces
 
     advanced_config = bool(data.get(CONF_ADVANCED_CONFIG))
     interface_schema = vol.Schema(
@@ -202,7 +233,7 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
                     mode=SelectSelectorMode.DROPDOWN,
                     multiple=True,
                     sort=True,
-                    options=[str(v) for v in DescriptionMarker],
+                    options=[str(v) for v in DescriptionMarker if v != DescriptionMarker.HAHM],
                 )
             ),
             vol.Required(
