@@ -1,7 +1,7 @@
 # Version 1.76.0 (2024-12-20)
 
 ## What's Changed
-- Bump hahomematic to 2024.12.10
+- Bump hahomematic to 2024.12.11
   - Add periodic checks for device firmware updates
   - Extend element_matches_key search
   - Log debug if variable is too long
@@ -15,6 +15,7 @@
   This means that not all programs/sysvars are retrieved except the internal ones.
 - Move periodic checks for device firmware updates to lib
 - Reformat line length to 120
+- Use existing config in config flow interface page
 
 # Version 1.75.1 (2024-12-15)
 
