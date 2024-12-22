@@ -1,12 +1,21 @@
-# Version 1.76.0 (2024-12-20)
+# Version 1.76.0 (2024-12-22)
+
+## Breaking changes
+
+- Remove unignore file import 
+  -> Use the UI option
+- Rename marker for extended system variables from hahm to HAHM to better align with other markers
+  -> Rename the marker in the sysvar description from hahm to HAHM
 
 ## What's Changed
 - Bump hahomematic to 2024.12.11
   - Add periodic checks for device firmware updates
   - Extend element_matches_key search
+  - Fix remove last sysvar/program
   - Log debug if variable is too long
   - Refactor scheduler to use just one task
   - Remove default markers from description
+  - Remove unignore file import
   - Rename create methods
   - Rename marker for extended system variables from hahm to HAHM to better align with other markers
   - Start json_rpc client only for ccu
