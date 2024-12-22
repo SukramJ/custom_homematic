@@ -22,7 +22,7 @@ from custom_components.homematicip_local.config_flow import (
     _get_instance_name,
     _get_serial,
 )
-from custom_components.homematicip_local.const import CONF_TLS, DOMAIN as HMIP_DOMAIN
+from custom_components.homematicip_local.const import CONF_INTERFACE, CONF_TLS, DOMAIN as HMIP_DOMAIN
 from homeassistant import config_entries
 from homeassistant.components import ssdp
 from homeassistant.const import CONF_HOST, CONF_PORT
@@ -163,13 +163,11 @@ async def async_check_options_form(
 
 async def test_form(hass: HomeAssistant) -> None:
     """Test we get the form."""
-    data = await async_check_form(hass)
+    interface_data = {CONF_ENABLE_HMIP_RF: True}
+    data = await async_check_form(hass=hass, interface_data=interface_data)
     interface = data["interface"]
-    if_hmip_rf = interface[Interface.HMIP_RF]
-    assert if_hmip_rf[CONF_PORT] == 2010
-    if_bidcos_rf = interface[Interface.BIDCOS_RF]
-    assert if_bidcos_rf[CONF_PORT] == 2001
-
+    assert interface[Interface.HMIP_RF][CONF_PORT] == 2010
+    assert interface.get(Interface.BIDCOS_RF) is None
     assert interface.get(Interface.VIRTUAL_DEVICES) is None
     assert interface.get(Interface.BIDCOS_WIRED) is None
 
@@ -189,7 +187,7 @@ async def test_options_form(hass: HomeAssistant, mock_config_entry_v2: MockConfi
 
 async def test_form_no_hmip_other_bidcos_port(hass: HomeAssistant) -> None:
     """Test we get the form."""
-    interface_data = {CONF_ENABLE_HMIP_RF: False, CONF_BIDCOS_RF_PORT: 5555}
+    interface_data = {CONF_ENABLE_BIDCOS_RF: True, CONF_BIDCOS_RF_PORT: 5555}
     data = await async_check_form(hass, interface_data=interface_data)
     interface = data["interface"]
     assert interface.get(Interface.HMIP_RF) is None
@@ -261,13 +259,11 @@ async def test_options_form_all_interfaces_enabled(hass: HomeAssistant, mock_con
 
 async def test_form_tls(hass: HomeAssistant) -> None:
     """Test we get the form with tls."""
-    data = await async_check_form(hass, tls=True)
-    interface = data["interface"]
-
-    if_hmip_rf = interface[Interface.HMIP_RF]
-    assert if_hmip_rf[CONF_PORT] == 42010
-    if_bidcos_rf = interface[Interface.BIDCOS_RF]
-    assert if_bidcos_rf[CONF_PORT] == 42001
+    interface_data = {CONF_ENABLE_HMIP_RF: True}
+    data = await async_check_form(hass=hass, interface_data=interface_data, tls=True)
+    interface = data[CONF_INTERFACE]
+    assert interface[Interface.HMIP_RF][CONF_PORT] == 42010
+    assert interface.get(Interface.BIDCOS_RF) is None
     assert interface.get(Interface.VIRTUAL_DEVICES) is None
     assert interface.get(Interface.BIDCOS_WIRED) is None
 

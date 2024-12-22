@@ -309,7 +309,7 @@ class DomainConfigFlow(ConfigFlow, domain=DOMAIN):
 
     def __init__(self) -> None:
         """Init the ConfigFlow."""
-        self.data: ConfigType = {CONF_INTERFACE: {Interface.HMIP_RF: {CONF_PORT: IF_HMIP_RF_PORT}}}
+        self.data: ConfigType = {}
         self.serial: str | None = None
 
     async def async_step_user(self, user_input: ConfigType | None = None) -> ConfigFlowResult:
