@@ -319,18 +319,54 @@ class HaHomematicGenericHubEntity(Entity):
         self._cu: ControlUnit = control_unit
         self._data_point = get_data_point(data_point)
         self._attr_unique_id = f"{DOMAIN}_{data_point.unique_id}"
+
         if entity_description := get_entity_description(data_point=data_point):
             self.entity_description = entity_description
-        self._attr_name = data_point.name
-        self._attr_entity_registry_enabled_default = data_point.enabled_default
+        else:
+            self._attr_entity_registry_enabled_default = data_point.enabled_default
+            if isinstance(data_point, GenericDataPoint):
+                self._attr_translation_key = data_point.name.lower()
+            else:
+                self._attr_name = data_point.name
+
         self._attr_device_info = control_unit.device_info
         self._unregister_callbacks: list[CALLBACK_TYPE] = []
-        _LOGGER.debug("init sysvar: Setting up %s", self.name)
+        _LOGGER.debug("init sysvar: Setting up %s", self._data_point.name)
 
     @property
     def available(self) -> bool:
         """Return if entity is available."""
         return self._data_point.available
+
+    @property
+    def name(self) -> str | UndefinedType | None:
+        """
+        Return the name of the entity.
+
+        Override by CC.
+        A hm entity can consist of two parts. The first part is already defined by the user,
+        and the second part is the english named parameter that must be translated.
+        This translated parameter will be used in the combined name.
+        """
+        entity_name = self._data_point.name
+        if (translated_name := super().name) is not None:
+            entity_name = translated_name  # type: ignore[assignment]
+
+        if isinstance(self._data_point, GenericSysvarDataPoint) and entity_name:
+            if entity_name.lower().startswith(tuple({"v_", "sv_", "sv"})):
+                entity_name = entity_name.replace("_", " ").title()
+            else:
+                entity_name = f"sv {entity_name}".title()
+        elif entity_name:  # isinstance(self._data_point, btn.HaHomematicProgramButton) and entity_name:
+            if entity_name.lower().startswith(tuple({"p_", "prg_"})):
+                entity_name = entity_name.replace("_", " ").title()
+            else:
+                entity_name = f"p {entity_name}".title()
+
+        if entity_name == "":
+            return None
+
+        return entity_name
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks and load initial data."""
@@ -394,7 +430,7 @@ class HaHomematicGenericSysvarEntity(Generic[HmGenericSysvarDataPoint], HaHomema
         )
         self._data_point: GenericSysvarDataPoint = data_point
         self._static_state_attributes = {
-            ATTR_NAME: self._data_point.ccu_var_name,
+            ATTR_NAME: self._data_point.name,
             ATTR_DESCRIPTION: self._data_point.description,
         }
 

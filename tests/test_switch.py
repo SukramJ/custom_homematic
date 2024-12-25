@@ -49,7 +49,7 @@ async def test_switch(factory: helper.Factory) -> None:
 async def test_hmsysvarswitch(factory: helper.Factory) -> None:
     """Test SysvarDpSwitch."""
     entity_id = "switch.centraltest_sv_alarm_ext"
-    entity_name = "CentralTest sv_alarm_ext"
+    entity_name = "CentralTest Sv Alarm_Ext"
 
     hass, control = await factory.setup_environment({}, add_sysvars=True)
     ha_state, _ = helper.get_and_check_state(hass=hass, control=control, entity_id=entity_id, entity_name=entity_name)

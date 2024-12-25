@@ -8,8 +8,9 @@
   -> Rename the marker in the sysvar description from hahm to HAHM
 
 ## What's Changed
-- Bump hahomematic to 2024.12.11
+- Bump hahomematic to 2024.12.12
   - Add periodic checks for device firmware updates
+  - Ensure service and alarm messages are always displayed
   - Extend element_matches_key search
   - Fix remove last sysvar/program
   - Log debug if variable is too long

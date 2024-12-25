@@ -12,7 +12,7 @@ from typing import Final
 from hahomematic.const import DataPointCategory
 from hahomematic.model.custom import CustomDataPoint
 from hahomematic.model.generic import GenericDataPoint
-from hahomematic.model.hub import GenericHubDataPoint
+from hahomematic.model.hub import GenericHubDataPoint, GenericSysvarDataPoint
 from hahomematic.support import element_matches_key
 
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass, BinarySensorEntityDescription
@@ -410,6 +410,18 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
 }
 
+_SENSOR_DESCRIPTIONS_BY_VAR_NAME: Mapping[str | tuple[str, ...], EntityDescription] = {
+    "ALARM_MESSAGES": HmSensorEntityDescription(
+        key="ALARM_MESSAGES",
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    "SERVICE_MESSAGES": HmSensorEntityDescription(
+        key="SERVICE_MESSAGES",
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+}
+
+
 _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], str], EntityDescription] = {
     (
         "HmIP-WKP",
@@ -790,6 +802,10 @@ _ENTITY_DESCRIPTION_BY_PARAM: Mapping[DataPointCategory, Mapping[str | tuple[str
     DataPointCategory.SWITCH: _SWITCH_DESCRIPTIONS_BY_PARAM,
 }
 
+_ENTITY_DESCRIPTION_BY_VAR_NAME: Mapping[DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]] = {
+    DataPointCategory.HUB_SENSOR: _SENSOR_DESCRIPTIONS_BY_VAR_NAME,
+}
+
 _ENTITY_DESCRIPTION_BY_POSTFIX: Mapping[DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]] = {
     DataPointCategory.LOCK: _LOCK_DESCRIPTIONS_BY_POSTFIX,
 }
@@ -814,10 +830,16 @@ _DEFAULT_PLATFORM_DESCRIPTION: Mapping[DataPointCategory, EntityDescription] = {
         device_class=SwitchDeviceClass.SWITCH,
     ),
     DataPointCategory.SELECT: SelectEntityDescription(key="select_default", entity_category=EntityCategory.CONFIG),
+    DataPointCategory.HUB_BINARY_SENSOR: BinarySensorEntityDescription(
+        key="hub_binary_sensor_default",
+    ),
     DataPointCategory.HUB_BUTTON: HmButtonEntityDescription(
         key="hub_button_default",
         entity_registry_enabled_default=False,
         translation_key="button_press",
+    ),
+    DataPointCategory.HUB_SENSOR: HmSensorEntityDescription(
+        key="hub_sensor_default",
     ),
     DataPointCategory.HUB_SWITCH: SwitchEntityDescription(
         key="hub_switch_default",
@@ -865,6 +887,11 @@ def get_name_and_translation_key(
             return None, data_point.name_data.parameter_name.lower()
         return None, entity_desc.translation_key
 
+    if isinstance(data_point, GenericSysvarDataPoint):
+        if entity_desc.translation_key is None and data_point.name:
+            return data_point.name, data_point.name.lower()
+        return data_point.name, entity_desc.translation_key
+
     # custom data points use the customizable name from the CCU WebUI,
     # that does not need to be translated in HA
     return data_point.name, None
@@ -894,6 +921,11 @@ def _find_entity_description(
 
         if entity_desc := _get_entity_description_by_postfix(data_point=data_point):
             return entity_desc
+
+    if isinstance(data_point, GenericSysvarDataPoint) and (
+        entity_desc := _get_entity_description_by_var_name(data_point=data_point)
+    ):
+        return entity_desc
 
     return _DEFAULT_PLATFORM_DESCRIPTION.get(data_point.category)
 
@@ -948,6 +980,17 @@ def _get_entity_description_by_model(
                 search_elements=devices,
                 compare_with=data_point.device.model,
             ):
+                return entity_desc
+    return None
+
+
+def _get_entity_description_by_var_name(
+    data_point: GenericSysvarDataPoint,
+) -> EntityDescription | None:
+    """Get entity_description by var name."""
+    if platform_var_name_descriptions := _ENTITY_DESCRIPTION_BY_VAR_NAME.get(data_point.category):
+        for var_names, entity_desc in platform_var_name_descriptions.items():
+            if _param_in_list(params=var_names, parameter=data_point.name):
                 return entity_desc
     return None
 

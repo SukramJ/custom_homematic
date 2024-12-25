@@ -171,7 +171,7 @@ class HaHomematicSysvarSensor(HaHomematicGenericSysvarEntity[SysvarDpSensor], Se
             ):
                 self._attr_state_class = (
                     SensorStateClass.TOTAL_INCREASING
-                    if data_point.ccu_var_name.startswith(TOTAL_SYSVAR)
+                    if data_point.name.startswith(TOTAL_SYSVAR)
                     else SensorStateClass.MEASUREMENT
                 )
             if unit := data_point.unit:
