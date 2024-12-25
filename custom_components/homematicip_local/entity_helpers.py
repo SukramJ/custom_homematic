@@ -871,30 +871,20 @@ def get_name_and_translation_key(
     entity_desc: EntityDescription,
 ) -> tuple[str | UndefinedType | None, str | None]:
     """Get the name and translation_key."""
+    name = data_point.name
+    if entity_desc.translation_key:
+        return name, entity_desc.translation_key
+
     if isinstance(data_point, GenericDataPoint):
-        if isinstance(entity_desc, HmEntityDescription) and entity_desc.translation_key is None:
-            if entity_desc.name_source == HmNameSource.PARAMETER:
-                return None, data_point.parameter.lower()
+        if isinstance(entity_desc, HmEntityDescription):
+            if entity_desc.name_source == HmNameSource.ENTITY_NAME:
+                return name, name.lower()
             if entity_desc.name_source == HmNameSource.DEVICE_CLASS:
                 return UNDEFINED, None
 
-        if entity_desc.translation_key is None:
-            return None, data_point.parameter.lower()
-        return None, entity_desc.translation_key
+        return name, data_point.parameter.lower()
 
-    if isinstance(data_point, CustomDataPoint):
-        if entity_desc.translation_key is None and data_point.name_data.parameter_name:
-            return None, data_point.name_data.parameter_name.lower()
-        return None, entity_desc.translation_key
-
-    if isinstance(data_point, GenericSysvarDataPoint):
-        if entity_desc.translation_key is None and data_point.name:
-            return data_point.name, data_point.name.lower()
-        return data_point.name, entity_desc.translation_key
-
-    # custom data points use the customizable name from the CCU WebUI,
-    # that does not need to be translated in HA
-    return data_point.name, None
+    return name, name.lower()
 
 
 def _find_entity_description(
