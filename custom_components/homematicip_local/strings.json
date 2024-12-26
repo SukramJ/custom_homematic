@@ -146,6 +146,9 @@
             "power_mains_failure": {
                 "name": "Power Mains Failure"
             },
+            "presence": {
+                "name": "Presence"
+            },
             "presence_detection_state": {
                 "name": "Presence Detection State"
             },
@@ -286,6 +289,9 @@
             },
             "air_pressure": {
                 "name": "Air Pressure"
+            },
+            "alarm_messages": {
+                "name": "AlarmMessages"
             },
             "average_illumination": {
                 "name": "Average Illumination"
@@ -487,6 +493,9 @@
                     "state_unknown": "State unknown",
                     "trickle_charge": "Trickle charge"
                 }
+            },
+            "service_messages": {
+                "name": "ServiceMessages"
             },
             "smoke_detector_alarm_status": {
                 "name": "Smoke Detector Alarm Status",

@@ -8,4 +8,4 @@ cd "$(dirname "$0")/.."
 
 echo "Installing development dependencies..."
 pip install colorlog pre-commit uv
-uv pip install -r requirements_test.txt
+uv pip install --prerelease=allow -r requirements_test.txt

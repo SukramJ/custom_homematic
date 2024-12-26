@@ -14,6 +14,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import UndefinedType
 
 from . import HomematicConfigEntry
 from .const import DOMAIN
@@ -104,7 +105,7 @@ class HaHomematicUpdate(UpdateEntity):
         return self._data_point.latest_firmware
 
     @property
-    def name(self) -> str | None:
+    def name(self) -> str | UndefinedType | None:
         """Return the name of the entity."""
         return self._data_point.name
 

@@ -150,6 +150,9 @@
             "power_mains_failure": {
                 "name": "Stromnetzausfall"
             },
+            "presence": {
+                "name": "Anwesenheit"
+            },
             "presence_detection_state": {
                 "name": "Anwesenheit"
             },
@@ -290,6 +293,9 @@
             },
             "air_pressure": {
                 "name": "Luftdruck"
+            },
+            "alarm_messages": {
+                "name": "Alarmmeldungen"
             },
             "average_illumination": {
                 "name": "Durchschnittliche Beleuchtungsstärke"
@@ -491,6 +497,9 @@
                     "state_unknown": "Zustand unbekannt",
                     "trickle_charge": "Erhaltungsladung"
                 }
+            },
+            "service_messages": {
+                "name": "Servicemeldungen"
             },
             "smoke_detector_alarm_status": {
                 "name": "Rauchmelder-Alarmstatus",
