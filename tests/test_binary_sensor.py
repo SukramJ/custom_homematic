@@ -50,7 +50,7 @@ async def test_hmsysvarbinarysensor(
 ) -> None:
     """Test SysvarDpBinarySensor."""
     entity_id = "binary_sensor.centraltest_sv_logic"
-    entity_name = "CentralTest Sv Logic"
+    entity_name = "CentralTest SV logic"
 
     hass, control = await factory.setup_environment({}, add_sysvars=True)
     ha_state, data_point = helper.get_and_check_state(
