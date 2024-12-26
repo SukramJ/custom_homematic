@@ -352,21 +352,18 @@ class HaHomematicGenericHubEntity(Entity):
         if (translated_name := super().name) is not None:
             entity_name = translated_name  # type: ignore[assignment]
 
-        if isinstance(self._data_point, GenericSysvarDataPoint) and entity_name:
-            if entity_name.lower().startswith(tuple({"v_", "sv_", "sv"})):
-                entity_name = entity_name.replace("_", " ").title()
-            else:
-                entity_name = f"sv {entity_name}".title()
-        elif entity_name:  # isinstance(self._data_point, btn.HaHomematicProgramButton) and entity_name:
-            if entity_name.lower().startswith(tuple({"p_", "prg_"})):
-                entity_name = entity_name.replace("_", " ").title()
-            else:
-                entity_name = f"p {entity_name}".title()
+        if entity_name:
+            if isinstance(self._data_point, GenericSysvarDataPoint) and not entity_name.lower().startswith(
+                tuple({"v_", "sv_", "sv"})
+            ):
+                entity_name = f"sv {entity_name}"
+            elif not entity_name.lower().startswith(tuple({"p_", "prg_"})):
+                entity_name = f"p {entity_name}"
 
         if entity_name == "":
             return None
 
-        return entity_name
+        return entity_name.replace("_", " ").title()
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks and load initial data."""
