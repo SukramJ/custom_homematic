@@ -16,6 +16,7 @@
   - Log debug if variable is too long
   - Refactor scheduler to use just one task
   - Remove default markers from description
+  - Remove sv prefix from sysvar / p prefix from program
   - Remove unignore file import
   - Rename create methods
   - Rename marker for extended system variables from hahm to HAHM to better align with other markers
