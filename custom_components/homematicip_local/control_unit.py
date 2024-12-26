@@ -171,8 +171,8 @@ class ControlUnit(BaseControlUnit):
         )
 
         self._unregister_callbacks.append(self._central.register_homematic_callback(cb=self._async_homematic_callback))
-        await super().start_central()
         self._async_add_central_to_device_registry()
+        await super().start_central()
         if self._enable_mqtt:
             self._mqtt_consumer = MQTTConsumer(hass=self._hass, central=self._central, mqtt_prefix=self._mqtt_prefix)
             await self._mqtt_consumer.subscribe()
@@ -233,7 +233,7 @@ class ControlUnit(BaseControlUnit):
                 model=virtual_remote.model,
                 sw_version=virtual_remote.firmware,
                 # Link to the homematic control unit.
-                via_device=cast(tuple[str, str], self._central.name),
+                via_device=(DOMAIN, self._central.name),
             )
 
     @callback

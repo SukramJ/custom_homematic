@@ -24,6 +24,7 @@
   - Support markers for sysvar/program selection
 - Add advanced config options to define markers for programs and sysvars. 
   This means that not all programs/sysvars are retrieved except the internal ones.
+- Fix warning `device_registry.async_get_or_create referencing a non existing via_device`
 - Move periodic checks for device firmware updates to lib
 - Reformat line length to 120
 - Use existing config in config flow interface page
