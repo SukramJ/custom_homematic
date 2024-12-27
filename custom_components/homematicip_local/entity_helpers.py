@@ -835,7 +835,6 @@ _DEFAULT_PLATFORM_DESCRIPTION: Mapping[DataPointCategory, EntityDescription] = {
     ),
     DataPointCategory.HUB_BUTTON: HmButtonEntityDescription(
         key="hub_button_default",
-        entity_registry_enabled_default=False,
         translation_key="button_press",
     ),
     DataPointCategory.HUB_SENSOR: HmSensorEntityDescription(

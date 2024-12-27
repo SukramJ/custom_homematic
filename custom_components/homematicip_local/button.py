@@ -12,7 +12,6 @@ from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import UndefinedType
 
 from . import HomematicConfigEntry
 from .control_unit import ControlUnit, signal_new_data_point
@@ -100,13 +99,6 @@ class HaHomematicProgramButton(HaHomematicGenericHubEntity, ButtonEntity):
             ATTR_NAME: self._data_point.name,
             ATTR_DESCRIPTION: self._data_point.description,
         }
-
-    @property
-    def name(self) -> str | UndefinedType | None:
-        """Return the name of the sysvar data_point."""
-        if (name := super().name) is not None and isinstance(name, str):
-            return f"p {name}".title()
-        return name
 
     async def async_press(self) -> None:
         """Execute a button press."""

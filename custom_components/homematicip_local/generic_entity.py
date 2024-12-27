@@ -357,7 +357,9 @@ class HaHomematicGenericHubEntity(Entity):
                 tuple({"v_", "sv_", "sv"})
             ):
                 entity_name = f"SV {entity_name}"
-            elif not entity_name.lower().startswith(tuple({"p_", "prg_"})):
+            elif isinstance(self._data_point, GenericProgramDataPoint) and not entity_name.lower().startswith(
+                tuple({"p_", "prg_"})
+            ):
                 entity_name = f"P {entity_name}"
 
         if entity_name == "":
