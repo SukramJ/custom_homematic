@@ -10,7 +10,7 @@ from hahomematic.const import CALLBACK_TYPE, CallSource
 from hahomematic.model.custom import CustomDataPoint
 from hahomematic.model.data_point import CallbackDataPoint
 from hahomematic.model.generic import GenericDataPoint
-from hahomematic.model.hub import GenericHubDataPoint, GenericSysvarDataPoint
+from hahomematic.model.hub import GenericHubDataPoint, GenericProgramDataPoint, GenericSysvarDataPoint
 
 from homeassistant.core import State, callback
 from homeassistant.helpers import device_registry as dr, entity_registry as er
@@ -22,7 +22,7 @@ from homeassistant.helpers.typing import UndefinedType
 from .const import DOMAIN, HmEntityState
 from .control_unit import ControlUnit
 from .entity_helpers import get_entity_description
-from .support import HmGenericDataPoint, HmGenericSysvarDataPoint, get_data_point
+from .support import HmGenericDataPoint, HmGenericProgramDataPoint, HmGenericSysvarDataPoint, get_data_point
 
 _LOGGER = logging.getLogger(__name__)
 ATTR_ADDRESS: Final = "address"
@@ -357,7 +357,9 @@ class HaHomematicGenericHubEntity(Entity):
                 tuple({"v_", "sv_", "sv"})
             ):
                 entity_name = f"SV {entity_name}"
-            elif not entity_name.lower().startswith(tuple({"p_", "prg_"})):
+            elif isinstance(self._data_point, GenericProgramDataPoint) and not entity_name.lower().startswith(
+                tuple({"p_", "prg_"})
+            ):
                 entity_name = f"P {entity_name}"
 
         if entity_name == "":
@@ -410,6 +412,39 @@ class HaHomematicGenericHubEntity(Entity):
             entity_registry = er.async_get(self.hass)
             if entity_id in entity_registry.entities:
                 entity_registry.async_remove(entity_id)
+
+
+class HaHomematicGenericProgramEntity(Generic[HmGenericProgramDataPoint], HaHomematicGenericHubEntity):
+    """Representation of the HomematicIP generic sysvar entity."""
+
+    def __init__(
+        self,
+        control_unit: ControlUnit,
+        data_point: GenericProgramDataPoint,
+    ) -> None:
+        """Initialize the generic entity."""
+        super().__init__(
+            control_unit=control_unit,
+            data_point=data_point,
+        )
+        self._data_point: GenericProgramDataPoint = data_point
+        self._static_state_attributes = {
+            ATTR_NAME: self._data_point.name,
+            ATTR_DESCRIPTION: self._data_point.description,
+        }
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the state attributes of the generic entity."""
+        attributes: dict[str, Any] = {}
+        attributes.update(self._static_state_attributes)
+        if self._data_point.is_valid:
+            attributes[ATTR_VALUE_STATE] = (
+                HmEntityState.UNCERTAIN if self._data_point.state_uncertain else HmEntityState.VALID
+            )
+        else:
+            attributes[ATTR_VALUE_STATE] = HmEntityState.NOT_VALID
+        return attributes
 
 
 class HaHomematicGenericSysvarEntity(Generic[HmGenericSysvarDataPoint], HaHomematicGenericHubEntity):
