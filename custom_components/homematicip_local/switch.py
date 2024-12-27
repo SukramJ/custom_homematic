@@ -8,7 +8,7 @@ from typing import Any, Final
 from hahomematic.const import DataPointCategory
 from hahomematic.model.custom import CustomDpSwitch
 from hahomematic.model.generic import DpSwitch
-from hahomematic.model.hub import SysvarDpSwitch
+from hahomematic.model.hub import ProgramDpSwitch, SysvarDpSwitch
 import voluptuous as vol
 
 from homeassistant.components.switch import SwitchEntity
@@ -21,7 +21,11 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import HomematicConfigEntry
 from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericRestoreEntity, HaHomematicGenericSysvarEntity
+from .generic_entity import (
+    HaHomematicGenericProgramEntity,
+    HaHomematicGenericRestoreEntity,
+    HaHomematicGenericSysvarEntity,
+)
 
 _LOGGER = logging.getLogger(__name__)
 ATTR_ON_TIME: Final = "on_time"
@@ -51,14 +55,23 @@ async def async_setup_entry(
             async_add_entities(entities)
 
     @callback
-    def async_add_hub_switch(data_points: tuple[SysvarDpSwitch, ...]) -> None:
+    def async_add_hub_switch(data_points: tuple[SysvarDpSwitch | ProgramDpSwitch, ...]) -> None:
         """Add sysvar switch from Homematic(IP) Local."""
         _LOGGER.debug("ASYNC_ADD_HUB_SWITCH: Adding %i data points", len(data_points))
 
-        if entities := [
-            HaHomematicSysvarSwitch(control_unit=control_unit, data_point=data_point) for data_point in data_points
+        if sysvar_entities := [
+            HaHomematicSysvarSwitch(control_unit=control_unit, data_point=data_point)
+            for data_point in data_points
+            if isinstance(data_point, SysvarDpSwitch)
         ]:
-            async_add_entities(entities)
+            async_add_entities(sysvar_entities)
+
+        if program_entities := [
+            HaHomematicProgramSwitch(control_unit=control_unit, data_point=data_point)
+            for data_point in data_points
+            if isinstance(data_point, ProgramDpSwitch)
+        ]:
+            async_add_entities(program_entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
@@ -82,6 +95,7 @@ async def async_setup_entry(
     )
 
     async_add_hub_switch(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSwitch))
+    async_add_hub_switch(data_points=control_unit.get_new_hub_data_points(data_point_type=ProgramDpSwitch))
 
     platform = entity_platform.async_get_current_platform()
     platform.async_register_entity_service(
@@ -140,7 +154,7 @@ class HaHomematicSwitch(HaHomematicGenericRestoreEntity[CustomDpSwitch | DpSwitc
 
 
 class HaHomematicSysvarSwitch(HaHomematicGenericSysvarEntity[SysvarDpSwitch], SwitchEntity):
-    """Representation of the HomematicIP hub switch entity."""
+    """Representation of the HomematicIP sysvar switch entity."""
 
     @property
     def is_on(self) -> bool | None:
@@ -154,3 +168,32 @@ class HaHomematicSysvarSwitch(HaHomematicGenericSysvarEntity[SysvarDpSwitch], Sw
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the switch off."""
         await self._data_point.send_variable(False)
+
+
+class HaHomematicProgramSwitch(HaHomematicGenericProgramEntity[ProgramDpSwitch], SwitchEntity):
+    """Representation of the HomematicIP program switch entity."""
+
+    def __init__(
+        self,
+        control_unit: ControlUnit,
+        data_point: ProgramDpSwitch,
+    ) -> None:
+        """Initialize the generic entity."""
+        super().__init__(
+            control_unit=control_unit,
+            data_point=data_point,
+        )
+        self._data_point: ProgramDpSwitch = data_point
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return true if switch is on."""
+        return self._data_point.value is True
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn the switch on."""
+        await self._data_point.turn_on()
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn the switch off."""
+        await self._data_point.turn_off()

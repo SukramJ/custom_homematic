@@ -1,4 +1,10 @@
-# Version 1.76.0 (2024-12-22)
+# Version 1.77.0 (2024-12-27)
+
+## What's Changed
+- Bump hahomematic to 2024.12.13
+  - Add program switch
+
+# Version 1.76.0 (2024-12-27)
 
 ## Breaking changes
 
