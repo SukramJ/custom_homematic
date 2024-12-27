@@ -66,12 +66,12 @@ async def async_setup_entry(
         ]:
             async_add_entities(sysvar_entities)
 
-        if program_entities := [
-            HaHomematicProgramSwitch(control_unit=control_unit, data_point=data_point)
-            for data_point in data_points
-            if isinstance(data_point, ProgramDpSwitch)
-        ]:
-            async_add_entities(program_entities)
+        # if program_entities := [
+        #    HaHomematicProgramSwitch(control_unit=control_unit, data_point=data_point)
+        #    for data_point in data_points
+        #    if isinstance(data_point, ProgramDpSwitch)
+        # ]:
+        #    async_add_entities(program_entities)
 
     entry.async_on_unload(
         func=async_dispatcher_connect(
@@ -95,7 +95,7 @@ async def async_setup_entry(
     )
 
     async_add_hub_switch(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSwitch))
-    async_add_hub_switch(data_points=control_unit.get_new_hub_data_points(data_point_type=ProgramDpSwitch))
+    # async_add_hub_switch(data_points=control_unit.get_new_hub_data_points(data_point_type=ProgramDpSwitch))
 
     platform = entity_platform.async_get_current_platform()
     platform.async_register_entity_service(
