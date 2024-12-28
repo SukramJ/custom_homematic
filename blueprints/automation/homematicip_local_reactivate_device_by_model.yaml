@@ -1,0 +1,28 @@
+blueprint:
+  name: Homematic(IP) reactivate device by model
+  description: Reactivate a device marked as not available by model.
+    v2024-12-28
+  domain: automation
+  source_url: https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_device_by_model.yaml
+  input:
+    model:
+      name: Model
+      description: The model of the Homematic device. E.g. HmIP-BROLL
+      selector:
+        text:
+          type: text
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - platform: event
+    event_type: homematic.device_availability
+    event_data:
+      model: !input model
+      unavailable: true
+
+action:
+  - service: homematicip_local.force_device_availability
+    data:
+      device_id: "{{ trigger.event.data.device_id }}"
