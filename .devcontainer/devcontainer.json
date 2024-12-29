@@ -19,6 +19,12 @@
     "label=disable"
   ],
   "customizations": {
+    "jetbrains": {
+      "backend": "PyCharm",
+      "settings": {
+        "com.intellij:app:HttpConfigurable.use_proxy_pac": true
+      }
+    },
     "vscode": {
       "extensions": [
         "charliermarsh.ruff",
