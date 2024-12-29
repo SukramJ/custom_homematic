@@ -10,8 +10,7 @@
       "request": "launch",
       "module": "homeassistant",
       "justMyCode": false,
-      "args": ["--debug", "-c", "config"],
-      "preLaunchTask": "Compile English translations"
+      "args": ["--debug", "-c", "config"]
     },
     {
       "name": "Home Assistant (skip pip)",
@@ -19,8 +18,7 @@
       "request": "launch",
       "module": "homeassistant",
       "justMyCode": false,
-      "args": ["--debug", "-c", "config", "--skip-pip"],
-      "preLaunchTask": "Compile English translations"
+      "args": ["--debug", "-c", "config", "--skip-pip"]
     },
     {
       "name": "Home Assistant: Changed tests",
