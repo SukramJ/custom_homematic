@@ -1,3 +1,7 @@
+# Version 1.77.0 (2024-12-29)
+
+- Add switch to toggle the state of CCU programs
+
 # Version 1.76.1 (2024-12-27)
 
 ## What's Changed
