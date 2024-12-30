@@ -735,6 +735,15 @@ Important:
 - Please read the [CCU-Jack documentation](https://github.com/mdzio/ccu-jack/wiki) on Howto setup CCU-Jack and an optional [MQTT-Bridge](https://github.com/mdzio/ccu-jack/wiki/MQTT-Bridge)
 - Please use an MQTT-Explorer to ensure there are subscribable topics, and the event come in as expected before opening an issue for this integration.
 
+## CUxD and CCU-Jack device support
+
+CUxD and CCU-Jack use Homematic (IP) device and paramset descriptions to be compatible the CCU.
+This fact is also used by this integration to integrate CUxD and CCU-Jack. The integration is basically done for the original devices connected to BidCos-RF/-Wired) and HmIP-(Wired), and only their functionality and behaviour is relevant.
+
+If the implementation for CUxD or CCU-Jack differs, no further adjustments will be made in this integration!!!
+In order to adapt the device to your own needs, HA offers extensive options via templates and customization that can be used for this purpose.
+Deviating behavior is acceptable for these devices and does not constitute a fault.
+
 ## Frequently asked questions
 
 Q: I can see an entity, but it is unavailable.<br>
