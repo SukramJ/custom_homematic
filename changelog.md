@@ -1,6 +1,9 @@
 # Version 1.77.0 (2024-12-29)
 
+- Bump hahomematic to 2025.1.0
+  - Remove get-/set_install_mode
 - Add switch to toggle the state of CCU programs
+- Remove action set_install_mode
 
 # Version 1.76.1 (2024-12-27)
 

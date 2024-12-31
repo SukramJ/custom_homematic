@@ -427,10 +427,6 @@ __Disclaimer: To much writing to the device MASTER paramset could kill your devi
 
 Set a device parameter via the XML-RPC interface. Preferred when using the UI. Works with device selection.
 
-### `homematicip_local.set_install_mode`
-
-Turn on the install mode on the provided Interface to pair new devices.
-
 ### `homematicip_local.set_schedule_profile`
 
 __Disclaimer: To much writing to the device could kill your device's storage.__

@@ -14,7 +14,7 @@ import hahomematic.validator as haval
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntryState
-from homeassistant.const import CONF_DEVICE_ID, CONF_MODE
+from homeassistant.const import CONF_DEVICE_ID
 from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, SupportsResponse, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
@@ -158,15 +158,6 @@ SCHEMA_SET_VARIABLE_VALUE = vol.Schema(
     }
 )
 
-SCHEMA_SET_INSTALL_MODE = vol.Schema(
-    {
-        vol.Required(CONF_INTERFACE_ID): cv.string,
-        vol.Optional(CONF_TIME, default=60): cv.positive_int,
-        vol.Optional(CONF_MODE, default=1): vol.All(vol.Coerce(int), vol.In([1, 2])),
-        vol.Optional(CONF_ADDRESS): haval.device_address,
-    }
-)
-
 SCHEMA_SET_DEVICE_VALUE = vol.All(
     cv.has_at_least_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
     cv.has_at_most_one_key(CONF_DEVICE_ID, CONF_DEVICE_ADDRESS),
@@ -246,8 +237,6 @@ async def async_setup_services(hass: HomeAssistant) -> None:
             await _async_service_put_paramset(hass=hass, service=service)
         elif service_name == HmipLocalServices.REMOVE_CENTRAL_LINKS:
             await _async_service_remove_central_link(hass=hass, service=service)
-        elif service_name == HmipLocalServices.SET_INSTALL_MODE:
-            await _async_service_set_install_mode(hass=hass, service=service)
         elif service_name == HmipLocalServices.SET_DEVICE_VALUE:
             await _async_service_set_device_value(hass=hass, service=service)
         elif service_name == HmipLocalServices.SET_VARIABLE_VALUE:
@@ -356,14 +345,6 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         service=HmipLocalServices.SET_DEVICE_VALUE,
         service_func=async_call_hmip_local_service,
         schema=SCHEMA_SET_DEVICE_VALUE,
-    )
-
-    async_register_admin_service(
-        hass=hass,
-        domain=DOMAIN,
-        service=HmipLocalServices.SET_INSTALL_MODE,
-        service_func=async_call_hmip_local_service,
-        schema=SCHEMA_SET_INSTALL_MODE,
     )
 
     hass.services.async_register(
@@ -582,17 +563,6 @@ async def _async_service_set_variable_value(hass: HomeAssistant, service: Servic
 
     if control := _async_get_control_unit(hass=hass, entry_id=entry_id):
         await control.central.set_system_variable(name=name, value=value)
-
-
-async def _async_service_set_install_mode(hass: HomeAssistant, service: ServiceCall) -> None:
-    """Service to set interface_id into install mode."""
-    interface_id = service.data[CONF_INTERFACE_ID]
-    mode: int = service.data.get(CONF_MODE, 1)
-    time: int = service.data.get(CONF_TIME, 60)
-    device_address = service.data.get(CONF_ADDRESS)
-
-    if control_unit := _async_get_cu_by_interface_id(hass=hass, interface_id=interface_id):
-        await control_unit.central.set_install_mode(interface_id, t=time, mode=mode, device_address=device_address)
 
 
 async def _async_service_clear_cache(hass: HomeAssistant, service: ServiceCall) -> None:

@@ -12,7 +12,7 @@ from homeassistant.const import Platform
 DOMAIN: Final = "homematicip_local"
 HMIP_LOCAL_MIN_HA_VERSION: Final = "2024.12.0"
 ENABLE_EXPERIMENTAL_FEATURES: Final = False
-HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2024.12.13"
+HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2025.1.0"
 
 DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK: Final = True
 DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS: Final = True
@@ -82,7 +82,6 @@ class HmipLocalServices(StrEnum):
     REMOVE_CENTRAL_LINKS = "remove_central_links"
     SET_COVER_COMBINED_POSITION = "set_cover_combined_position"
     SET_DEVICE_VALUE = "set_device_value"
-    SET_INSTALL_MODE = "set_install_mode"
     SET_SCHEDULE_PROFILE = "set_schedule_profile"
     SET_SCHEDULE_PROFILE_WEEKDAY = "set_schedule_profile_weekday"
     SET_SCHEDULE_SIMPLE_PROFILE = "set_schedule_simple_profile"
