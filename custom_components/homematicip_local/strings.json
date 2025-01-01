@@ -1052,28 +1052,6 @@
             },
             "name": "Set device value"
         },
-        "set_install_mode": {
-            "description": "Set a RPC XML interface into installation mode",
-            "fields": {
-                "address": {
-                    "description": "Address of homematic device or BidCoS-RF to learn",
-                    "name": "Address"
-                },
-                "interface_id": {
-                    "description": "Select the given interface into install mode",
-                    "name": "Interface"
-                },
-                "mode": {
-                    "description": "1= Normal mode / 2= Remove exists old links",
-                    "name": "Mode"
-                },
-                "time": {
-                    "description": "Time to run in install mode",
-                    "name": "Time"
-                }
-            },
-            "name": "Set install mode"
-        },
         "set_schedule_profile": {
             "description": "Call to store a schedule on a climate device",
             "fields": {

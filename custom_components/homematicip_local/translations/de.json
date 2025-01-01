@@ -1050,28 +1050,6 @@
             },
             "name": "Wert eines Geräteparameters schreiben"
         },
-        "set_install_mode": {
-            "description": "Aktiviert den Anlernmodus auf der Zentrale über die XML-RPC-Schnittstelle",
-            "fields": {
-                "address": {
-                    "description": "Adresse des Homematic-Gerätes zum anlernen",
-                    "name": "Adresse"
-                },
-                "interface_id": {
-                    "description": "Wählen Sie die Schnittstelle für den Installationsmodus aus",
-                    "name": "Schnittstelle"
-                },
-                "mode": {
-                    "description": "1= Normaler Modus / 2= Entfernt die vorhandenen alten Links",
-                    "name": "Modus"
-                },
-                "time": {
-                    "description": "Dauer für die Ausführung im Installationsmodus",
-                    "name": "Dauer"
-                }
-            },
-            "name": "Anlernmodus auf der Homematic-Zentrale aktivieren"
-        },
         "set_schedule_profile": {
             "description": "Speichert einen Zeitplan auf einem Thermostat",
             "fields": {
