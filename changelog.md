@@ -1,3 +1,9 @@
+# Version 1.78.0 (2025-01-05)
+
+## What's Changed
+- Bump hahomematic to 2025.1.1
+  - Consider heating value type when calculating hvac action
+
 # Version 1.77.0 (2024-12-29)
 
 ## What's Changed
