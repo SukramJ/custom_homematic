@@ -882,15 +882,9 @@ _DEFAULT_PLATFORM_DESCRIPTION: Mapping[DataPointCategory, EntityDescription] = {
         device_class=SwitchDeviceClass.SWITCH,
     ),
     DataPointCategory.SELECT: SelectEntityDescription(key="select_default", entity_category=EntityCategory.CONFIG),
-    DataPointCategory.HUB_BINARY_SENSOR: BinarySensorEntityDescription(
-        key="hub_binary_sensor_default",
-    ),
     DataPointCategory.HUB_BUTTON: HmButtonEntityDescription(
         key="hub_button_default",
         translation_key="button_press",
-    ),
-    DataPointCategory.HUB_SENSOR: HmSensorEntityDescription(
-        key="hub_sensor_default",
     ),
     DataPointCategory.HUB_SWITCH: SwitchEntityDescription(
         key="hub_switch_default",
