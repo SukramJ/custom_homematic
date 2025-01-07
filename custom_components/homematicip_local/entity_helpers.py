@@ -348,7 +348,7 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         key="RAIN_COUNTER",
         native_unit_of_measurement=UnitOfLength.MILLIMETERS,
         state_class=SensorStateClass.TOTAL_INCREASING,
-        translation_key="rain_counter",
+        translation_key="rain_counter_total",
     ),
     ("RSSI_DEVICE", "RSSI_PEER"): HmSensorEntityDescription(
         key="RSSI",
@@ -373,7 +373,7 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         key="SUNSHINEDURATION",
         native_unit_of_measurement=UnitOfTime.MINUTES,
         state_class=SensorStateClass.TOTAL_INCREASING,
-        translation_key="sunshineduration",
+        translation_key="sunshine_duration",
     ),
     "VALUE": HmSensorEntityDescription(
         key="VALUE",
@@ -419,8 +419,60 @@ _SENSOR_DESCRIPTIONS_BY_VAR_NAME: Mapping[str | tuple[str, ...], EntityDescripti
         key="SERVICE_MESSAGES",
         state_class=SensorStateClass.MEASUREMENT,
     ),
+    "svEnergyCounter": HmSensorEntityDescription(
+        key="ENERGY_COUNTER",
+        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        translation_key="energy_counter_total",
+    ),
+    "svEnergyCounterFeedIn": HmSensorEntityDescription(
+        key="ENERGY_COUNTER_FEED_IN",
+        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        translation_key="energy_counter_feed_in_total",
+    ),
+    "svHmIPRainCounter": HmSensorEntityDescription(
+        key="RAIN_COUNTER",
+        native_unit_of_measurement=UnitOfLength.MILLIMETERS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        translation_key="rain_counter_total",
+    ),
+    "svHmIPRainCounterToday": HmSensorEntityDescription(
+        key="RAIN_COUNTER_TODAY",
+        native_unit_of_measurement=UnitOfLength.MILLIMETERS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        translation_key="rain_counter_today",
+    ),
+    "svHmIPRainCounterYesterday": HmSensorEntityDescription(
+        key="RAIN_COUNTER_YESTERDAY",
+        native_unit_of_measurement=UnitOfLength.MILLIMETERS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        translation_key="rain_counter_yesterday",
+    ),
+    "svHmIPSunshineCounter": HmSensorEntityDescription(
+        key="SUNSHINE_COUNTER",
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        translation_key="sunshine_counter_total",
+    ),
+    "svHmIPSunshineCounterToday": HmSensorEntityDescription(
+        key="SUNSHINE_COUNTER_TODAY",
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        translation_key="sunshine_counter_today",
+    ),
+    "svHmIPSunshineCounterYesterday": HmSensorEntityDescription(
+        key="SUNSHINE_COUNTER_YESTERDAY",
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        translation_key="sunshine_counter_yesterday",
+    ),
 }
-
 
 _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], str], EntityDescription] = {
     (
