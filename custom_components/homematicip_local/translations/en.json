@@ -350,6 +350,12 @@
             "energy_counter": {
                 "name": "Energy Counter"
             },
+            "energy_counter_feed_in_total": {
+                "name": "Energy Counter feed in Total"
+            },
+            "energy_counter_total": {
+                "name": "Energy Counter Total"
+            },
             "error": {
                 "name": "Error"
             },
@@ -451,8 +457,14 @@
             "power": {
                 "name": "Power"
             },
-            "rain_counter": {
-                "name": "Rain Counter"
+            "rain_counter_today": {
+                "name": "Rain Counter Today"
+            },
+            "rain_counter_total": {
+                "name": "Rain Counter Total"
+            },
+            "rain_counter_yesterday": {
+                "name": "Rain Counter Yesterday"
             },
             "rssi_device": {
                 "name": "RSSI Device"
@@ -520,8 +532,17 @@
             "status": {
                 "name": ""
             },
-            "sunshineduration": {
-                "name": "Sunshineduration"
+            "sunshine_counter_today": {
+                "name": "Sunshine Counter Today"
+            },
+            "sunshine_counter_total": {
+                "name": "Sunshine Counter Total"
+            },
+            "sunshine_counter_yesterday": {
+                "name": "Sunshine Counter Yesterday"
+            },
+            "sunshine_duration": {
+                "name": "Sunshine Duration"
             },
             "taupunkt": {
                 "name": "dew point"

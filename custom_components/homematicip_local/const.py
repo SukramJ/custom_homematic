@@ -12,7 +12,7 @@ from homeassistant.const import Platform
 DOMAIN: Final = "homematicip_local"
 HMIP_LOCAL_MIN_HA_VERSION: Final = "2024.12.0"
 ENABLE_EXPERIMENTAL_FEATURES: Final = False
-HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2025.1.1"
+HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2025.1.2"
 
 DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK: Final = True
 DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS: Final = True
@@ -91,12 +91,6 @@ class HmipLocalServices(StrEnum):
     TURN_ON_SIREN = "turn_on_siren"
     UPDATE_DEVICE_FIRMWARE_DATA = "update_device_firmware_data"
 
-
-TOTAL_SYSVAR: Final[tuple[str, ...]] = (
-    "svEnergyCounter_",
-    "svHmIPRainCounter_",
-    "svHmIPSunshineCounter_",
-)
 
 # filter out event error parameters, that should not be displayed in logbook
 FILTER_ERROR_EVENT_PARAMETERS: Final[tuple[str, ...]] = ("ERROR_CODE",)

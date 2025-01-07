@@ -324,14 +324,23 @@ class HaHomematicGenericHubEntity(Entity):
             self.entity_description = entity_description
         else:
             self._attr_entity_registry_enabled_default = data_point.enabled_default
-            if isinstance(data_point, GenericDataPoint):
+            if isinstance(data_point, GenericSysvarDataPoint):
                 self._attr_translation_key = data_point.name.lower()
             else:
                 self._attr_name = data_point.name
 
-        self._attr_device_info = control_unit.device_info
+        self._attr_device_info = self._get_device_info()
         self._unregister_callbacks: list[CALLBACK_TYPE] = []
         _LOGGER.debug("init sysvar: Setting up %s", self._data_point.name)
+
+    def _get_device_info(self) -> DeviceInfo | None:
+        """Return device specific attributes."""
+        if self._data_point.channel is None:
+            return self._cu.device_info
+
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._data_point.channel.device.identifier)},
+        )
 
     @property
     def available(self) -> bool:
@@ -348,11 +357,13 @@ class HaHomematicGenericHubEntity(Entity):
         and the second part is the english named parameter that must be translated.
         This translated parameter will be used in the combined name.
         """
-        entity_name = self._data_point.name
-        if (translated_name := super().name) is not None:
-            entity_name = translated_name  # type: ignore[assignment]
 
-        if entity_name:
+        entity_name = self._data_point.name
+
+        if (translated_name := super().name) is not None and not isinstance(translated_name, UndefinedType):
+            entity_name = translated_name
+
+        if not self._data_point.channel and entity_name and isinstance(entity_name, str):
             if isinstance(self._data_point, GenericSysvarDataPoint) and not entity_name.lower().startswith(
                 tuple({"v_", "sv_", "sv"})
             ):
@@ -364,7 +375,8 @@ class HaHomematicGenericHubEntity(Entity):
 
         if entity_name == "":
             return None
-
+        if isinstance(entity_name, UndefinedType):
+            return None
         return entity_name.replace("_", " ")
 
     async def async_added_to_hass(self) -> None:

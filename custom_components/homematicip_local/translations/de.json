@@ -354,6 +354,12 @@
             "energy_counter": {
                 "name": "Energiezähler"
             },
+            "energy_counter_feed_in_total": {
+                "name": "Energiezähler Einspeisung Gesamt"
+            },
+            "energy_counter_total": {
+                "name": "Energiezähler Gesamt"
+            },
             "error": {
                 "name": "Fehler"
             },
@@ -455,8 +461,14 @@
             "power": {
                 "name": "Leistung"
             },
-            "rain_counter": {
-                "name": "Regenzähler"
+            "rain_counter_today": {
+                "name": "Regenzähler Heute"
+            },
+            "rain_counter_total": {
+                "name": "Regenzähler Gesamt"
+            },
+            "rain_counter_yesterday": {
+                "name": "Regenzähler Gestern"
             },
             "rssi_device": {
                 "name": "RSSI Device"
@@ -524,7 +536,16 @@
             "status": {
                 "name": ""
             },
-            "sunshineduration": {
+            "sunshine_counter_today": {
+                "name": "Sonnenscheinzähler Heute"
+            },
+            "sunshine_counter_total": {
+                "name": "Sonnenscheinzähler Gesamt"
+            },
+            "sunshine_counter_yesterday": {
+                "name": "Sonnenscheinzähler Gestern"
+            },
+            "sunshine_duration": {
                 "name": "Sonnenscheindauer"
             },
             "taupunkt": {

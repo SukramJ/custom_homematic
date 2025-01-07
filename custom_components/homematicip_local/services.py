@@ -510,7 +510,7 @@ async def _async_service_get_variable_value(hass: HomeAssistant, service: Servic
 
     if control := _async_get_control_unit(hass=hass, entry_id=entry_id):
         try:
-            if (value := await control.central.get_system_variable(name=name)) is not None:
+            if (value := await control.central.get_system_variable(legacy_name=name)) is not None:
                 return {"result": value}
         except BaseHomematicException as ex:
             raise HomeAssistantError(ex) from ex
@@ -562,7 +562,7 @@ async def _async_service_set_variable_value(hass: HomeAssistant, service: Servic
     value = service.data[CONF_VALUE]
 
     if control := _async_get_control_unit(hass=hass, entry_id=entry_id):
-        await control.central.set_system_variable(name=name, value=value)
+        await control.central.set_system_variable(legacy_name=name, value=value)
 
 
 async def _async_service_clear_cache(hass: HomeAssistant, service: ServiceCall) -> None:

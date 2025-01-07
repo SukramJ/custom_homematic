@@ -18,7 +18,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 
 from . import HomematicConfigEntry
-from .const import TOTAL_SYSVAR, HmEntityState
+from .const import HmEntityState
 from .control_unit import ControlUnit, signal_new_data_point
 from .entity_helpers import HmSensorEntityDescription
 from .generic_entity import ATTR_VALUE_STATE, HaHomematicGenericEntity, HaHomematicGenericSysvarEntity
@@ -161,21 +161,17 @@ class HaHomematicSysvarSensor(HaHomematicGenericSysvarEntity[SysvarDpSensor], Se
     ) -> None:
         """Initialize the sensor entity."""
         super().__init__(control_unit=control_unit, data_point=data_point)
-        if data_point.data_type == SysvarType.LIST:
-            self._attr_options = list(data_point.values) if data_point.values else None
-            self._attr_device_class = SensorDeviceClass.ENUM
-        else:
-            if data_point.data_type in (
+        if not hasattr(self, "entity_description"):
+            if data_point.data_type == SysvarType.LIST:
+                self._attr_options = list(data_point.values) if data_point.values else None
+                self._attr_device_class = SensorDeviceClass.ENUM
+            elif data_point.data_type in (
                 SysvarType.FLOAT,
                 SysvarType.INTEGER,
             ):
-                self._attr_state_class = (
-                    SensorStateClass.TOTAL_INCREASING
-                    if data_point.name.startswith(TOTAL_SYSVAR)
-                    else SensorStateClass.MEASUREMENT
-                )
-            if unit := data_point.unit:
-                self._attr_native_unit_of_measurement = unit
+                self._attr_state_class = SensorStateClass.MEASUREMENT
+                if unit := data_point.unit:
+                    self._attr_native_unit_of_measurement = unit
 
     @property
     def native_value(self) -> StateType | date | datetime | Decimal:
