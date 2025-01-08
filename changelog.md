@@ -1,14 +1,15 @@
-# Version 1.78.0 (2025-01-05)
+# Version 1.78.0 (2025-01-08)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.2
+- Bump hahomematic to 2025.1.3
   - Consider heating value type when calculating hvac action
   - Identify channel of a system variable if name ends with channel address
-- Device related sysvars are now shown under the device instead of the hub
+  - Fix issue with programs/sysvars on backend restart
 - Add entity descriptions for (some statistics might be recalculated): 
   - svHmIPRainCounter*, svHmIPRainCounterToday*, svHmIPRainCounterYesterday*
   - svHmIPSunshineCounter*, svHmIPSunshineCounterToday*, vHmIPSunshineCounterYesterday*
   - svEnergyCounter*, svEnergyCounterFeedIn*
+- Device related sysvars are now shown under the device instead of the hub
 
 # Version 1.77.0 (2024-12-29)
 
