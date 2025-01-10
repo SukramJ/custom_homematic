@@ -376,7 +376,7 @@ class ControlUnit(BaseControlUnit):
                         {
                             EVENT_IDENTIFIER: f"{device_address}_DEVICE_AVAILABILITY",
                             EVENT_TITLE: title,
-                            EVENT_MESSAGE: f"{name}/{device_address} " f"on interface {interface_id}",
+                            EVENT_MESSAGE: f"{name}/{device_address} on interface {interface_id}",
                             EVENT_UNAVAILABLE: unavailable,
                         }
                     )
@@ -399,14 +399,11 @@ class ControlUnit(BaseControlUnit):
                 display_error: bool = False
                 if isinstance(error_value, bool):
                     display_error = error_value
-                    error_message = (
-                        f"{name}/{device_address} on interface {interface_id}: " f"{error_parameter_display}"
-                    )
+                    error_message = f"{name}/{device_address} on interface {interface_id}: {error_parameter_display}"
                 if isinstance(error_value, int):
                     display_error = error_value != 0
                     error_message = (
-                        f"{name}/{device_address} on interface {interface_id}: "
-                        f"{error_parameter_display} {error_value}"
+                        f"{name}/{device_address} on interface {interface_id}: {error_parameter_display} {error_value}"
                     )
                 event_data.update(
                     {
