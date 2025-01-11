@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from decimal import Decimal
 import logging
-from typing import Any
+from typing import Any, cast
 
 from hahomematic.const import DEFAULT_MULTIPLIER, DataPointCategory, ParameterType, SysvarType
 from hahomematic.model.generic import DpSensor
@@ -124,10 +124,10 @@ class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
                 and self.translation_key is not None
                 and self._data_point.hmtype in (ParameterType.ENUM, ParameterType.STRING)
             ):
-                return self._data_point.value.lower()  # type: ignore[no-any-return]
-            return self._data_point.value  # type: ignore[no-any-return]
+                return cast(StateType | date | datetime | Decimal, self._data_point.value.lower())
+            return cast(StateType | date | datetime | Decimal, self._data_point.value)
         if self.is_restored:
-            return self._restored_native_value  # type: ignore[no-any-return]
+            return cast(StateType | date | datetime | Decimal, self._restored_native_value)
         return None
 
     @property

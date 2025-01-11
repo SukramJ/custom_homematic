@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from typing import cast
 
 from hahomematic.const import DataPointCategory
 from hahomematic.model.generic import DpBinarySensor
@@ -82,7 +83,7 @@ class HaHomematicBinarySensor(HaHomematicGenericRestoreEntity[DpBinarySensor], B
             and (restored_state := self._restored_state.state) not in (STATE_UNKNOWN, STATE_UNAVAILABLE)
         ):
             return restored_state == STATE_ON
-        return self._data_point.default  # type: ignore[no-any-return]
+        return cast(bool | None, self._data_point.default)
 
 
 class HaHomematicSysvarBinarySensor(HaHomematicGenericSysvarEntity[SysvarDpBinarySensor], BinarySensorEntity):
