@@ -18,6 +18,8 @@ from hahomematic.model.custom import (
     ClimateActivity,
     ClimateMode,
     ClimateProfile,
+    ScheduleProfile,
+    ScheduleWeekday,
 )
 import voluptuous as vol
 
@@ -419,7 +421,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
             await source_climate_data_point.copy_schedule(target_climate_data_point=self._data_point)
 
     async def async_copy_schedule_profile(
-        self, source_profile: str, target_profile: str, source_entity_id: str | None = None
+        self, source_profile: ScheduleProfile, target_profile: ScheduleProfile, source_entity_id: str | None = None
     ) -> None:
         """Copy a schedule profile."""
         if source_entity_id and (
@@ -436,24 +438,26 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
         else:
             await self._data_point.copy_schedule_profile(source_profile=source_profile, target_profile=target_profile)
 
-    async def async_get_schedule_profile(self, profile: str) -> ServiceResponse:
+    async def async_get_schedule_profile(self, profile: ScheduleProfile) -> ServiceResponse:
         """Return the schedule profile."""
-        return await self._data_point.get_schedule_profile(profile=profile)  # type: ignore[no-any-return]
+        return cast(ServiceResponse, await self._data_point.get_schedule_profile(profile=profile))
 
-    async def async_get_schedule_profile_weekday(self, profile: str, weekday: str) -> ServiceResponse:
+    async def async_get_schedule_profile_weekday(
+        self, profile: ScheduleProfile, weekday: ScheduleWeekday
+    ) -> ServiceResponse:
         """Return the schedule profile weekday."""
-        return await self._data_point.get_schedule_profile_weekday(  # type: ignore[no-any-return]
-            profile=profile, weekday=weekday
+        return cast(
+            ServiceResponse, await self._data_point.get_schedule_profile_weekday(profile=profile, weekday=weekday)
         )
 
-    async def async_set_schedule_profile(self, profile: str, profile_data: PROFILE_DICT) -> None:
+    async def async_set_schedule_profile(self, profile: ScheduleProfile, profile_data: PROFILE_DICT) -> None:
         """Set the schedule profile."""
         for p_key, p_value in profile_data.items():
             profile_data[p_key] = {int(key): value for key, value in p_value.items()}
         await self._data_point.set_schedule_profile(profile=profile, profile_data=profile_data)
 
     async def async_set_schedule_simple_profile(
-        self, profile: str, base_temperature: float, simple_profile_data: SIMPLE_PROFILE_DICT
+        self, profile: ScheduleProfile, base_temperature: float, simple_profile_data: SIMPLE_PROFILE_DICT
     ) -> None:
         """Set the schedule simple profile."""
         await self._data_point.set_simple_schedule_profile(
@@ -462,15 +466,17 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
             simple_profile_data=simple_profile_data,
         )
 
-    async def async_set_schedule_profile_weekday(self, profile: str, weekday: str, weekday_data: WEEKDAY_DICT) -> None:
+    async def async_set_schedule_profile_weekday(
+        self, profile: ScheduleProfile, weekday: ScheduleWeekday, weekday_data: WEEKDAY_DICT
+    ) -> None:
         """Set the schedule profile weekday."""
         weekday_data = {int(key): value for key, value in weekday_data.items()}
         await self._data_point.set_schedule_profile_weekday(profile=profile, weekday=weekday, weekday_data=weekday_data)
 
     async def async_set_schedule_simple_profile_weekday(
         self,
-        profile: str,
-        weekday: str,
+        profile: ScheduleProfile,
+        weekday: ScheduleWeekday,
         base_temperature: float,
         simple_weekday_list: SIMPLE_WEEKDAY_LIST,
     ) -> None:

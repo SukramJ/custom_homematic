@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from typing import cast
 
 from hahomematic.const import DataPointCategory
 from hahomematic.model.generic import DpText
@@ -80,7 +81,7 @@ class HaHomematicText(HaHomematicGenericRestoreEntity[DpText], TextEntity):
     def native_value(self) -> str | None:
         """Return the value reported by the text."""
         if self._data_point.is_valid:
-            return self._data_point.value  # type: ignore[no-any-return]
+            return cast(str | None, self._data_point.value)
         if (
             self.is_restored
             and self._restored_state
