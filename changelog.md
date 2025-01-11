@@ -1,10 +1,12 @@
-# Version 1.78.0 (2025-01-08)
+# Version 1.78.0 (2025-01-11)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.4
+- Bump hahomematic to 2025.1.5
   - Consider heating value type when calculating hvac action
-  - Identify channel of a system variable if name ends with channel address
   - Fix issue with programs/sysvars on backend restart
+  - Identify channel of a system variable if name ends with channel address
+  - Refactor create\_\* methods:
+  - Speedup wildcard lookup
 - Add entity descriptions for (some statistics might be recalculated): 
   - svHmIPRainCounter*, svHmIPRainCounterToday*, svHmIPRainCounterYesterday*
   - svHmIPSunshineCounter*, svHmIPSunshineCounterToday*, vHmIPSunshineCounterYesterday*
