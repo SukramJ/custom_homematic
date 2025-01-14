@@ -1,8 +1,8 @@
 # Version 1.78.1 (2025-01-14)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.6
- - Fix KeyError on uninitialised dict
+- Bump hahomematic to 2025.1.7
+  - Fix KeyError on uninitialised dict
 
 # Version 1.78.0 (2025-01-11)
 
