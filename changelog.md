@@ -3,6 +3,7 @@
 ## What's Changed
 - Bump hahomematic to 2025.1.8
   - Improve defaultdict usage
+  - Use Mapping instead of dict where possible
   
 # Version 1.78.1 (2025-01-14)
 
