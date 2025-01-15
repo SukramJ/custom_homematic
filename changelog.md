@@ -1,3 +1,9 @@
+# Version 1.79.0 (2025-01-15)
+
+## What's Changed
+- Bump hahomematic to 2025.1.8
+  - Improve defaultdict usage
+  
 # Version 1.78.1 (2025-01-14)
 
 ## What's Changed
