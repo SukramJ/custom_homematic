@@ -1,7 +1,7 @@
-# Version 1.79.0 (2025-01-15)
+# Version 1.79.0 (2025-01-17)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.9
+- Bump hahomematic to 2025.1.10
   - Improve defaultdict usage
   - Load cached files as defaultdicts
   - Use Mapping instead of dict where possible
