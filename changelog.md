@@ -5,6 +5,8 @@
   - Improve defaultdict usage
   - Load cached files as defaultdicts
   - Use Mapping instead of dict where possible
+- Delete cache 
+  - Fix a problem with new devices, due to an issue in 1.78.0
   
 # Version 1.78.1 (2025-01-14)
 
