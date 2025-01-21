@@ -1,3 +1,9 @@
+# Version 1.80.0 (2025-01-20)
+
+## What's Changed
+- Bump hahomematic to 2025.1.11
+  - Delay start of scheduler until devices are created
+
 # Version 1.79.0 (2025-01-17)
 
 ## What's Changed
