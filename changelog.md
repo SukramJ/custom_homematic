@@ -1,4 +1,4 @@
-# Version 1.80.0 (2025-01-20)
+# Version 1.79.1 (2025-01-21)
 
 ## What's Changed
 - Bump hahomematic to 2025.1.11
@@ -6,6 +6,7 @@
   - Delay start of scheduler until devices are created
   - Rename instance_name to central_name
   - Slugify cache file name
+- Compare keys against sysvar names with wildcards
 
 # Version 1.79.0 (2025-01-17)
 

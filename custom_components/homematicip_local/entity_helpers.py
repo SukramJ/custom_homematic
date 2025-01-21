@@ -989,7 +989,7 @@ def _get_entity_description_by_param(
     """Get entity_description by model and parameter."""
     if platform_param_descriptions := _ENTITY_DESCRIPTION_BY_PARAM.get(data_point.category):
         for params, entity_desc in platform_param_descriptions.items():
-            if _param_in_list(params=params, parameter=data_point.parameter):
+            if _param_in_list(keys=params, name=data_point.parameter):
                 return entity_desc
     return None
 
@@ -1000,7 +1000,7 @@ def _get_entity_description_by_postfix(
     """Get entity_description by model and parameter."""
     if platform_postfix_descriptions := _ENTITY_DESCRIPTION_BY_POSTFIX.get(data_point.category):
         for postfix, entity_desc in platform_postfix_descriptions.items():
-            if _param_in_list(params=postfix, parameter=data_point.data_point_name_postfix):
+            if _param_in_list(keys=postfix, name=data_point.data_point_name_postfix):
                 return entity_desc
     return None
 
@@ -1025,17 +1025,19 @@ def _get_entity_description_by_var_name(
     """Get entity_description by var name."""
     if platform_var_name_descriptions := _ENTITY_DESCRIPTION_BY_VAR_NAME.get(data_point.category):
         for var_names, entity_desc in platform_var_name_descriptions.items():
-            if _param_in_list(params=var_names, parameter=data_point.name):
+            if _param_in_list(keys=var_names, name=data_point.name, do_wildcard_compare=True):
                 return entity_desc
     return None
 
 
-def _param_in_list(params: str | tuple[str, ...], parameter: str) -> bool:
+def _param_in_list(keys: str | tuple[str, ...], name: str, do_wildcard_compare: bool = False) -> bool:
     """Return if parameter is in set."""
-    if isinstance(params, str):
-        return parameter.lower() == params.lower()
-    if isinstance(params, tuple):
-        for device in params:
-            if parameter.lower() == device.lower():
+    if isinstance(keys, str):
+        if do_wildcard_compare:
+            return keys.lower() in name.lower()
+        return keys.lower() == name.lower()
+    if isinstance(keys, tuple):
+        for key in keys:
+            if (do_wildcard_compare and key.lower() in name.lower()) or key.lower() == name.lower():
                 return True
     return False
