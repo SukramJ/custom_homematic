@@ -9,8 +9,9 @@ from typing import TypeAlias
 
 from awesomeversion import AwesomeVersion
 from hahomematic import __version__ as HAHM_VERSION
+from hahomematic.caches.persistent import cleanup_cache_dirs
 from hahomematic.const import DEFAULT_ENABLE_SYSVAR_SCAN, DEFAULT_SYS_SCAN_INTERVAL, DEFAULT_UN_IGNORES
-from hahomematic.support import cleanup_cache_dirs, find_free_port
+from hahomematic.support import find_free_port
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EVENT_HOMEASSISTANT_STOP, __version__ as HA_VERSION_STR
@@ -111,7 +112,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: HomematicConfigEntry) -
 
 async def async_remove_entry(hass: HomeAssistant, entry: HomematicConfigEntry) -> None:
     """Handle removal of an entry."""
-    cleanup_cache_dirs(instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
+    cleanup_cache_dirs(central_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
 
 
 async def async_remove_config_entry_device(
@@ -197,11 +198,11 @@ async def async_migrate_entry(hass: HomeAssistant, entry: HomematicConfigEntry) 
         del_param(name=CONF_ENABLE_SYSTEM_NOTIFICATIONS)
         del_param(name=CONF_UN_IGNORES)
 
-        cleanup_cache_dirs(instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
+        cleanup_cache_dirs(central_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
         hass.config_entries.async_update_entry(entry, version=5, data=data)
     if entry.version == 5:
         data = dict(entry.data)
-        cleanup_cache_dirs(instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
+        cleanup_cache_dirs(central_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
         hass.config_entries.async_update_entry(entry, version=6, data=data)
     if entry.version == 6:
         data = dict(entry.data)
@@ -210,7 +211,7 @@ async def async_migrate_entry(hass: HomeAssistant, entry: HomematicConfigEntry) 
         hass.config_entries.async_update_entry(entry, version=7, data=data)
     if entry.version == 7:
         data = dict(entry.data)
-        cleanup_cache_dirs(instance_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
+        cleanup_cache_dirs(central_name=entry.data["instance_name"], storage_folder=get_storage_folder(hass=hass))
         hass.config_entries.async_update_entry(entry, version=8, data=data)
     _LOGGER.info("Migration to version %s successful", entry.version)
     return True

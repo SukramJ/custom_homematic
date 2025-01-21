@@ -498,7 +498,7 @@ class ControlConfig:
         self._enable_device_firmware_check: Final = enable_device_firmware_check
 
         # central
-        self._instance_name: Final[str] = data[CONF_INSTANCE_NAME]
+        self._instance_name: Final[str] = _cleanup_instance_name(instance_name=data[CONF_INSTANCE_NAME])
         self._host: Final[str] = data[CONF_HOST]
         self._username: Final[str] = data[CONF_USERNAME]
         self._password: Final[str] = data[CONF_PASSWORD]
@@ -655,3 +655,10 @@ async def validate_config_and_get_system_information(
 def get_storage_folder(hass: HomeAssistant) -> str:
     """Return the base path where to store files for this integration."""
     return f"{hass.config.config_dir}/{DOMAIN}"
+
+
+def _cleanup_instance_name(instance_name: str) -> str:
+    """Clean up instance name."""
+    for char in ("/", "\\"):
+        instance_name = instance_name.replace(char, "_")
+    return instance_name
