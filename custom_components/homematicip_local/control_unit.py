@@ -658,7 +658,7 @@ def get_storage_folder(hass: HomeAssistant) -> str:
 
 
 def _cleanup_instance_name(instance_name: str) -> str:
-    """Clean up instance name."""
+    """Clean up instance name problematic characters for folders."""
     for char in ("/", "\\"):
-        instance_name = instance_name.replace(char, "_")
+        instance_name = instance_name.replace(char, "")
     return instance_name
