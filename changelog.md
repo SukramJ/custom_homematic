@@ -1,3 +1,9 @@
+# Version 1.78.0 (2025-01-23)
+
+## What's Changed
+- Bump hahomematic to 2025.1.12
+  - Refactor parameter_visibility
+
 # Version 1.79.1 (2025-01-21)
 
 ## What's Changed
