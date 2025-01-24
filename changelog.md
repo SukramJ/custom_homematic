@@ -1,4 +1,4 @@
-# Version 1.78.0 (2025-01-24)
+# Version 1.80.0 (2025-01-24)
 
 ## What's Changed
 - Bump hahomematic to 2025.1.12
