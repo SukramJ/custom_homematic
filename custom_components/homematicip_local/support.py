@@ -7,6 +7,7 @@ import logging
 from typing import Any, TypeAlias, TypeVar, cast
 
 from hahomematic.const import IDENTIFIER_SEPARATOR, EventKey
+from hahomematic.model.calculated import CalculatedDataPoint
 from hahomematic.model.custom import CustomDataPoint
 from hahomematic.model.data_point import EVENT_DATA_SCHEMA, CallbackDataPoint
 from hahomematic.model.generic import GenericDataPoint
@@ -29,7 +30,7 @@ from .const import (
 )
 
 # Union for entity types used as base class for data points
-HmBaseDataPoint: TypeAlias = CustomDataPoint | GenericDataPoint
+HmBaseDataPoint: TypeAlias = CalculatedDataPoint | CustomDataPoint | GenericDataPoint
 # Generic base type used for data points in Homematic(IP) Local
 HmGenericDataPoint = TypeVar("HmGenericDataPoint", bound=HmBaseDataPoint)
 # Generic base type used for sysvar data points in Homematic(IP) Local

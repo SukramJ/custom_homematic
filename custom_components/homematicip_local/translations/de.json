@@ -452,6 +452,9 @@
             "operating_voltage": {
                 "name": "Betriebsspannung"
             },
+            "operating_voltage_level": {
+                "name": "Betriebsspannungspegel"
+            },
             "passage_counter_value": {
                 "name": "Durchgangszählerwert"
             },

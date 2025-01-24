@@ -448,6 +448,9 @@
             "operating_voltage": {
                 "name": "Operating Voltage"
             },
+            "operating_voltage_level": {
+                "name": "Operating Voltage Level"
+            },
             "passage_counter_value": {
                 "name": "Passage Counter Value"
             },
