@@ -7,6 +7,7 @@ import logging
 from typing import Any, Final, Generic
 
 from hahomematic.const import CALLBACK_TYPE, CallSource
+from hahomematic.model.calculated import CalculatedDataPoint
 from hahomematic.model.custom import CustomDataPoint
 from hahomematic.model.data_point import CallbackDataPoint
 from hahomematic.model.generic import GenericDataPoint
@@ -66,7 +67,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
             self.entity_description = entity_description
         else:
             self._attr_entity_registry_enabled_default = data_point.enabled_default
-            if isinstance(data_point, GenericDataPoint):
+            if isinstance(data_point, CalculatedDataPoint | GenericDataPoint):
                 self._attr_translation_key = data_point.parameter.lower()
 
         hm_device = data_point.device
@@ -87,7 +88,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
 
         _LOGGER.debug("init: Setting up %s", data_point.full_name)
         if (
-            isinstance(data_point, GenericDataPoint)
+            isinstance(data_point, CalculatedDataPoint | GenericDataPoint)
             and hasattr(self, "entity_description")
             and hasattr(self.entity_description, "native_unit_of_measurement")
             and data_point.unit is not None
@@ -112,7 +113,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
             ATTR_ADDRESS: self._data_point.channel.address,
             ATTR_MODEL: self._data_point.device.model,
         }
-        if isinstance(self._data_point, GenericDataPoint):
+        if isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint):
             attributes[ATTR_PARAMETER] = self._data_point.parameter
             attributes[ATTR_FUNCTION] = self._data_point.function
 
@@ -124,9 +125,9 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         attributes: dict[str, Any] = {}
         attributes.update(self._static_state_attributes)
 
-        if (isinstance(self._data_point, GenericDataPoint) and self._data_point.is_readable) or isinstance(
-            self._data_point, CustomDataPoint
-        ):
+        if (
+            isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint) and self._data_point.is_readable
+        ) or isinstance(self._data_point, CustomDataPoint):
             if self._data_point.is_valid:
                 attributes[ATTR_VALUE_STATE] = (
                     HmEntityState.UNCERTAIN if self._data_point.state_uncertain else HmEntityState.VALID
@@ -152,7 +153,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         """
         entity_name = self._data_point.name
 
-        if isinstance(self._data_point, GenericDataPoint) and entity_name:
+        if isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint) and entity_name:
             translated_name = super().name
             if self._do_remove_name():
                 translated_name = ""
@@ -212,10 +213,10 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 self._data_point.register_device_removed_callback(cb=self._async_device_removed)
             )
         # Init value of entity.
-        if isinstance(self._data_point, GenericDataPoint | CustomDataPoint):
+        if isinstance(self._data_point, CalculatedDataPoint | CustomDataPoint | GenericDataPoint):
             await self._data_point.load_data_point_value(call_source=CallSource.HA_INIT)
         if (
-            isinstance(self._data_point, GenericDataPoint)
+            isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint)
             and not self._data_point.is_valid
             and self._data_point.is_readable
         ) or (isinstance(self._data_point, CustomDataPoint) and not self._data_point.is_valid):
@@ -241,7 +242,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
 
     async def async_update(self) -> None:
         """Update entities."""
-        if isinstance(self._data_point, GenericDataPoint | CustomDataPoint):
+        if isinstance(self._data_point, CalculatedDataPoint | CustomDataPoint | GenericDataPoint):
             await self._data_point.load_data_point_value(call_source=CallSource.MANUAL_OR_SCHEDULED)
 
     async def async_will_remove_from_hass(self) -> None:

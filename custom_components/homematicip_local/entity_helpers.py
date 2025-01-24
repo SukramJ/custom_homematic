@@ -10,6 +10,7 @@ import logging
 from typing import Final
 
 from hahomematic.const import DataPointCategory
+from hahomematic.model.calculated import CalculatedDataPoint
 from hahomematic.model.custom import CustomDataPoint
 from hahomematic.model.generic import GenericDataPoint
 from hahomematic.model.hub import GenericHubDataPoint, GenericSysvarDataPoint
@@ -334,6 +335,14 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         key="OPERATING_VOLTAGE",
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+    ),
+    "OPERATING_VOLTAGE_LEVEL": HmSensorEntityDescription(
+        key="OPERATING_VOLTAGE_LEVEL",
+        native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
@@ -894,7 +903,7 @@ _DEFAULT_PLATFORM_DESCRIPTION: Mapping[DataPointCategory, EntityDescription] = {
 
 
 def get_entity_description(
-    data_point: HmGenericDataPoint | GenericHubDataPoint | CustomDataPoint,
+    data_point: HmGenericDataPoint | CustomDataPoint | GenericHubDataPoint,
 ) -> EntityDescription | None:
     """Get the entity_description."""
     if entity_desc := _find_entity_description(data_point=data_point):
@@ -912,7 +921,7 @@ def get_entity_description(
 
 
 def get_name_and_translation_key(
-    data_point: HmGenericDataPoint | GenericHubDataPoint | CustomDataPoint,
+    data_point: HmGenericDataPoint | CustomDataPoint | GenericHubDataPoint,
     entity_desc: EntityDescription,
 ) -> tuple[str | UndefinedType | None, str | None]:
     """Get the name and translation_key."""
@@ -920,7 +929,7 @@ def get_name_and_translation_key(
     if entity_desc.translation_key:
         return name, entity_desc.translation_key
 
-    if isinstance(data_point, GenericDataPoint):
+    if isinstance(data_point, CalculatedDataPoint | GenericDataPoint):
         if isinstance(entity_desc, HmEntityDescription):
             if entity_desc.name_source == HmNameSource.ENTITY_NAME:
                 return name, name.lower()
@@ -936,7 +945,7 @@ def _find_entity_description(
     data_point: HmGenericDataPoint | GenericHubDataPoint | CustomDataPoint,
 ) -> EntityDescription | None:
     """Find the entity_description for platform."""
-    if isinstance(data_point, GenericDataPoint):
+    if isinstance(data_point, CalculatedDataPoint | GenericDataPoint):
         if entity_desc := _get_entity_description_by_model_and_param(data_point=data_point):
             return entity_desc
 
@@ -966,7 +975,7 @@ def _find_entity_description(
 
 
 def _get_entity_description_by_model_and_param(
-    data_point: GenericDataPoint,
+    data_point: CalculatedDataPoint | GenericDataPoint,
 ) -> EntityDescription | None:
     """Get entity_description by model and parameter."""
     if platform_device_and_param_descriptions := _ENTITY_DESCRIPTION_BY_DEVICE_AND_PARAM.get(  # noqa: E501
@@ -984,7 +993,7 @@ def _get_entity_description_by_model_and_param(
 
 
 def _get_entity_description_by_param(
-    data_point: GenericDataPoint,
+    data_point: CalculatedDataPoint | GenericDataPoint,
 ) -> EntityDescription | None:
     """Get entity_description by model and parameter."""
     if platform_param_descriptions := _ENTITY_DESCRIPTION_BY_PARAM.get(data_point.category):
