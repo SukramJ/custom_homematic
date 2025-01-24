@@ -1,7 +1,7 @@
 # Version 1.80.0 (2025-01-24)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.12
+- Bump hahomematic to 2025.1.13
   - Add LOW_BAT_LIMIT
   - Add calculated data points: OperatingVoltageLevel
   - Refactor parameter_visibility
