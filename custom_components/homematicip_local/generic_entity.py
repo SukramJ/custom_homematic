@@ -124,6 +124,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         """Return the state attributes of the generic entity."""
         attributes: dict[str, Any] = {}
         attributes.update(self._static_state_attributes)
+        attributes.update(self._data_point.additional_information)
 
         if (
             isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint) and self._data_point.is_readable
