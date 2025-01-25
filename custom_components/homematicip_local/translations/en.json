@@ -290,6 +290,9 @@
             "air_pressure": {
                 "name": "Air Pressure"
             },
+            "apparent_temperature": {
+                "name": "Apparent Temperature"
+            },
             "alarm_messages": {
                 "name": "AlarmMessages"
             },
