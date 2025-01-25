@@ -177,11 +177,12 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         device_class=SensorDeviceClass.CURRENT,
         state_class=SensorStateClass.MEASUREMENT,
     ),
-    "DEWPOINT": HmSensorEntityDescription(
-        key="DEWPOINT",
+    ("DEWPOINT", "DEW_POINT"): HmSensorEntityDescription(
+        key="DEW_POINT",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,
         state_class=SensorStateClass.MEASUREMENT,
+        translation_key="dew_point",
         entity_registry_enabled_default=False,
     ),
     ("ACTIVITY_STATE", "DIRECTION"): HmSensorEntityDescription(
@@ -368,7 +369,7 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
     ),
-    "APPARENT_TEMPERATURE": HmSensorEntityDescription(
+    ("APPARENT_TEMPERATURE", "FROST_POINT"): HmSensorEntityDescription(
         key="APPARENT_TEMPERATURE",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,

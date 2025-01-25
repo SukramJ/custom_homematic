@@ -330,7 +330,7 @@
             "current_illumination": {
                 "name": "Beleuchtungsstärke"
             },
-            "dewpoint": {
+            "dew_point": {
                 "name": "Taupunkt"
             },
             "direction": {
@@ -371,6 +371,9 @@
             },
             "frequency": {
                 "name": "Frequenz"
+            },
+            "frost_point": {
+                "name": "Frostpunkt"
             },
             "gas_flow": {
                 "name": "Gas-Fluss"

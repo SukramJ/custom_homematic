@@ -326,8 +326,8 @@
             "current_illumination": {
                 "name": "Illumination"
             },
-            "dewpoint": {
-                "name": "Dewpoint"
+            "dew_point": {
+                "name": "Dew point"
             },
             "direction": {
                 "name": "Direction",
@@ -367,6 +367,9 @@
             },
             "frequency": {
                 "name": "Frequency"
+            },
+            "frost_point": {
+                "name": "Frost point"
             },
             "gas_energy_counter": {
                 "name": "Gas Energy Counter"
