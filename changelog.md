@@ -1,11 +1,12 @@
-# Version 1.80.0 (2025-01-24)
+# Version 1.80.0 (2025-01-25)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.14
+- Bump hahomematic to 2025.1.15
   - Add LOW_BAT_LIMIT
   - Add calculated data points: 
     - ApparentTemperature
     - DewPoint
+    - FrostPoint
     - OperatingVoltageLevel
     - VaporConcentration
   - Refactor parameter_visibility
