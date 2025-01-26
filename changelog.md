@@ -1,7 +1,7 @@
 # Version 1.80.0 (2025-01-25)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.15
+- Bump hahomematic to 2025.1.16
   - Add LOW_BAT_LIMIT
   - Add calculated data points: 
     - ApparentTemperature

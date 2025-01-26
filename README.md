@@ -754,6 +754,9 @@ A: I doesn't matter. These are just examples. If you can press it, it is a butto
 Q: I have a problem with the integration. What can i do?<br>
 A: Before creating an issue, you should review the HA log files for `error` or `warning` entries related to this integration (`homematicip_local`, `hahomematic`) and read the corresponding messages. You can find further information about some messages in this document.
 
+Q: What is the source of OPERATING_VOLTAGE_LEVEL, APPARENT_TEMPERATURE, DEW_POINT, FROST_POINT, VAPOR_CONCENTRATION
+A: These are parameters/sensors, that are [calculated](https://github.com/SukramJ/hahomematic/blob/devel/docs/calculated_climate_sensors.md) based on existing parameters to add more information to a device.
+
 ## Examples in YAML
 
 
