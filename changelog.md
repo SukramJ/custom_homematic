@@ -1,14 +1,18 @@
-# Version 1.80.0 (2025-01-25)
+# Version 1.80.0 (2025-01-28)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.17
-  - Add LOW_BAT_LIMIT
+- Bump hahomematic to 2025.1.18
   - Add calculated data points: 
     - ApparentTemperature
     - DewPoint
     - FrostPoint
     - OperatingVoltageLevel
     - VaporConcentration
+  - Add climate presets based on WEEK_PROGRAM_POINTER
+  - Add LOW_BAT_LIMIT
+  - Add WEEK_PROGRAM_POINTER for bidcos climate devices
+  - Define schedule_channel_address for HM schedule usage
+  - Fix usage of master dps for bidcos climate devices
   - Refactor parameter_visibility
 - Add support for CalculatedDataPoint
 - Add translations to apparent_temperature
