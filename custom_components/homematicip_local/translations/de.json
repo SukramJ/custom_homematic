@@ -294,11 +294,11 @@
             "air_pressure": {
                 "name": "Luftdruck"
             },
-            "apparent_temperature": {
-                "name": "Gefühlte Temperatur"
-            },
             "alarm_messages": {
                 "name": "Alarmmeldungen"
+            },
+            "apparent_temperature": {
+                "name": "Gefühlte Temperatur"
             },
             "average_illumination": {
                 "name": "Durchschnittliche Beleuchtungsstärke"
