@@ -1,7 +1,7 @@
 # Version 1.80.0 (2025-01-28)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.18
+- Bump hahomematic to 2025.1.19
   - Add calculated data points: 
     - ApparentTemperature
     - DewPoint
