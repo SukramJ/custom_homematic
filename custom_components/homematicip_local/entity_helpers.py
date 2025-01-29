@@ -803,7 +803,7 @@ _COVER_DESCRIPTIONS_BY_DEVICE: Mapping[str | tuple[str, ...], EntityDescription]
         key="BLIND",
         device_class=CoverDeviceClass.BLIND,
     ),
-    ("HmIP-BROLL", "HmIP-FROLL"): CoverEntityDescription(
+    ("HmIP-BROLL", "HmIP-FROLL", "HM-LC-Bl1PBU-FM"): CoverEntityDescription(
         key="SHUTTER",
         device_class=CoverDeviceClass.SHUTTER,
     ),
