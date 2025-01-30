@@ -1,7 +1,7 @@
-# Version 1.80.0 (2025-01-28)
+# Version 1.80.0 (2025-01-30)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.20
+- Bump hahomematic to 2025.1.21
   - Add calculated data points: 
     - ApparentTemperature
     - DewPoint
@@ -15,6 +15,7 @@
   - Don't read on unavailable devices
   - Enable schedule on hm thermostat
   - Fix usage of master dps for bidcos climate devices
+  - Improve connection error handling
   - Poll master dp values 5s after send for bidcos devices
   - Refactor parameter_visibility
   - Rename paramset_key to paramset_key_or_link_address for put_paramset
