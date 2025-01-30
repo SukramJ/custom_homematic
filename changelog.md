@@ -8,12 +8,16 @@
     - FrostPoint
     - OperatingVoltageLevel
     - VaporConcentration
-  - Add climate presets based on WEEK_PROGRAM_POINTER
   - Add LOW_BAT_LIMIT
   - Add WEEK_PROGRAM_POINTER for bidcos climate devices
+  - Add climate presets based on WEEK_PROGRAM_POINTER
   - Define schedule_channel_address for HM schedule usage
+  - Don't read on unavailable devices
+  - Enable schedule on hm thermostat
   - Fix usage of master dps for bidcos climate devices
+  - Poll master dp values 5s after send for bidcos devices
   - Refactor parameter_visibility
+  - Rename paramset_key to paramset_key_or_link_address for put_paramset
 - Add support for CalculatedDataPoint
 - Add translations to apparent_temperature
 

@@ -594,7 +594,7 @@ async def _async_service_put_link_paramset(hass: HomeAssistant, service: Service
         try:
             await hm_device.client.put_paramset(
                 channel_address=receiver_channel_address,
-                paramset_key=sender_channel_address,
+                paramset_key_or_link_address=sender_channel_address,
                 values=values,
                 rx_mode=rx_mode,
                 check_against_pd=True,
@@ -619,7 +619,7 @@ async def _async_service_put_paramset(hass: HomeAssistant, service: ServiceCall)
         try:
             await hm_device.client.put_paramset(
                 channel_address=channel_address,
-                paramset_key=paramset_key,
+                paramset_key_or_link_address=paramset_key,
                 values=values,
                 wait_for_callback=wait_for_callback,
                 rx_mode=rx_mode,
