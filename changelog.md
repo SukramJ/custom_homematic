@@ -1,13 +1,14 @@
 # Version 1.80.0 (2025-01-30)
 
 ## What's Changed
-- Bump hahomematic to 2025.1.21
+- Bump hahomematic to 2025.1.22
   - Add calculated data points: 
     - ApparentTemperature
     - DewPoint
     - FrostPoint
     - OperatingVoltageLevel
     - VaporConcentration
+  - Add config option to define the hm_master_poll_after_send_intervals
   - Add LOW_BAT_LIMIT
   - Add WEEK_PROGRAM_POINTER for bidcos climate devices
   - Add climate presets based on WEEK_PROGRAM_POINTER
