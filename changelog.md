@@ -20,6 +20,7 @@
   - Poll master dp values 5s after send for bidcos devices
   - Refactor parameter_visibility
   - Rename paramset_key to paramset_key_or_link_address for put_paramset
+  - Use temporary values where push is not supported
 - Add support for CalculatedDataPoint
 - Add translations to apparent_temperature
 
