@@ -1,3 +1,11 @@
+# Version 1.81.0 (2025-02-01)
+
+## What's Changed
+- Bump hahomematic to 2025.2.1
+  - Remove support for python 3.12
+- Fix import from HA
+
+
 # Version 1.80.0 (2025-01-30)
 
 ## What's Changed
