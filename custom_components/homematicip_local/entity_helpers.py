@@ -66,8 +66,7 @@ class HmNameSource(StrEnum):
     PARAMETER = "parameter"
 
 
-@dataclass(frozen=True, kw_only=True)
-class HmEntityDescription:
+class HmEntityDescription(EntityDescription, frozen_or_thawed=True):
     """Base class describing Homematic(IP) Local entities."""
 
     name_source: HmNameSource = HmNameSource.PARAMETER
