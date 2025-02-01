@@ -813,44 +813,44 @@ data:
   weekday: MONDAY
   weekday_data:
     "1":
-      ScheduleSlotType.ENDTIME: "05:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "05:00"
+      TEMPERATURE: 16
     "2":
-      ScheduleSlotType.ENDTIME: "06:00"
-      ScheduleSlotType.TEMPERATURE: 17
+      ENDTIME: "06:00"
+      TEMPERATURE: 17
     "3":
-      ScheduleSlotType.ENDTIME: "09:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "09:00"
+      TEMPERATURE: 16
     "4":
-      ScheduleSlotType.ENDTIME: "15:00"
-      ScheduleSlotType.TEMPERATURE: 17
+      ENDTIME: "15:00"
+      TEMPERATURE: 17
     "5":
-      ScheduleSlotType.ENDTIME: "19:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "19:00"
+      TEMPERATURE: 16
     "6":
-      ScheduleSlotType.ENDTIME: "22:00"
-      ScheduleSlotType.TEMPERATURE: 22
+      ENDTIME: "22:00"
+      TEMPERATURE: 22
     "7":
-      ScheduleSlotType.ENDTIME: "24:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "24:00"
+      TEMPERATURE: 16
     "8":
-      ScheduleSlotType.ENDTIME: "24:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "24:00"
+      TEMPERATURE: 16
     "9":
-      ScheduleSlotType.ENDTIME: "24:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "24:00"
+      TEMPERATURE: 16
     "10":
-      ScheduleSlotType.ENDTIME: "24:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "24:00"
+      TEMPERATURE: 16
     "11":
-      ScheduleSlotType.ENDTIME: "24:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "24:00"
+      TEMPERATURE: 16
     "12":
-      ScheduleSlotType.ENDTIME: "24:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "24:00"
+      TEMPERATURE: 16
     "13":
-      ScheduleSlotType.ENDTIME: "24:00"
-      ScheduleSlotType.TEMPERATURE: 16
+      ENDTIME: "24:00"
+      TEMPERATURE: 16
 ```
 
 ### Sample for set_schedule_simple_profile
