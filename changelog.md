@@ -1,10 +1,11 @@
-# Version 1.81.0 (2025-02-01)
+# Version 1.81.0 (2025-02-02)
 
 ## What's Changed
 - Bump hahomematic to 2025.2.1
-  - Remove support for python 3.12
+  - Add calculated data points for HM devices
+  - Remove python 3.12 for github tests and pylint
+  - Use py 3.13 for mypy and pylint
 - Fix import from HA
-
 
 # Version 1.80.0 (2025-01-30)
 
