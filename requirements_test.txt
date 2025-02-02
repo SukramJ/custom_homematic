@@ -1,8 +1,8 @@
 -r requirements_test_pre_commit.txt
 
 async-upnp-client==0.43.0
-hahomematic==2025.2.0
-homeassistant==2025.2.0b4
+hahomematic==2025.2.1
+homeassistant==2025.2.0b6
 isal==1.7.1
 mypy-dev==1.14.0a7
 pre-commit==4.1.0
@@ -10,4 +10,4 @@ pur==7.3.3
 pydevccu==0.1.9
 pylint==3.3.4
 pylint_strict_informational==0.1
-pytest-homeassistant-custom-component==0.13.206
+pytest-homeassistant-custom-component==0.13.207

@@ -23,7 +23,6 @@ from hahomematic.exceptions import AuthFailure, BaseHomematicException
 import voluptuous as vol
 from voluptuous.schema_builder import UNDEFINED, Schema
 
-from homeassistant.components import ssdp
 from homeassistant.config_entries import CONN_CLASS_LOCAL_PUSH, ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PASSWORD, CONF_PATH, CONF_PORT, CONF_USERNAME
 from homeassistant.core import HomeAssistant, callback
@@ -39,6 +38,7 @@ from homeassistant.helpers.selector import (
     TextSelectorConfig,
     TextSelectorType,
 )
+from homeassistant.helpers.service_info import ssdp
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
