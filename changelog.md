@@ -3,6 +3,7 @@
 ## What's Changed
 - Bump hahomematic to 2025.2.2
   - Add calculated data points for HM devices
+  - Ignore devices with unknown battery
   - Remove python 3.12 for github tests and pylint
   - Use py 3.13 for mypy and pylint
 - Fix import from HA
