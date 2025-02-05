@@ -1,7 +1,7 @@
 # Version 1.81.0 (2025-02-02)
 
 ## What's Changed
-- Bump hahomematic to 2025.2.2
+- Bump hahomematic to 2025.2.3
   - Add calculated data points for HM devices
   - Catch JSONDecodeError on load/save cache files
   - Catch get_metadata XMLRPC fault
