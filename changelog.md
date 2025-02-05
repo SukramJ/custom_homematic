@@ -1,4 +1,10 @@
-# Version 1.81.0 (2025-02-02)
+# Version 1.81.2 (2025-02-05)
+
+## What's Changed
+- Bump hahomematic to 2025.2.4
+  - Use value instead of default for low_bat_limit
+
+# Version 1.81.1 (2025-02-05)
 
 ## What's Changed
 - Bump hahomematic to 2025.2.3
