@@ -10,7 +10,7 @@ from hahomematic.const import CATEGORIES
 from homeassistant.const import Platform
 
 DOMAIN: Final = "homematicip_local"
-HMIP_LOCAL_MIN_HA_VERSION: Final = "2025.2.0b0"
+HMIP_LOCAL_MIN_HA_VERSION: Final = "2025.2.0"
 ENABLE_EXPERIMENTAL_FEATURES: Final = False
 
 HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2025.2.5"
