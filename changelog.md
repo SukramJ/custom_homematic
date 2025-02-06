@@ -1,3 +1,9 @@
+# Version 1.82.0 (2025-02-06)
+
+## What's Changed
+- Bump hahomematic to 2025.2.6
+  - Add vapor concentration and dew point to all device channels that support temperature and humidity
+
 # Version 1.81.2 (2025-02-05)
 
 ## What's Changed
