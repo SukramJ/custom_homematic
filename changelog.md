@@ -1,3 +1,14 @@
+# Version 1.82.0 (2025-02-06)
+
+## What's Changed
+- Bump hahomematic to 2025.2.6
+  - Add HmIP-FCI1 and HmIP-FCI6 to batteries
+  - Add vapor concentration and dew point to all device channels that support temperature and humidity
+  - Ensure load_data_point_value usage for initial load
+  - Fix OperatingVoltageLevel attributes: low_bat_limit, low_bat_limit_default
+  - Ignore model on initial load (HmIP-SWSD, HmIP-SWD)
+  - Ignore parameters on initial load (ERROR*, RSSI*)
+
 # Version 1.81.2 (2025-02-05)
 
 ## What's Changed
