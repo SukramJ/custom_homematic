@@ -7,7 +7,7 @@
   - Ensure load_data_point_value usage for initial load
   - Fix OperatingVoltageLevel attributes: low_bat_limit, low_bat_limit_default
   - Ignore model on initial load (HmIP-SWSD, HmIP-SWD)
-  - Ignore parameters on initial load (ERROR*, RSSI*)
+  - Ignore parameters on initial load, if not already fetched by rega script (ERROR*, RSSI*, DUTY_CYCLE, DUTYCYCLE, LOW_BAT, LOWBAT, OPERATING_VOLTAGE)
   - Remove @cache and @lru_cache annotations
   - Use @cached_property for expensive, one time calculated properties
   
