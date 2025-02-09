@@ -1,4 +1,4 @@
-# Version 1.82.0 (2025-02-06)
+# Version 1.82.0 (2025-02-09)
 
 ## What's Changed
 - Bump hahomematic to 2025.2.7
@@ -9,6 +9,7 @@
   - Ignore model on initial load (HmIP-SWSD, HmIP-SWD)
   - Ignore parameters on initial load (ERROR*, RSSI*)
   - Remove @cache and @lru_cache annotations
+  - Use @cached_property for expensive, one time calculated properties
   
 # Version 1.81.2 (2025-02-05)
 
