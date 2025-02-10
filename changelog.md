@@ -1,7 +1,7 @@
-# Version 1.82.0 (2025-02-09)
+# Version 1.82.0 (2025-02-10)
 
 ## What's Changed
-- Bump hahomematic to 2025.2.7
+- Bump hahomematic to 2025.2.8
   - Add HmIP-FCI1 and HmIP-FCI6 to batteries
   - Add vapor concentration and dew point to all device channels that support temperature and humidity
   - Ensure load_data_point_value usage for initial load
@@ -10,6 +10,7 @@
   - Ignore parameters on initial load, if not already fetched by rega script (ERROR*, RSSI*, DUTY_CYCLE, DUTYCYCLE, LOW_BAT, LOWBAT, OPERATING_VOLTAGE)
   - Remove @cache and @lru_cache annotations
   - Use @cached_property for expensive, one time calculated properties
+  - Use enums for const parameter values
   
 # Version 1.81.2 (2025-02-05)
 
