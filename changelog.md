@@ -1,7 +1,7 @@
 # Version 1.82.0 (2025-02-10)
 
 ## What's Changed
-- Bump hahomematic to 2025.2.8
+- Bump hahomematic to 2025.3.0
   - Add HmIP-FCI1 and HmIP-FCI6 to batteries
   - Add vapor concentration and dew point to all device channels that support temperature and humidity
   - Ensure load_data_point_value usage for initial load
