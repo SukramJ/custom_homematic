@@ -3,6 +3,7 @@
 Homematic(IP) [Integration for Home Assistant](https://www.home-assistant.io/getting-started/concepts-terminology/#integrations)
 
 [Installation](https://github.com/sukramj/custom_homematic/wiki/Installation)
+
 [Alternative Installation by J. Maus](https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration)
 
 [Wiki with additional information](https://github.com/sukramj/hahomematic/wiki)
