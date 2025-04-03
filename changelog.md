@@ -1,3 +1,9 @@
+# Version 1.82.1 (2025-04-03)
+
+## What's Changed
+- Bump hahomematic to 2025.4.0
+  - Create TLS context during module load
+
 # Version 1.82.0 (2025-03-28)
 
 ## What's Changed
