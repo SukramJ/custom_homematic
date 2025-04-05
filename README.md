@@ -319,6 +319,11 @@ These marked system variables and programs are created as activated in HA. The p
 
 The Homematic(IP) Local integration makes various custom actions available.
 
+### `homematicip_local.add_link`
+
+Call to `addLink` on the XML-RPC interface.
+Creates a direct connection.
+
 ### `homematicip_local.clear_cache`
 
 Clears the cache for a central unit from Home Assistant. Requires a restart.
@@ -417,6 +422,11 @@ Call to `putParamset` for direct connections on the XML-RPC interface.
 ### `homematicip_local.remove_central_links`
 
 Removes a central link from the backend. This is required to disable enable button-press events.
+
+### `homematicip_local.remove_link`
+
+Call to `removeLink` on the XML-RPC interface.
+Removes a direct connection.
 
 ### `homematicip_local.set_cover_combined_position`
 

@@ -708,6 +708,28 @@
         }
     },
     "services": {
+        "add_link": {
+            "description": "Erzeugt eine Direktverknüpfung über die XML-RPC-Schnittstelle",
+            "fields": {
+                "receiver_channel_address": {
+                    "description": "Kanaladresse des verknüpften Empfängers",
+                    "name": "Empfänger Kanaladresse"
+                },
+                "sender_channel_address": {
+                    "description": "Kanaladresse des verknüpften Senders",
+                    "name": "Sender Kanaladresse"
+                },
+                "name": {
+                    "description": "Name der Direktverknüpfung, der in der CCU angezeigt wird",
+                    "name": "Name der Direktverknüpfung"
+                },
+                "description": {
+                    "description": "Beschreibung der Direktverknüpfung, der in der CCU angezeigt wird",
+                    "name": "Beschreibung der Direktverknüpfung"
+                }
+            },
+            "name": "Eine Direktverknüpfung erstellen"
+        },
         "clear_cache": {
             "description": "Löscht den Cache. Benötigt einen Neustart",
             "fields": {
@@ -1023,6 +1045,20 @@
                 }
             },
             "name": "Entfernt Zentralenverknüpfungen"
+        },
+        "remove_link": {
+            "description": "Entfernt eine Direktverknüpfung über die XML-RPC-Schnittstelle",
+            "fields": {
+                "receiver_channel_address": {
+                    "description": "Kanaladresse des verknüpften Empfängers",
+                    "name": "Empfänger Kanaladresse"
+                },
+                "sender_channel_address": {
+                    "description": "Kanaladresse des verknüpften Senders",
+                    "name": "Sender Kanaladresse"
+                }
+            },
+            "name": "Eine Direktverknüpfung entfernen"
         },
         "set_cover_combined_position": {
             "description": "Bewegt eine Jalousie in eine bestimmte Position und Neigungsposition",

@@ -60,6 +60,7 @@ EVENT_UNAVAILABLE: Final = "unavailable"
 class HmipLocalServices(StrEnum):
     """Enum with services."""
 
+    ADD_LINK = "add_link"
     CLEAR_CACHE = "clear_cache"
     COPY_SCHEDULE = "copy_schedule"
     COPY_SCHEDULE_PROFILE = "copy_schedule_profile"
@@ -81,6 +82,7 @@ class HmipLocalServices(StrEnum):
     PUT_LINK_PARAMSET = "put_link_paramset"
     PUT_PARAMSET = "put_paramset"
     REMOVE_CENTRAL_LINKS = "remove_central_links"
+    REMOVE_LINK = "remvove_link"
     SET_COVER_COMBINED_POSITION = "set_cover_combined_position"
     SET_DEVICE_VALUE = "set_device_value"
     SET_SCHEDULE_PROFILE = "set_schedule_profile"

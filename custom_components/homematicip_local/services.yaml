@@ -1,4 +1,25 @@
 # Describes the format for available component services
+add_link:
+  fields:
+    sender_channel_address:
+      example: "0008789453:1"
+      required: true
+      selector:
+        text:
+    receiver_channel_address:
+      example: "0008789453:3"
+      required: true
+      selector:
+        text:
+    name:
+      required: true
+      selector:
+        text:
+    description:
+      required: true
+      selector:
+        text:
+
 create_central_links:
   fields:
     entry_id:
@@ -258,6 +279,19 @@ remove_central_links:
       selector:
         device:
           integration: homematicip_local
+
+remove_link:
+  fields:
+    sender_channel_address:
+      example: "0008789453:1"
+      required: true
+      selector:
+        text:
+    receiver_channel_address:
+      example: "0008789453:3"
+      required: true
+      selector:
+        text:
 
 set_schedule_profile:
   target:
