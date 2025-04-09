@@ -1,6 +1,8 @@
 # Version 1.83.0 (2025-04-05)
 
 ## What's Changed
+- Bump hahomematic to 2025.4.1
+  - Limit text values to 255 characters
 - Add add_link and remove_link to actions
 
 # Version 1.82.1 (2025-04-03)
