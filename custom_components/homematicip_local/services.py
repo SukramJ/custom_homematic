@@ -61,8 +61,10 @@ BASE_SCHEMA_DEVICE = vol.Schema(
 
 SCHEMA_ADD_LINK = vol.All(
     {
-        vol.Optional(CONF_RECEIVER_CHANNEL_ADDRESS): haval.channel_address,
-        vol.Optional(CONF_SENDER_CHANNEL_ADDRESS): haval.channel_address,
+        vol.Required(CONF_RECEIVER_CHANNEL_ADDRESS): haval.channel_address,
+        vol.Required(CONF_SENDER_CHANNEL_ADDRESS): haval.channel_address,
+        vol.Optional(CONF_NAME): cv.string,
+        vol.Optional(CONF_DESCRIPTION): cv.string,
     }
 )
 
@@ -160,8 +162,8 @@ SCHEMA_REMOVE_CENTRAL_LINKS = vol.All(
 
 SCHEMA_REMOVE_LINK = vol.All(
     {
-        vol.Optional(CONF_RECEIVER_CHANNEL_ADDRESS): haval.channel_address,
-        vol.Optional(CONF_SENDER_CHANNEL_ADDRESS): haval.channel_address,
+        vol.Required(CONF_RECEIVER_CHANNEL_ADDRESS): haval.channel_address,
+        vol.Required(CONF_SENDER_CHANNEL_ADDRESS): haval.channel_address,
     }
 )
 

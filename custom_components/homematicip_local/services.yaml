@@ -12,11 +12,11 @@ add_link:
       selector:
         text:
     name:
-      required: true
+      required: false
       selector:
         text:
     description:
-      required: true
+      required: false
       selector:
         text:
 
