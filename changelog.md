@@ -4,6 +4,7 @@
 - Bump hahomematic to 2025.4.1
   - Limit text values to 255 characters
 - Add add_link and remove_link to actions
+- Add options to all enums
 
 # Version 1.82.1 (2025-04-03)
 
