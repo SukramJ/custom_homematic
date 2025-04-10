@@ -82,7 +82,7 @@ class HmipLocalServices(StrEnum):
     PUT_LINK_PARAMSET = "put_link_paramset"
     PUT_PARAMSET = "put_paramset"
     REMOVE_CENTRAL_LINKS = "remove_central_links"
-    REMOVE_LINK = "remvove_link"
+    REMOVE_LINK = "remove_link"
     SET_COVER_COMBINED_POSITION = "set_cover_combined_position"
     SET_DEVICE_VALUE = "set_device_value"
     SET_SCHEDULE_PROFILE = "set_schedule_profile"

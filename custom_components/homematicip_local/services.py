@@ -420,8 +420,8 @@ async def _async_service_add_link(hass: HomeAssistant, service: ServiceCall) -> 
     """Service to call the addLink method for link creation on a Homematic(IP) Local connection."""
     sender_channel_address = service.data[CONF_SENDER_CHANNEL_ADDRESS]
     receiver_channel_address = service.data[CONF_RECEIVER_CHANNEL_ADDRESS]
-    name = service.data[CONF_NAME]
-    description = service.data[CONF_DESCRIPTION]
+    name = service.data.get(CONF_NAME, f"{sender_channel_address} -> {receiver_channel_address}")
+    description = service.data.get(CONF_DESCRIPTION, "created by HA")
 
     if hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
         try:
