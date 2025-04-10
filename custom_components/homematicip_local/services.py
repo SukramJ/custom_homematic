@@ -35,6 +35,7 @@ CONF_ADDRESS: Final = "address"
 CONF_CHANNEL: Final = "channel"
 CONF_CHANNEL_ADDRESS: Final = "channel_address"
 CONF_DEVICE_ADDRESS: Final = "device_address"
+CONF_DESCRIPTION: Final = "description"
 CONF_ENTRY_ID: Final = "entry_id"
 CONF_INTERFACE_ID: Final = "interface_id"
 CONF_NAME: Final = "name"
@@ -55,6 +56,15 @@ BASE_SCHEMA_DEVICE = vol.Schema(
     {
         vol.Optional(CONF_DEVICE_ID): cv.string,
         vol.Optional(CONF_DEVICE_ADDRESS): haval.device_address,
+    }
+)
+
+SCHEMA_ADD_LINK = vol.All(
+    {
+        vol.Required(CONF_RECEIVER_CHANNEL_ADDRESS): haval.channel_address,
+        vol.Required(CONF_SENDER_CHANNEL_ADDRESS): haval.channel_address,
+        vol.Optional(CONF_NAME): cv.string,
+        vol.Optional(CONF_DESCRIPTION): cv.string,
     }
 )
 
@@ -150,6 +160,13 @@ SCHEMA_REMOVE_CENTRAL_LINKS = vol.All(
     ),
 )
 
+SCHEMA_REMOVE_LINK = vol.All(
+    {
+        vol.Required(CONF_RECEIVER_CHANNEL_ADDRESS): haval.channel_address,
+        vol.Required(CONF_SENDER_CHANNEL_ADDRESS): haval.channel_address,
+    }
+)
+
 SCHEMA_SET_VARIABLE_VALUE = vol.Schema(
     {
         vol.Required(CONF_ENTRY_ID): cv.string,
@@ -213,6 +230,8 @@ async def async_setup_services(hass: HomeAssistant) -> None:
 
         if service_name == HmipLocalServices.CREATE_CENTRAL_LINKS:
             await _async_service_create_central_link(hass=hass, service=service)
+        elif service_name == HmipLocalServices.ADD_LINK:
+            await _async_service_add_link(hass=hass, service=service)
         elif service_name == HmipLocalServices.CLEAR_CACHE:
             await _async_service_clear_cache(hass=hass, service=service)
         elif service_name == HmipLocalServices.EXPORT_DEVICE_DEFINITION:
@@ -237,6 +256,8 @@ async def async_setup_services(hass: HomeAssistant) -> None:
             await _async_service_put_paramset(hass=hass, service=service)
         elif service_name == HmipLocalServices.REMOVE_CENTRAL_LINKS:
             await _async_service_remove_central_link(hass=hass, service=service)
+        elif service_name == HmipLocalServices.REMOVE_LINK:
+            await _async_service_remove_link(hass=hass, service=service)
         elif service_name == HmipLocalServices.SET_DEVICE_VALUE:
             await _async_service_set_device_value(hass=hass, service=service)
         elif service_name == HmipLocalServices.SET_VARIABLE_VALUE:
@@ -244,6 +265,14 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         elif service_name == HmipLocalServices.UPDATE_DEVICE_FIRMWARE_DATA:
             await _async_service_update_device_firmware_data(hass=hass, service=service)
         return None
+
+    async_register_admin_service(
+        hass=hass,
+        domain=DOMAIN,
+        service=HmipLocalServices.ADD_LINK,
+        service_func=async_call_hmip_local_service,
+        schema=SCHEMA_ADD_LINK,
+    )
 
     async_register_admin_service(
         hass=hass,
@@ -333,6 +362,14 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         schema=SCHEMA_REMOVE_CENTRAL_LINKS,
     )
 
+    async_register_admin_service(
+        hass=hass,
+        domain=DOMAIN,
+        service=HmipLocalServices.REMOVE_LINK,
+        service_func=async_call_hmip_local_service,
+        schema=SCHEMA_REMOVE_LINK,
+    )
+
     hass.services.async_register(
         domain=DOMAIN,
         service=HmipLocalServices.SET_VARIABLE_VALUE,
@@ -379,6 +416,26 @@ async def async_unload_services(hass: HomeAssistant) -> None:
         hass.services.async_remove(domain=DOMAIN, service=hmip_local_service)
 
 
+async def _async_service_add_link(hass: HomeAssistant, service: ServiceCall) -> None:
+    """Service to call the addLink method for link creation on a Homematic(IP) Local connection."""
+    sender_channel_address = service.data[CONF_SENDER_CHANNEL_ADDRESS]
+    receiver_channel_address = service.data[CONF_RECEIVER_CHANNEL_ADDRESS]
+    name = service.data.get(CONF_NAME, f"{sender_channel_address} -> {receiver_channel_address}")
+    description = service.data.get(CONF_DESCRIPTION, "created by HA")
+
+    if hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
+        try:
+            await hm_device.client.add_link(
+                sender_address=sender_channel_address,
+                receiver_address=receiver_channel_address,
+                name=name,
+                description=description,
+            )
+        except BaseHomematicException as ex:
+            raise HomeAssistantError(ex) from ex
+        _LOGGER.debug("Called add_link")
+
+
 async def _async_service_create_central_link(hass: HomeAssistant, service: ServiceCall) -> None:
     """Service to create central links for Homematic(IP) Local devices."""
     try:
@@ -405,6 +462,22 @@ async def _async_service_remove_central_link(hass: HomeAssistant, service: Servi
     except BaseHomematicException as ex:
         raise HomeAssistantError(ex) from ex
     _LOGGER.debug("Called remove_central_links")
+
+
+async def _async_service_remove_link(hass: HomeAssistant, service: ServiceCall) -> None:
+    """Service to call the removeLink method for link removal on a Homematic(IP) Local connection."""
+    sender_channel_address = service.data[CONF_SENDER_CHANNEL_ADDRESS]
+    receiver_channel_address = service.data[CONF_RECEIVER_CHANNEL_ADDRESS]
+
+    if hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
+        try:
+            await hm_device.client.remove_link(
+                sender_address=sender_channel_address,
+                receiver_address=receiver_channel_address,
+            )
+        except BaseHomematicException as ex:
+            raise HomeAssistantError(ex) from ex
+        _LOGGER.debug("Called remove_link")
 
 
 async def _async_service_export_device_definition(hass: HomeAssistant, service: ServiceCall) -> None:

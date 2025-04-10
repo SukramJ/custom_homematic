@@ -710,6 +710,28 @@
         }
     },
     "services": {
+        "add_link": {
+            "description": "Call to addLink for links in the RPC XML interface",
+            "fields": {
+                "receiver_channel_address": {
+                    "description": "Channel address of the associated receiver",
+                    "name": "Receiver Channel Address"
+                },
+                "sender_channel_address": {
+                    "description": "Channel address of the associated sender",
+                    "name": "Sender Channel Address"
+                },
+                "name": {
+                    "description": "Name of the Link, that will be displayed in the CCU",
+                    "name": "Name of the Link"
+                },
+                "description": {
+                    "description": "Description of the Link, that will be displayed in the CCU",
+                    "name": "Description of the Link"
+                }
+            },
+            "name": "Add link"
+        },
         "clear_cache": {
             "description": "Clear the cache. Requires a restart",
             "fields": {
@@ -858,8 +880,8 @@
             "description": "Call to getParamset for links in the RPC XML interface",
             "fields": {
                 "receiver_channel_address": {
-                    "description": "Channel address for calling a paramset",
-                    "name": "Channel Address"
+                    "description": "Channel address of the associated receiver",
+                    "name": "Receiver Channel Address"
                 },
                 "sender_channel_address": {
                     "description": "Channel address of the associated sender",
@@ -964,8 +986,8 @@
                     "name": "Paramset"
                 },
                 "receiver_channel_address": {
-                    "description": "Channel address for calling a paramset",
-                    "name": "Channel Address"
+                    "description": "Channel address of the associated receiver",
+                    "name": "Receiver Channel Address"
                 },
                 "rx_mode": {
                     "description": "The receive mode used",
@@ -1025,6 +1047,20 @@
                 }
             },
             "name": "Remove central links"
+        },
+        "remove_link": {
+            "description": "Call to removeLink for links in the RPC XML interface",
+            "fields": {
+                "receiver_channel_address": {
+                    "description": "Channel address of the associated receiver",
+                    "name": "Receiver Channel Address"
+                },
+                "sender_channel_address": {
+                    "description": "Channel address of the associated sender",
+                    "name": "Sender Channel Address"
+                }
+            },
+            "name": "Remove link"
         },
         "set_cover_combined_position": {
             "description": "Move a blind to a specific position and tilt position",

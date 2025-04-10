@@ -103,7 +103,10 @@ class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
         )
         if not hasattr(self, "entity_description") and data_point.unit:
             self._attr_native_unit_of_measurement = data_point.unit
-        if self.device_class == SensorDeviceClass.ENUM:
+
+        if data_point.values:
+            if self.device_class != SensorDeviceClass.ENUM:
+                self._attr_device_class = SensorDeviceClass.ENUM
             self._attr_options = [item.lower() for item in data_point.values] if data_point.values else None
 
     @property
