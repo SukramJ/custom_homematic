@@ -499,7 +499,7 @@
                 }
             },
             "sec_wds_state": {
-                "name": "STATE",
+                "name": "",
                 "state": {
                     "dry": "Dry",
                     "wet": "Wet",
