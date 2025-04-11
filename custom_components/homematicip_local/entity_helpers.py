@@ -509,6 +509,21 @@ _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], s
         device_class=SensorDeviceClass.ENUM,
         translation_key="srh_state",
     ),
+    ("HM-Sec-Key", "DIRECTION"): HmSensorEntityDescription(
+        key="SEC-KEY_DIRECTION",
+        device_class=SensorDeviceClass.ENUM,
+        translation_key="sec_direction",
+    ),
+    ("HM-Sec-Key", "ERROR"): HmSensorEntityDescription(
+        key="SEC-KEY_ERROR",
+        device_class=SensorDeviceClass.ENUM,
+        translation_key="sec_key_error",
+    ),
+    ("HM-Sec-WDS", "STATE"): HmSensorEntityDescription(
+        key="STATE",
+        device_class=SensorDeviceClass.ENUM,
+        translation_key="sec_wds_state",
+    ),
     ("HM-Sec-Win", "STATUS"): HmSensorEntityDescription(
         key="SEC-WIN_STATUS",
         device_class=SensorDeviceClass.ENUM,
@@ -523,16 +538,6 @@ _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], s
         key="SEC-WIN_ERROR",
         device_class=SensorDeviceClass.ENUM,
         translation_key="sec_win_error",
-    ),
-    ("HM-Sec-Key", "DIRECTION"): HmSensorEntityDescription(
-        key="SEC-KEY_DIRECTION",
-        device_class=SensorDeviceClass.ENUM,
-        translation_key="sec_direction",
-    ),
-    ("HM-Sec-Key", "ERROR"): HmSensorEntityDescription(
-        key="SEC-KEY_ERROR",
-        device_class=SensorDeviceClass.ENUM,
-        translation_key="sec_key_error",
     ),
     (
         ("HmIP-eTRV", "HmIP-HEATING", "HmIP-FALMOT-C12", "HmIPW-FALMOT-C12"),
