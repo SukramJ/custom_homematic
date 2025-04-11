@@ -503,7 +503,7 @@
                 }
             },
             "sec_wds_state": {
-                "name": "STATE",
+                "name": "",
                 "state": {
                     "dry": "Trocken",
                     "wet": "Feucht",
