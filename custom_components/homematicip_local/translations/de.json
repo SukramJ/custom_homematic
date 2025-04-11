@@ -502,6 +502,14 @@
                     "no_error": "Kein Fehler"
                 }
             },
+            "sec_wds_state": {
+                "name": "STATE",
+                "state": {
+                    "dry": "Trocken",
+                    "wet": "Feucht",
+                    "water": "Wasser"
+                }
+            },
             "sec_win_error": {
                 "name": "Fehler",
                 "state": {

@@ -498,6 +498,14 @@
                     "no_error": "No error"
                 }
             },
+            "sec_wds_state": {
+                "name": "STATE",
+                "state": {
+                    "dry": "Dry",
+                    "wet": "Wet",
+                    "water": "Water"
+                }
+            },
             "sec_win_error": {
                 "name": "Error",
                 "state": {
