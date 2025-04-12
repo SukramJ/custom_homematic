@@ -1,3 +1,9 @@
+# Version 1.84.0 (2025-04-12)
+
+## What's Changed
+- Bump hahomematic to 2025.4.2
+  - Add button_lock to HmIP-DLD
+
 # Version 1.83.0 (2025-04-05)
 
 ## What's Changed
