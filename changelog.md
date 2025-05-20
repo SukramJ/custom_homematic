@@ -3,6 +3,7 @@
 ## What's Changed
 - Bump hahomematic to 2025.5.0
   - Add button_lock to HmIP-DLD
+  - Improve identify ip address
   - Wait with PING/PONG handling until interface is initialized
 
 # Version 1.83.0 (2025-04-05)
