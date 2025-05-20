@@ -93,6 +93,7 @@ class HmipLocalServices(StrEnum):
     SWITCH_SET_ON_TIME = "switch_set_on_time"
     TURN_ON_SIREN = "turn_on_siren"
     UPDATE_DEVICE_FIRMWARE_DATA = "update_device_firmware_data"
+    VALVE_SET_ON_TIME = "valve_set_on_time"
 
 
 # filter out event error parameters, that should not be displayed in logbook

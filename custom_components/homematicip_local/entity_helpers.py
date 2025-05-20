@@ -25,6 +25,7 @@ from homeassistant.components.select import SelectEntityDescription
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntityDescription, SensorStateClass
 from homeassistant.components.siren import SirenEntityDescription
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntityDescription
+from homeassistant.components.valve import ValveDeviceClass, ValveEntityDescription
 from homeassistant.const import (
     CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
     CONCENTRATION_PARTS_PER_MILLION,
@@ -877,6 +878,14 @@ _LOCK_DESCRIPTIONS_BY_POSTFIX: Mapping[str | tuple[str, ...], EntityDescription]
         entity_category=EntityCategory.CONFIG,
         entity_registry_enabled_default=False,
         translation_key="button_lock",
+    ),
+}
+
+_VALVE_DESCRIPTIONS_BY_DEVICE: Mapping[str | tuple[str, ...], EntityDescription] = {
+    ("ELV-SH-WSM ", "HmIP-WSM"): ValveEntityDescription(
+        key="WSM",
+        device_class=ValveDeviceClass.WATER,
+        translation_key="irrigation_valve",
     ),
 }
 
