@@ -585,6 +585,15 @@
             "voltage": {
                 "name": "Voltage"
             },
+            "water_flow": {
+                "name": "Water Flow"
+            },
+            "water_volume": {
+                "name": "Water Volume"
+            },
+            "water_volume_since_open": {
+                "name": "Water Volume since open"
+            },
             "wind_dir": {
                 "name": "Wind Dir"
             },

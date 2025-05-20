@@ -426,6 +426,24 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         state_class=SensorStateClass.MEASUREMENT,
         translation_key="wind_speed",
     ),
+    "WATER_FLOW": HmSensorEntityDescription(
+        key="WATER_FLOW",
+        native_unit_of_measurement=UnitOfVolumeFlowRate.LITERS_PER_MINUTE,
+        device_class=SensorDeviceClass.VOLUME_FLOW_RATE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    "WATER_VOLUME": HmSensorEntityDescription(
+        key="WATER_VOLUME",
+        native_unit_of_measurement=UnitOfVolume.LITERS,
+        device_class=SensorDeviceClass.WATER,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+    ),
+    "WATER_VOLUME_SINCE_OPEN": HmSensorEntityDescription(
+        key="WATER_VOLUME_SINCE_OPEN",
+        native_unit_of_measurement=UnitOfVolume.LITERS,
+        device_class=SensorDeviceClass.WATER,
+        state_class=SensorStateClass.TOTAL,
+    ),
 }
 
 _SENSOR_DESCRIPTIONS_BY_VAR_NAME: Mapping[str | tuple[str, ...], EntityDescription] = {

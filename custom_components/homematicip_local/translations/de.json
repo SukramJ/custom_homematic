@@ -589,6 +589,15 @@
             "voltage": {
                 "name": "Spannung"
             },
+            "water_flow": {
+                "name": "Wasser Durchfluss"
+            },
+            "water_volume": {
+                "name": "Wassermenge"
+            },
+            "water_volume_since_open": {
+                "name": "Wassermenge seit Öffnung"
+            },
             "wind_dir": {
                 "name": "Windrichtung"
             },
