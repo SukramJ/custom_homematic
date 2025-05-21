@@ -121,9 +121,9 @@ _NUMBER_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], s
         "LEVEL",
     ): HmNumberEntityDescription(
         key="LEVEL",
+        entity_registry_enabled_default=False,
         multiplier=100,
         native_unit_of_measurement=PERCENTAGE,
-        entity_registry_enabled_default=False,
         translation_key="pipe_level",
     ),
     ("HMW-IO-12-Sw14-DR", "FREQUENCY"): HmNumberEntityDescription(
@@ -147,8 +147,8 @@ _SELECT_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
 _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription] = {
     "AIR_PRESSURE": HmSensorEntityDescription(
         key="AIR_PRESSURE",
-        native_unit_of_measurement=UnitOfPressure.HPA,
         device_class=SensorDeviceClass.PRESSURE,
+        native_unit_of_measurement=UnitOfPressure.HPA,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "BRIGHTNESS": HmSensorEntityDescription(
@@ -158,32 +158,33 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     "CARRIER_SENSE_LEVEL": HmSensorEntityDescription(
         key="CARRIER_SENSE_LEVEL",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:radio-tower",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_category=EntityCategory.DIAGNOSTIC,
     ),
     "CODE_ID": HmSensorEntityDescription(
         key="CODE_ID",
     ),
     "CONCENTRATION": HmSensorEntityDescription(
         key="CONCENTRATION",
-        native_unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
         device_class=SensorDeviceClass.CO2,
+        native_unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "CURRENT": HmSensorEntityDescription(
         key="CURRENT",
-        native_unit_of_measurement=UnitOfElectricCurrent.MILLIAMPERE,
         device_class=SensorDeviceClass.CURRENT,
+        native_unit_of_measurement=UnitOfElectricCurrent.MILLIAMPERE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     ("DEWPOINT", "DEW_POINT"): HmSensorEntityDescription(
         key="DEW_POINT",
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,
+        entity_registry_enabled_default=False,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         translation_key="dew_point",
-        entity_registry_enabled_default=False,
     ),
     ("ACTIVITY_STATE", "DIRECTION"): HmSensorEntityDescription(
         key="DIRECTION",
@@ -197,14 +198,15 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     "DUTY_CYCLE_LEVEL": HmSensorEntityDescription(
         key="DUTY_CYCLE_LEVEL",
-        native_unit_of_measurement=PERCENTAGE,
-        state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
+        native_unit_of_measurement=PERCENTAGE,
+        icon="mdi:radio-tower",
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     "ENERGY_COUNTER": HmSensorEntityDescription(
         key="ENERGY_COUNTER",
-        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     "FILLING_LEVEL": HmSensorEntityDescription(
@@ -214,20 +216,20 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     "FREQUENCY": HmSensorEntityDescription(
         key="FREQUENCY",
-        native_unit_of_measurement=UnitOfFrequency.HERTZ,
         device_class=SensorDeviceClass.FREQUENCY,
+        native_unit_of_measurement=UnitOfFrequency.HERTZ,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "GAS_ENERGY_COUNTER": HmSensorEntityDescription(
         key="GAS_ENERGY_COUNTER",
-        native_unit_of_measurement=UnitOfVolume.CUBIC_METERS,
         device_class=SensorDeviceClass.GAS,
+        native_unit_of_measurement=UnitOfVolume.CUBIC_METERS,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     "GAS_FLOW": HmSensorEntityDescription(
         key="GAS_FLOW",
-        native_unit_of_measurement=UnitOfVolumeFlowRate.CUBIC_METERS_PER_HOUR,
         device_class=SensorDeviceClass.VOLUME_FLOW_RATE,
+        native_unit_of_measurement=UnitOfVolumeFlowRate.CUBIC_METERS_PER_HOUR,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "GAS_POWER": HmSensorEntityDescription(
@@ -236,26 +238,26 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     "GAS_VOLUME": HmSensorEntityDescription(
         key="GAS_VOLUME",
-        native_unit_of_measurement=UnitOfVolume.CUBIC_METERS,
         device_class=SensorDeviceClass.GAS,
+        native_unit_of_measurement=UnitOfVolume.CUBIC_METERS,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     ("HUMIDITY", "ACTUAL_HUMIDITY"): HmSensorEntityDescription(
         key="HUMIDITY",
-        native_unit_of_measurement=PERCENTAGE,
         device_class=SensorDeviceClass.HUMIDITY,
+        native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "IEC_ENERGY_COUNTER": HmSensorEntityDescription(
         key="IEC_ENERGY_COUNTER",
-        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     "IEC_POWER": HmSensorEntityDescription(
         key="IEC_POWER",
-        native_unit_of_measurement=UnitOfPower.WATT,
         device_class=SensorDeviceClass.POWER,
+        native_unit_of_measurement=UnitOfPower.WATT,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     (
@@ -267,19 +269,19 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         "LUX",
     ): HmSensorEntityDescription(
         key="ILLUMINATION",
-        native_unit_of_measurement=LIGHT_LUX,
         device_class=SensorDeviceClass.ILLUMINANCE,
+        native_unit_of_measurement=LIGHT_LUX,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "IP_ADDRESS": HmSensorEntityDescription(
         key="IP_ADDRESS",
-        icon="mdi:ip-network",
         entity_category=EntityCategory.DIAGNOSTIC,
+        icon="mdi:ip-network",
     ),
     ("LEVEL", "LEVEL_2"): HmSensorEntityDescription(
         key="LEVEL",
-        native_unit_of_measurement=PERCENTAGE,
         multiplier=100,
+        native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "LOCK_STATE": HmSensorEntityDescription(
@@ -292,8 +294,8 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         "MASS_CONCENTRATION_PM_1_24H_AVERAGE",
     ): HmSensorEntityDescription(
         key="MASS_CONCENTRATION_PM_1",
-        native_unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
         device_class=SensorDeviceClass.PM1,
+        native_unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     (
@@ -301,8 +303,8 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         "MASS_CONCENTRATION_PM_10_24H_AVERAGE",
     ): HmSensorEntityDescription(
         key="MASS_CONCENTRATION_PM_10",
-        native_unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
         device_class=SensorDeviceClass.PM10,
+        native_unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     (
@@ -310,8 +312,8 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         "MASS_CONCENTRATION_PM_2_5_24H_AVERAGE",
     ): HmSensorEntityDescription(
         key="MASS_CONCENTRATION_PM_2_5",
-        native_unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
         device_class=SensorDeviceClass.PM25,
+        native_unit_of_measurement=CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "NUMBER_CONCENTRATION_PM_1": HmSensorEntityDescription(
@@ -336,24 +338,24 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     ("BATTERY_STATE", "OPERATING_VOLTAGE"): HmSensorEntityDescription(
         key="OPERATING_VOLTAGE",
-        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
-        state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     "OPERATING_VOLTAGE_LEVEL": HmSensorEntityDescription(
         key="OPERATING_VOLTAGE_LEVEL",
-        native_unit_of_measurement=PERCENTAGE,
         device_class=SensorDeviceClass.BATTERY,
-        state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     "POWER": HmSensorEntityDescription(
         key="POWER",
-        native_unit_of_measurement=UnitOfPower.WATT,
         device_class=SensorDeviceClass.POWER,
+        native_unit_of_measurement=UnitOfPower.WATT,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "RAIN_COUNTER": HmSensorEntityDescription(
@@ -365,22 +367,22 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ("RSSI_DEVICE", "RSSI_PEER"): HmSensorEntityDescription(
         key="RSSI",
         device_class=SensorDeviceClass.SIGNAL_STRENGTH,
-        native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-        state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
+        native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     ("APPARENT_TEMPERATURE", "FROST_POINT"): HmSensorEntityDescription(
         key="APPARENT_TEMPERATURE",
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,
-        state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     ("ACTUAL_TEMPERATURE", "TEMPERATURE"): HmSensorEntityDescription(
         key="TEMPERATURE",
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "SMOKE_DETECTOR_ALARM_STATUS": HmSensorEntityDescription(
@@ -400,14 +402,14 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     "VAPOR_CONCENTRATION": HmSensorEntityDescription(
         key="VAPOR_CONCENTRATION",
+        entity_registry_enabled_default=False,
         native_unit_of_measurement=CONCENTRATION_GRAMS_PER_CUBIC_METER,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_registry_enabled_default=False,
     ),
     "VOLTAGE": HmSensorEntityDescription(
         key="VOLTAGE",
-        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     (
@@ -423,27 +425,27 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     "WIND_SPEED": HmSensorEntityDescription(
         key="WIND_SPEED",
-        native_unit_of_measurement=UnitOfSpeed.KILOMETERS_PER_HOUR,
         device_class=SensorDeviceClass.WIND_SPEED,
+        native_unit_of_measurement=UnitOfSpeed.KILOMETERS_PER_HOUR,
         state_class=SensorStateClass.MEASUREMENT,
         translation_key="wind_speed",
     ),
     "WATER_FLOW": HmSensorEntityDescription(
         key="WATER_FLOW",
-        native_unit_of_measurement=UnitOfVolumeFlowRate.LITERS_PER_MINUTE,
         device_class=SensorDeviceClass.VOLUME_FLOW_RATE,
+        native_unit_of_measurement=UnitOfVolumeFlowRate.LITERS_PER_MINUTE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "WATER_VOLUME": HmSensorEntityDescription(
         key="WATER_VOLUME",
-        native_unit_of_measurement=UnitOfVolume.LITERS,
         device_class=SensorDeviceClass.WATER,
+        native_unit_of_measurement=UnitOfVolume.LITERS,
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
     "WATER_VOLUME_SINCE_OPEN": HmSensorEntityDescription(
         key="WATER_VOLUME_SINCE_OPEN",
-        native_unit_of_measurement=UnitOfVolume.LITERS,
         device_class=SensorDeviceClass.WATER,
+        native_unit_of_measurement=UnitOfVolume.LITERS,
         state_class=SensorStateClass.TOTAL,
     ),
 }
@@ -459,15 +461,15 @@ _SENSOR_DESCRIPTIONS_BY_VAR_NAME: Mapping[str | tuple[str, ...], EntityDescripti
     ),
     "svEnergyCounter": HmSensorEntityDescription(
         key="ENERGY_COUNTER",
-        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
         state_class=SensorStateClass.TOTAL_INCREASING,
         translation_key="energy_counter_total",
     ),
     "svEnergyCounterFeedIn": HmSensorEntityDescription(
         key="ENERGY_COUNTER_FEED_IN",
-        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
         state_class=SensorStateClass.TOTAL_INCREASING,
         translation_key="energy_counter_feed_in_total",
     ),
@@ -491,22 +493,22 @@ _SENSOR_DESCRIPTIONS_BY_VAR_NAME: Mapping[str | tuple[str, ...], EntityDescripti
     ),
     "svHmIPSunshineCounter": HmSensorEntityDescription(
         key="SUNSHINE_COUNTER",
-        native_unit_of_measurement=UnitOfTime.MINUTES,
         device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
         state_class=SensorStateClass.TOTAL_INCREASING,
         translation_key="sunshine_counter_total",
     ),
     "svHmIPSunshineCounterToday": HmSensorEntityDescription(
         key="SUNSHINE_COUNTER_TODAY",
-        native_unit_of_measurement=UnitOfTime.MINUTES,
         device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
         state_class=SensorStateClass.TOTAL_INCREASING,
         translation_key="sunshine_counter_today",
     ),
     "svHmIPSunshineCounterYesterday": HmSensorEntityDescription(
         key="SUNSHINE_COUNTER_YESTERDAY",
-        native_unit_of_measurement=UnitOfTime.MINUTES,
         device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
         state_class=SensorStateClass.TOTAL_INCREASING,
         translation_key="sunshine_counter_yesterday",
     ),
@@ -564,10 +566,10 @@ _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], s
         "LEVEL",
     ): HmSensorEntityDescription(
         key="LEVEL",
-        native_unit_of_measurement=PERCENTAGE,
-        multiplier=100,
-        state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
+        multiplier=100,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
         translation_key="pipe_level",
     ),
     (
@@ -575,10 +577,10 @@ _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], s
         "LEVEL",
     ): HmSensorEntityDescription(
         key="LEVEL",
-        native_unit_of_measurement=PERCENTAGE,
-        multiplier=100,
-        state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
+        multiplier=100,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
         translation_key="cover_level",
     ),
     (
@@ -607,10 +609,10 @@ _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], s
         "LEVEL",
     ): HmSensorEntityDescription(
         key="LEVEL",
-        native_unit_of_measurement=PERCENTAGE,
-        multiplier=100,
-        state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
+        multiplier=100,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
         translation_key="light_level",
     ),
     (
@@ -618,10 +620,10 @@ _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], s
         "LEVEL_2",
     ): HmSensorEntityDescription(
         key="LEVEL",
-        native_unit_of_measurement=PERCENTAGE,
-        multiplier=100,
-        state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
+        multiplier=100,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
         translation_key="cover_tilt",
     ),
     ("HMW-IO-12-Sw14-DR", "FREQUENCY"): HmSensorEntityDescription(
@@ -632,11 +634,11 @@ _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], s
     (("HmIP-SWSD",), "TIME_OF_OPERATION"): HmSensorEntityDescription(
         key="TIME_OF_OPERATION",
         device_class=SensorDeviceClass.DURATION,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         multiplier=1 / 86400,
         native_unit_of_measurement=UnitOfTime.DAYS,
         state_class=SensorStateClass.TOTAL_INCREASING,
-        entity_category=EntityCategory.DIAGNOSTIC,
-        entity_registry_enabled_default=False,
     ),
     (("HM-CC-RT-DN", "HM-CC-VD"), "VALVE_STATE"): HmSensorEntityDescription(
         key="VALVE_STATE",
@@ -654,14 +656,14 @@ _SENSOR_DESCRIPTIONS_BY_UNIT: Mapping[str, EntityDescription] = {
     ),
     UnitOfPressure.BAR: HmSensorEntityDescription(
         key="PRESSURE_BAR",
-        native_unit_of_measurement=UnitOfPressure.BAR,
         device_class=SensorDeviceClass.PRESSURE,
+        native_unit_of_measurement=UnitOfPressure.BAR,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     UnitOfTemperature.CELSIUS: HmSensorEntityDescription(
         key="TEMPERATURE",
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     CONCENTRATION_GRAMS_PER_CUBIC_METER: HmSensorEntityDescription(
@@ -698,6 +700,7 @@ _BINARY_SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescr
         device_class=BinarySensorDeviceClass.PROBLEM,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
+        icon="mdi:radio-tower",
     ),
     "DEW_POINT_ALARM": HmBinarySensorEntityDescription(
         key="DEW_POINT_ALARM",
