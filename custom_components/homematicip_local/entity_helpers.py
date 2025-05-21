@@ -273,6 +273,7 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     "IP_ADDRESS": HmSensorEntityDescription(
         key="IP_ADDRESS",
+        icon="mdi:ip-network",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     ("LEVEL", "LEVEL_2"): HmSensorEntityDescription(
