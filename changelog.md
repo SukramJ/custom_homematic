@@ -6,6 +6,7 @@
   - Add CustomDP valve for ELV-SH-WSM / HmIP-WSM
   - Improve identify ip address
   - Wait with PING/PONG handling until interface is initialized
+- Add valve platform
 
 # Version 1.83.0 (2025-04-05)
 
