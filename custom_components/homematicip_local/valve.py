@@ -103,6 +103,11 @@ class HaHomematicValve(HaHomematicGenericRestoreEntity[CustomDpIpIrrigationValve
         return None
 
     @property
+    def reports_position(self) -> bool:
+        """Return True if entity reports position, False otherwise."""
+        return False
+
+    @property
     def supported_features(self) -> ValveEntityFeature:
         """Return the list of supported features."""
         return ValveEntityFeature.OPEN | ValveEntityFeature.CLOSE

@@ -897,6 +897,7 @@ _ENTITY_DESCRIPTION_BY_DEVICE: Mapping[DataPointCategory, Mapping[str | tuple[st
     DataPointCategory.COVER: _COVER_DESCRIPTIONS_BY_DEVICE,
     DataPointCategory.SIREN: _SIREN_DESCRIPTIONS_BY_DEVICE,
     DataPointCategory.SWITCH: _SWITCH_DESCRIPTIONS_BY_DEVICE,
+    DataPointCategory.VALVE: _VALVE_DESCRIPTIONS_BY_DEVICE,
 }
 
 _ENTITY_DESCRIPTION_BY_PARAM: Mapping[DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]] = {
