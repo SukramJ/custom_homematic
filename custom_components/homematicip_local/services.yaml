@@ -677,6 +677,21 @@ switch_set_on_time:
           unit_of_measurement: seconds
           mode: box
 
+valve_set_on_time:
+  target:
+    entity:
+      domain: valve
+      integration: homematicip_local
+  fields:
+    on_time:
+      required: true
+      selector:
+        number:
+          min: -1
+          max: 8580000
+          unit_of_measurement: seconds
+          mode: box
+
 set_cover_combined_position:
   target:
     entity:

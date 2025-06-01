@@ -1,10 +1,12 @@
 # Version 1.84.0 (2025-05-19)
 
 ## What's Changed
-- Bump hahomematic to 2025.5.0
+- Bump hahomematic to 2025.5.1
   - Add button_lock to HmIP-DLD
+  - Add CustomDP valve for ELV-SH-WSM / HmIP-WSM
   - Improve identify ip address
   - Wait with PING/PONG handling until interface is initialized
+- Add valve platform
 
 # Version 1.83.0 (2025-04-05)
 

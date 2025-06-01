@@ -95,7 +95,7 @@ class HaHomematicUpdate(UpdateEntity):
         return self._data_point.firmware
 
     @property
-    def in_progress(self) -> bool | int | None:
+    def in_progress(self) -> bool | None:
         """Update installation progress."""
         return self._data_point.in_progress
 

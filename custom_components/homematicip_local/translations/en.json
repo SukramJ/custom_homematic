@@ -585,6 +585,15 @@
             "voltage": {
                 "name": "Voltage"
             },
+            "water_flow": {
+                "name": "Water Flow"
+            },
+            "water_volume": {
+                "name": "Water Volume"
+            },
+            "water_volume_since_open": {
+                "name": "Water Volume since open"
+            },
             "wind_dir": {
                 "name": "Wind Dir"
             },
@@ -621,6 +630,11 @@
             },
             "state": {
                 "name": ""
+            }
+        },
+        "valve": {
+            "irrigation_valve": {
+                "name": "Irrigation Valve"
             }
         }
     },
@@ -1253,6 +1267,16 @@
                 }
             },
             "name": "Update device firmware data"
+        },
+        "valve_set_on_time": {
+            "description": "Set on time for a valve entity. Must be followed by a valve.open",
+            "fields": {
+                "on_time": {
+                    "description": "On time for a valve in seconds. Use 0 to reset the on time",
+                    "name": "On Time"
+                }
+            },
+            "name": "Set valve on time"
         }
     }
 }

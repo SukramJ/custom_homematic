@@ -13,7 +13,7 @@ DOMAIN: Final = "homematicip_local"
 HMIP_LOCAL_MIN_HA_VERSION: Final = "2025.3.0"
 ENABLE_EXPERIMENTAL_FEATURES: Final = False
 
-HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2025.5.0"
+HMIP_LOCAL_HAHOMEMATIC_VERSION: Final = "2025.5.1"
 
 DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK: Final = True
 DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS: Final = True
@@ -93,6 +93,7 @@ class HmipLocalServices(StrEnum):
     SWITCH_SET_ON_TIME = "switch_set_on_time"
     TURN_ON_SIREN = "turn_on_siren"
     UPDATE_DEVICE_FIRMWARE_DATA = "update_device_firmware_data"
+    VALVE_SET_ON_TIME = "valve_set_on_time"
 
 
 # filter out event error parameters, that should not be displayed in logbook

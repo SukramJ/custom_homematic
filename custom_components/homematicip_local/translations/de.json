@@ -589,6 +589,15 @@
             "voltage": {
                 "name": "Spannung"
             },
+            "water_flow": {
+                "name": "Wasser Durchfluss"
+            },
+            "water_volume": {
+                "name": "Wassermenge"
+            },
+            "water_volume_since_open": {
+                "name": "Wassermenge seit Öffnung"
+            },
             "wind_dir": {
                 "name": "Windrichtung"
             },
@@ -625,6 +634,11 @@
             },
             "state": {
                 "name": ""
+            }
+        },
+        "valve": {
+            "irrigation_valve": {
+                "name": "Bewässerungsventil"
             }
         }
     },
@@ -1218,7 +1232,7 @@
             "description": "Stellt die Einschaltdauer eines Schalters ein. Muss von einem switch.turn_on gefolgt werden",
             "fields": {
                 "on_time": {
-                    "description": "Einschaltdauer für einn Schalter in Sekunden. Verwenden Sie 0, um die Einschaltdauer zurückzusetzen",
+                    "description": "Einschaltdauer für einen Schalter in Sekunden. Verwenden Sie 0, um die Einschaltdauer zurückzusetzen",
                     "name": "Einschaltdauer"
                 }
             },
@@ -1251,6 +1265,16 @@
                 }
             },
             "name": "Aktualisiert die Firmware-Daten des Geräts"
+        },
+        "valve_set_on_time": {
+            "description": "Stellt die Einschaltdauer eines Ventils ein. Muss von einem valve.open gefolgt werden",
+            "fields": {
+                "on_time": {
+                    "description": "Einschaltdauer für ein Ventil in Sekunden. Verwenden Sie 0, um die Einschaltdauer zurückzusetzen",
+                    "name": "Einschaltdauer"
+                }
+            },
+            "name": "Stellt die Einschaltdauer eines Ventils ein"
         }
     }
 }
