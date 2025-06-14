@@ -9,6 +9,7 @@
   - Improve identify ip address
   - Wait with PING/PONG handling until interface is initialized
 - Add valve platform
+- Set suggested_display_precision for OPERATING_VOLTAGE to 1 
 
 # Version 1.83.0 (2025-04-05)
 
