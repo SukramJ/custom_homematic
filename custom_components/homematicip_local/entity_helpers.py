@@ -343,6 +343,7 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         entity_registry_enabled_default=False,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
     ),
     "OPERATING_VOLTAGE_LEVEL": HmSensorEntityDescription(
         key="OPERATING_VOLTAGE_LEVEL",
