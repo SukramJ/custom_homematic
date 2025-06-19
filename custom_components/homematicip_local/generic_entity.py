@@ -162,10 +162,9 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         and the second part is the english named parameter that must be translated.
         This translated parameter will be used in the combined name.
         """
-        if (entity_name := self._data_point.name) != "":
-            return None
+        entity_name = self._data_point.name
 
-        if isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint):
+        if isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint) and entity_name:
             if self._cu.enable_sub_devices:
                 entity_name = self._data_point.parameter
 
@@ -175,7 +174,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
             if isinstance(translated_name, str):
                 entity_name = entity_name.replace(self._data_point.parameter.replace("_", " ").title(), translated_name)
 
-        if isinstance(self._data_point, CustomDataPoint):
+        if isinstance(self._data_point, CustomDataPoint) and entity_name:
             translated_name = super().name
             if self._do_remove_name():
                 translated_name = ""
