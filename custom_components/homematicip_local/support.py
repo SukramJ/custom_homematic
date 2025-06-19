@@ -112,7 +112,7 @@ def get_device_address_at_interface_from_identifiers(
     return None
 
 
-def get_data_point(data_point: T) -> T:
+def get_data_point[DP](data_point: DP) -> DP:
     """Return the homematic data point. Makes it mockable."""
     return data_point
 

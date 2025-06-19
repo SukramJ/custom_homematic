@@ -179,7 +179,7 @@ def get_mock(instance, **kwargs):
     return mock
 
 
-def get_data_point_mock(data_point: T) -> T:
+def get_data_point_mock[DP](data_point: DP) -> DP:
     """Return the mocked homematic entity."""
     try:
         for method_name in _get_mockable_method_names(data_point):
