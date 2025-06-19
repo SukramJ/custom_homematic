@@ -105,6 +105,7 @@ class BaseControlUnit:
         self._entry_id: Final = control_config.entry_id
         self._instance_name: Final = control_config.instance_name
         self._enable_mqtt: Final = control_config.enable_mqtt
+        self._enable_sub_devices: Final = control_config.enable_sub_devices
         self._mqtt_prefix: Final = control_config.mqtt_prefix
         self._enable_system_notifications: Final = control_config.enable_system_notifications
         self._central: Final = control_config.create_central()
@@ -132,6 +133,11 @@ class BaseControlUnit:
     def device_info(self) -> DeviceInfo | None:
         """Return device specific attributes."""
         return self._attr_device_info
+
+    @property
+    def enable_sub_devices(self) -> bool:
+        """Return if sub devices are enabled."""
+        return self._enable_sub_devices
 
     async def start_central(self) -> None:
         """Start the central unit."""
@@ -514,6 +520,7 @@ class ControlConfig:
         ac = data.get(CONF_ADVANCED_CONFIG, {})
         self._enable_mqtt: Final[bool] = ac.get(CONF_ENABLE_MQTT, DEFAULT_ENABLE_MQTT)
         self._enable_program_scan: Final[bool] = ac.get(CONF_ENABLE_PROGRAM_SCAN, DEFAULT_ENABLE_PROGRAM_SCAN)
+        self._enable_sub_devices: Final[bool] = False
         self._enable_system_notifications: Final[bool] = ac.get(
             CONF_ENABLE_SYSTEM_NOTIFICATIONS, DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS
         )
@@ -548,6 +555,11 @@ class ControlConfig:
     def enable_mqtt(self) -> bool:
         """Return the enable_mqtt."""
         return self._enable_mqtt
+
+    @property
+    def enable_sub_devices(self) -> bool:
+        """Return if sub devices are enabled."""
+        return self._enable_sub_devices
 
     @property
     def instance_name(self) -> str:

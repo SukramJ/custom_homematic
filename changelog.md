@@ -1,12 +1,15 @@
-# Version 1.84.0 (2025-06-01)
+# Version 1.84.0 (2025-06-17)
 
 ## What's Changed
-- Bump hahomematic to 2025.5.2
+- Bump hahomematic to 2025.6.0
   - Add CustomDP valve for ELV-SH-WSM / HmIP-WSM
+  - Add batteries for ELV-SH-TACO
   - Add button_lock to HmIP-DLD
   - Add operating voltage level to ELV-SH-WSM / HmIP-WSM
+  - Add state channel to sub_device_channel mapping
   - Enable ACTUAL_TEMPERATURE on maintenance channel
   - Improve identify ip address
+  - Improve sub_device_channel identification
   - Wait with PING/PONG handling until interface is initialized
 - Add valve platform
 - Set suggested_display_precision for OPERATING_VOLTAGE to 1 

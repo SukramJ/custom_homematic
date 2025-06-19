@@ -71,16 +71,26 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 self._attr_translation_key = data_point.parameter.lower()
 
         hm_device = data_point.device
+        identifier = hm_device.identifier
+        via_identifier = hm_device.central.name
+        suggested_area = hm_device.room
+        if control_unit.enable_sub_devices and hm_device.has_sub_devices and data_point.channel.is_in_multi_group:
+            via_identifier = hm_device.identifier
+            if channel_group_master := data_point.channel.group_master:
+                identifier = f"{hm_device.identifier}-{channel_group_master.group_no}"
+                if channel_group_master.room is not None:
+                    suggested_area = channel_group_master.room
+
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, hm_device.identifier)},
+            identifiers={(DOMAIN, identifier)},
             manufacturer=hm_device.manufacturer,
             model=hm_device.model,
-            name=hm_device.name,
+            name=self._ha_device_name,
             serial_number=hm_device.address,
             sw_version=hm_device.firmware,
-            suggested_area=hm_device.room,
+            suggested_area=suggested_area,
             # Link to the homematic control unit.
-            via_device=(DOMAIN, hm_device.central.name),
+            via_device=(DOMAIN, via_identifier),
         )
 
         self._static_state_attributes = self._get_static_state_attributes()
@@ -155,6 +165,9 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         entity_name = self._data_point.name
 
         if isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint) and entity_name:
+            if self._cu.enable_sub_devices:
+                entity_name = self._data_point.parameter
+
             translated_name = super().name
             if self._do_remove_name():
                 translated_name = ""
@@ -170,9 +183,32 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                     self._data_point.name_data.parameter_name.replace("_", " ").title(),
                     translated_name,
                 )
+
+        if self._ha_device_name == entity_name:
+            entity_name = ""
+
         if entity_name == "":
             return None
         return entity_name
+
+    @property
+    def _ha_device_name(self) -> str:
+        """Return the homematic entity device name."""
+        hm_device = self._data_point.device
+        if not self._cu.enable_sub_devices:
+            return hm_device.name
+
+        if (
+            hm_device.has_sub_devices
+            and self._data_point.channel.is_in_multi_group
+            and (channel_group_master := self._data_point.channel.group_master)
+        ):
+            return (
+                f"{hm_device.name}-{channel_group_master.name}"
+                if channel_group_master.name.isnumeric()
+                else channel_group_master.name
+            )
+        return hm_device.name
 
     def _do_remove_name(self) -> bool:
         """
