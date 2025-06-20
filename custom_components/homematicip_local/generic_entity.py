@@ -207,6 +207,8 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 f"{hm_device.name}-{channel_group_master.name}"
                 if channel_group_master.name.isnumeric()
                 else channel_group_master.name
+                if channel_group_master.name
+                else f"{hm_device.name}-{channel_group_master.no}"
             )
         return hm_device.name
 
