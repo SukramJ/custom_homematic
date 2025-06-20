@@ -9,7 +9,7 @@ from typing import Any, TypeAlias, TypeVar, cast
 from hahomematic.const import IDENTIFIER_SEPARATOR, EventKey
 from hahomematic.model.calculated import CalculatedDataPoint
 from hahomematic.model.custom import CustomDataPoint
-from hahomematic.model.data_point import EVENT_DATA_SCHEMA, CallbackDataPoint
+from hahomematic.model.data_point import EVENT_DATA_SCHEMA
 from hahomematic.model.generic import GenericDataPoint
 from hahomematic.model.hub import GenericProgramDataPoint, GenericSysvarDataPoint
 import voluptuous as vol
@@ -37,7 +37,6 @@ HmGenericDataPoint = TypeVar("HmGenericDataPoint", bound=HmBaseDataPoint)
 HmGenericProgramDataPoint = TypeVar("HmGenericProgramDataPoint", bound=GenericProgramDataPoint)
 # Generic base type used for sysvar data points in Homematic(IP) Local
 HmGenericSysvarDataPoint = TypeVar("HmGenericSysvarDataPoint", bound=GenericSysvarDataPoint)
-T = TypeVar("T", bound=CallbackDataPoint)
 
 BASE_EVENT_DATA_SCHEMA = EVENT_DATA_SCHEMA.extend(
     {
