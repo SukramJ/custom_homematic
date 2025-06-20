@@ -72,10 +72,10 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
 
         hm_device = data_point.device
         identifier = hm_device.identifier
-        via_identifier = hm_device.central.name
+        via_device = hm_device.central.name
         suggested_area = hm_device.room
         if control_unit.enable_sub_devices and hm_device.has_sub_devices and data_point.channel.is_in_multi_group:
-            via_identifier = hm_device.identifier
+            via_device = hm_device.identifier
             if channel_group_master := data_point.channel.group_master:
                 identifier = f"{hm_device.identifier}-{channel_group_master.group_no}"
                 if channel_group_master.room is not None:
@@ -90,7 +90,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
             sw_version=hm_device.firmware,
             suggested_area=suggested_area,
             # Link to the homematic control unit.
-            via_device=(DOMAIN, via_identifier),
+            via_device=(DOMAIN, via_device),
         )
 
         self._static_state_attributes = self._get_static_state_attributes()
@@ -162,12 +162,11 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         and the second part is the english named parameter that must be translated.
         This translated parameter will be used in the combined name.
         """
-        entity_name = self._data_point.name
+        entity_name = (
+            self._data_point.name_data.parameter_name or "" if self._cu.enable_sub_devices else self._data_point.name
+        )
 
         if isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint) and entity_name:
-            if self._cu.enable_sub_devices:
-                entity_name = self._data_point.parameter
-
             translated_name = super().name
             if self._do_remove_name():
                 translated_name = ""
@@ -207,6 +206,8 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 f"{hm_device.name}-{channel_group_master.name}"
                 if channel_group_master.name.isnumeric()
                 else channel_group_master.name
+                if channel_group_master.name
+                else f"{hm_device.name}-{channel_group_master.no}"
             )
         return hm_device.name
 

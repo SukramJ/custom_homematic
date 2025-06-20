@@ -47,6 +47,7 @@ from .const import (
     CONF_CALLBACK_PORT,
     CONF_ENABLE_MQTT,
     CONF_ENABLE_PROGRAM_SCAN,
+    CONF_ENABLE_SUB_DEVICES,
     CONF_ENABLE_SYSTEM_NOTIFICATIONS,
     CONF_ENABLE_SYSVAR_SCAN,
     CONF_INSTANCE_NAME,
@@ -61,6 +62,7 @@ from .const import (
     CONF_UN_IGNORES,
     CONF_VERIFY_TLS,
     DEFAULT_ENABLE_MQTT,
+    DEFAULT_ENABLE_SUB_DEVICES,
     DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS,
     DEFAULT_LISTEN_ON_ALL_IP,
     DEFAULT_MQTT_PREFIX,
@@ -284,6 +286,10 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
                     options=all_un_ignore_parameters,
                 )
             ),
+            vol.Optional(
+                CONF_ENABLE_SUB_DEVICES,
+                default=data.get(CONF_ADVANCED_CONFIG, {}).get(CONF_ENABLE_SUB_DEVICES, DEFAULT_ENABLE_SUB_DEVICES),
+            ): BOOLEAN_SELECTOR,
         }
     )
     if not all_un_ignore_parameters:
@@ -571,6 +577,8 @@ def _update_advanced_input(data: ConfigType, advanced_input: ConfigType) -> None
     data[CONF_ADVANCED_CONFIG][CONF_LISTEN_ON_ALL_IP] = advanced_input[CONF_LISTEN_ON_ALL_IP]
     data[CONF_ADVANCED_CONFIG][CONF_ENABLE_MQTT] = advanced_input[CONF_ENABLE_MQTT]
     data[CONF_ADVANCED_CONFIG][CONF_MQTT_PREFIX] = advanced_input[CONF_MQTT_PREFIX]
+    data[CONF_ADVANCED_CONFIG][CONF_ENABLE_SUB_DEVICES] = advanced_input[CONF_ENABLE_SUB_DEVICES]
+
     if advanced_input.get(CONF_UN_IGNORES):
         data[CONF_ADVANCED_CONFIG][CONF_UN_IGNORES] = advanced_input[CONF_UN_IGNORES]
 

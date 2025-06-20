@@ -12,6 +12,7 @@
   - Improve sub_device_channel identification
   - Wait with PING/PONG handling until interface is initialized
 - Add valve platform
+- Add option to use sub devices to config flow/advanced options
 - Set suggested_display_precision for OPERATING_VOLTAGE to 1 
 
 # Version 1.83.0 (2025-04-05)
