@@ -16,6 +16,7 @@
                     "mqtt_prefix": "MQTT Prefix",
                     "program_markers": "Programm Marken",
                     "program_scan_enabled": "Programm Scan aktivieren",
+                    "sub_devices_enabled": "Unter Geräte aktivieren",
                     "sysvar_markers": "Systemvariablen Marken",
                     "sysvar_scan_enabled": "Systemvariablen Scan aktivieren",
                     "sysvar_scan_interval": "Sysvar/Program Scan Interval"
@@ -676,6 +677,7 @@
                     "mqtt_prefix": "MQTT Prefix",
                     "program_markers": "Programm Marken",
                     "program_scan_enabled": "Programm Scan aktivieren",
+                    "sub_devices_enabled": "Unter Geräte aktivieren",
                     "sysvar_markers": "Systemvariablen Marken",
                     "sysvar_scan_enabled": "Systemvariablen Scan aktivieren",
                     "sysvar_scan_interval": "Sysvar/Program Scan Interval",

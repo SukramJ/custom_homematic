@@ -16,6 +16,7 @@
                     "mqtt_prefix": "MQTT Prefix",
                     "program_markers": "program markers",
                     "program_scan_enabled": "enable program scan",
+                    "sub_devices_enabled": "enable sub devices",
                     "sysvar_markers": "system variable markers",
                     "sysvar_scan_enabled": "enable system variable scan",
                     "sysvar_scan_interval": "Sysvar/Program scan interval"
@@ -672,6 +673,7 @@
                     "mqtt_prefix": "MQTT Prefix",
                     "program_markers": "program markers",
                     "program_scan_enabled": "enable program scan",
+                    "sub_devices_enabled": "enable sub devices",
                     "sysvar_markers": "system variable markers",
                     "sysvar_scan_enabled": "enable system variable scan",
                     "sysvar_scan_interval": "Sysvar/Program scan interval",

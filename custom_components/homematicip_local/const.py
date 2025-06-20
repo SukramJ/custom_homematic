@@ -20,6 +20,7 @@ DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS: Final = True
 DEFAULT_LISTEN_ON_ALL_IP: Final = False
 DEFAULT_ENABLE_MQTT: Final = False
 DEFAULT_MQTT_PREFIX: Final = ""
+DEFAULT_ENABLE_SUB_DEVICES: Final = False
 
 LEARN_MORE_URL_XMLRPC_SERVER_RECEIVES_NO_EVENTS: Final = "https://github.com/sukramj/custom_homematic?tab=readme-ov-file#what-is-the-meaning-of-xmlrpc-server-received-no-events--xmlrpc-server-empf%C3%A4ngt-keine-ereignisse"
 LEARN_MORE_URL_PONG_MISMATCH: Final = "https://github.com/sukramj/custom_homematic#what-is-the-meaning-of-pending-pong-mismatch-on-interface--austehende-pong-ereignisse-auf-interface"
@@ -29,6 +30,7 @@ CONF_CALLBACK_HOST: Final = "callback_host"
 CONF_CALLBACK_PORT: Final = "callback_port"
 CONF_ENABLE_MQTT: Final = "mqtt_enabled"
 CONF_ENABLE_PROGRAM_SCAN: Final = "program_scan_enabled"
+CONF_ENABLE_SUB_DEVICES: Final = "sub_devices_enabled"
 CONF_ENABLE_SYSTEM_NOTIFICATIONS: Final = "enable_system_notifications"
 CONF_ENABLE_SYSVAR_SCAN: Final = "sysvar_scan_enabled"
 CONF_EVENT_TYPE: Final = "event_type"

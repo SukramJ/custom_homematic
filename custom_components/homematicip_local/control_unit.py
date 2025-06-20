@@ -51,6 +51,7 @@ from .const import (
     CONF_CALLBACK_PORT,
     CONF_ENABLE_MQTT,
     CONF_ENABLE_PROGRAM_SCAN,
+    CONF_ENABLE_SUB_DEVICES,
     CONF_ENABLE_SYSTEM_NOTIFICATIONS,
     CONF_ENABLE_SYSVAR_SCAN,
     CONF_INSTANCE_NAME,
@@ -66,6 +67,7 @@ from .const import (
     CONF_VERIFY_TLS,
     DEFAULT_ENABLE_DEVICE_FIRMWARE_CHECK,
     DEFAULT_ENABLE_MQTT,
+    DEFAULT_ENABLE_SUB_DEVICES,
     DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS,
     DEFAULT_LISTEN_ON_ALL_IP,
     DEFAULT_MQTT_PREFIX,
@@ -520,7 +522,7 @@ class ControlConfig:
         ac = data.get(CONF_ADVANCED_CONFIG, {})
         self._enable_mqtt: Final[bool] = ac.get(CONF_ENABLE_MQTT, DEFAULT_ENABLE_MQTT)
         self._enable_program_scan: Final[bool] = ac.get(CONF_ENABLE_PROGRAM_SCAN, DEFAULT_ENABLE_PROGRAM_SCAN)
-        self._enable_sub_devices: Final[bool] = False
+        self._enable_sub_devices: Final[bool] = ac.get(CONF_ENABLE_SUB_DEVICES, DEFAULT_ENABLE_SUB_DEVICES)
         self._enable_system_notifications: Final[bool] = ac.get(
             CONF_ENABLE_SYSTEM_NOTIFICATIONS, DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS
         )
