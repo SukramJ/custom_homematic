@@ -246,6 +246,13 @@ mqtt_prefix:
 un_ignore: (Only visible when reconfiguring the integration)
   description: Add additional datapoints/parameters to your instance. See Unignore device parameters
   type: select
+enable_sub_devices:
+  description: 
+    Creates additional HA (sub) devices for Homematic devices with multiple channels like HmIP-DRSI4 and HmIP-DRDI3.
+    Enabling this has effect on automations that use devices, which must be updated.
+    When disabling this obsolete devices must be deleted manually.
+  type: bool
+  default: false
 ```
 
 
