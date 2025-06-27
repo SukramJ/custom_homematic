@@ -436,6 +436,7 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
         device_class=SensorDeviceClass.VOLUME_FLOW_RATE,
         native_unit_of_measurement=UnitOfVolumeFlowRate.LITERS_PER_MINUTE,
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
     ),
     "WATER_VOLUME": HmSensorEntityDescription(
         key="WATER_VOLUME",
@@ -516,6 +517,17 @@ _SENSOR_DESCRIPTIONS_BY_VAR_NAME: Mapping[str | tuple[str, ...], EntityDescripti
 }
 
 _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], str], EntityDescription] = {
+    (
+        ("ELV-SH-BS", "HmIP-BD", "HmIP-BS", "HmIP-DR", "HmIP-FD", "HmIP-FS", "HmIP-PD", "HmIP-PS", "HmIPW-DR"),
+        "ACTUAL_TEMPERATURE",
+    ): HmSensorEntityDescription(
+        key="ACTUAL_TEMPERATURE",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
     (
         "HmIP-WKP",
         "CODE_STATE",

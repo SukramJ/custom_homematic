@@ -1,3 +1,9 @@
+# Version 1.84.1 (2025-06-27)
+
+## What's Changed
+
+- Categorize diagnostic temperature sensors
+
 # Version 1.84.0 (2025-06-17)
 
 ## What's Changed
