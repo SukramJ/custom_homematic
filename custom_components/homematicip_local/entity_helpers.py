@@ -518,7 +518,25 @@ _SENSOR_DESCRIPTIONS_BY_VAR_NAME: Mapping[str | tuple[str, ...], EntityDescripti
 
 _SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, ...], str], EntityDescription] = {
     (
-        ("ELV-SH-BS", "HmIP-BD", "HmIP-BS", "HmIP-DR", "HmIP-FD", "HmIP-FS", "HmIP-PD", "HmIP-PS", "HmIPW-DR"),
+        (
+            "ELV-SH-BS",
+            "HmIP-BB",
+            "HmIP-BD",
+            "HmIP-BR",
+            "HmIP-BS",
+            "HmIP-DR",
+            "HmIP-FB",
+            "HmIP-FD",
+            "HmIP-FR",
+            "HmIP-FS",
+            "HmIP-MOD-OC8",
+            "HmIP-PCB",
+            "HmIP-PD",
+            "HmIP-PS",
+            "HmIP-USB",
+            "HmIPW-DR",
+            "HmIPW-FIO",
+        ),
         "ACTUAL_TEMPERATURE",
     ): HmSensorEntityDescription(
         key="ACTUAL_TEMPERATURE",
