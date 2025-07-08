@@ -110,7 +110,7 @@ Known cases are in combination with the rf-module `HM-MOD-RPI-PCB`.
 ```yaml
 instance_name:
   description: Name of the HA instance. Allowed characters are a-z and 0-9.
-    If you want to connect to the same CCU instance from multiple HA installations this instance_name must be unique on every HA instance.
+    If you want to connect to the same CCU instance from multiple HA installations (or to multiple CCUs) this instance_name must be unique on every HA instance.
   type: string
 host:
   description: Hostname or IP address of your hub.
