@@ -1,7 +1,12 @@
+# Version 1.85.0 (2025-06-17)
+
+## What's Changed
+- Bump hahomematic to 2025.7.0
+  - Add default customization for ELV-SH-SW1-BAT (Deleting of obsolete entities might be required)
+
 # Version 1.84.1 (2025-06-27)
 
 ## What's Changed
-
 - Categorize diagnostic temperature sensors
 
 # Version 1.84.0 (2025-06-17)
