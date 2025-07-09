@@ -3,6 +3,7 @@
 ## What's Changed
 - Bump hahomematic to 2025.7.0
   - Add default customization for ELV-SH-SW1-BAT (Deleting of obsolete entities might be required)
+  - Enable OPERATING_VOLTAGE_LEVEL for HM-CC-RT-DN and HM-TC-IT-WM-W-EU
 
 # Version 1.84.1 (2025-06-27)
 
