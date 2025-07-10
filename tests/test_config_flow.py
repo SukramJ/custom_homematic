@@ -626,11 +626,11 @@ async def test_async_validate_config_and_get_system_information(hass: HomeAssist
             serial=const.SERIAL,
         ),
     ):
-        result = await _async_validate_config_and_get_system_information(hass, entry_data_v5)
+        result = await _async_validate_config_and_get_system_information(hass=hass, data=entry_data_v5, entry_id="test")
         assert result.serial == const.SERIAL
 
     entry_data_v5[CONF_PASSWORD] = const.INVALID_PASSWORD
 
     with pytest.raises(InvalidConfig) as exc:
-        await _async_validate_config_and_get_system_information(hass, entry_data_v5)
+        await _async_validate_config_and_get_system_information(hass=hass, data=entry_data_v5, entry_id="test")
     assert exc

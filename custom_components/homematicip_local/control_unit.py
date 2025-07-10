@@ -575,6 +575,8 @@ class ControlConfig:
 
     def check_config(self) -> None:
         """Check config. Throws BaseHomematicException on failure."""
+        if not self._check_instance_name_is_unique():
+            raise InvalidConfig("Instance name must be unique.")
         if config_failures := check_config(
             central_name=self._instance_name,
             host=self._host,
@@ -587,6 +589,15 @@ class ControlConfig:
         ):
             failures = ", ".join(config_failures)
             raise InvalidConfig(failures)
+
+    def _check_instance_name_is_unique(self) -> bool:
+        """Check if instance_name is unique in HA."""
+        for entry in self._hass.config_entries.async_entries(domain=DOMAIN):
+            if entry.entry_id == self._entry_id:
+                continue
+            if entry.data[CONF_INSTANCE_NAME] == self._instance_name:
+                return False
+        return True
 
     def create_control_unit(self) -> ControlUnit:
         """Identify the used client."""
