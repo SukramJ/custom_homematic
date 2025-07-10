@@ -298,10 +298,10 @@ def get_advanced_schema(data: ConfigType, all_un_ignore_parameters: list[str]) -
 
 
 async def _async_validate_config_and_get_system_information(
-    hass: HomeAssistant, data: ConfigType
+    hass: HomeAssistant, data: ConfigType, entry_id: str
 ) -> SystemInformation | None:
     """Validate the user input allows us to connect."""
-    if control_config := ControlConfig(hass=hass, entry_id="validate", data=data):
+    if control_config := ControlConfig(hass=hass, entry_id=entry_id, data=data):
         control_config.check_config()
         return await validate_config_and_get_system_information(control_config=control_config)
     return None
@@ -375,7 +375,9 @@ class DomainConfigFlow(ConfigFlow, domain=DOMAIN):
         description_placeholders = {}
 
         try:
-            system_information = await _async_validate_config_and_get_system_information(self.hass, self.data)
+            system_information = await _async_validate_config_and_get_system_information(
+                hass=self.hass, data=self.data, entry_id="validate"
+            )
             if system_information is not None:
                 await self.async_set_unique_id(system_information.serial)
             self._abort_if_unique_id_configured()
@@ -487,7 +489,9 @@ class HomematicIPLocalOptionsFlowHandler(OptionsFlow):
         description_placeholders = {}
 
         try:
-            system_information = await _async_validate_config_and_get_system_information(self.hass, self.data)
+            system_information = await _async_validate_config_and_get_system_information(
+                hass=self.hass, data=self.data, entry_id=self.entry.entry_id
+            )
         except AuthFailure:
             errors["base"] = "invalid_auth"
         except InvalidConfig as ic:
