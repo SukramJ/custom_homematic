@@ -115,9 +115,9 @@ class HaHomematicSwitch(HaHomematicGenericRestoreEntity[CustomDpSwitch | DpSwitc
         """Return the state attributes of the generic entity."""
         attributes = super().extra_state_attributes
         if isinstance(self._data_point, CustomDpSwitch) and (
-            self._data_point.channel_value and self._data_point.value != self._data_point.channel_value
+            self._data_point.group_value and self._data_point.value != self._data_point.group_value
         ):
-            attributes[ATTR_CHANNEL_STATE] = self._data_point.channel_value
+            attributes[ATTR_CHANNEL_STATE] = self._data_point.group_value
         return attributes
 
     @property
