@@ -1,9 +1,10 @@
 # Version 1.85.0 (2025-06-17)
 
 ## What's Changed
-- Bump hahomematic to 2025.7.0
+- Bump hahomematic to 2025.7.1
   - Add default customization for ELV-SH-SW1-BAT (Deleting of obsolete entities might be required)
   - Enable OPERATING_VOLTAGE_LEVEL for HM-CC-RT-DN and HM-TC-IT-WM-W-EU
+  - Fire updated events for calculated DPs when refreshed within a second
 - Check uniqueness of instance name
 
 # Version 1.84.1 (2025-06-27)
