@@ -107,8 +107,8 @@ class HaHomematicLight(HaHomematicGenericRestoreEntity[CustomDpDimmer], LightEnt
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return the state attributes of the generic entity."""
         attributes = super().extra_state_attributes
-        if self._data_point.channel_brightness is not None:
-            attributes[ATTR_CHANNEL_BRIGHTNESS] = self._data_point.channel_brightness
+        if self._data_point.group_brightness is not None:
+            attributes[ATTR_CHANNEL_BRIGHTNESS] = self._data_point.group_brightness
 
         if isinstance(self._data_point, CustomDpIpFixedColorLight):
             attributes[ATTR_COLOR] = self._data_point.color_name

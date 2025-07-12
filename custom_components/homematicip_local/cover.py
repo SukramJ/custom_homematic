@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, TypeVar
+from typing import Any, Final, TypeVar
 
 from hahomematic.const import DataPointCategory
 from hahomematic.model.custom import CustomDpBlind, CustomDpCover, CustomDpGarage, CustomDpIpBlind
@@ -29,6 +29,9 @@ from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import HaHomematicGenericRestoreEntity
 from .services import CONF_WAIT_FOR_CALLBACK
+
+ATTR_CHANNEL_POSITION: Final = "channel_position"
+ATTR_CHANNEL_TILT_POSITION: Final = "channel_tilt_position"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -126,6 +129,18 @@ class HaHomematicBaseCover(HaHomematicGenericRestoreEntity[HmGenericCover], Cove
         return None
 
     @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the state attributes of the generic entity."""
+        attributes = super().extra_state_attributes
+        if (
+            hasattr(self._data_point, "current_channel_position")
+            and self._data_point.current_channel_position is not None
+        ):
+            attributes[ATTR_CHANNEL_POSITION] = self._data_point.current_channel_position
+
+        return attributes
+
+    @property
     def is_closed(self) -> bool | None:
         """Return if the cover is closed."""
         if self._data_point.is_valid:
@@ -195,6 +210,15 @@ class HaHomematicBlind(HaHomematicBaseCover[CustomDpBlind | CustomDpIpBlind]):
         if self.is_restored and self._restored_state:
             return self._restored_state.attributes.get(ATTR_CURRENT_TILT_POSITION)
         return None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the state attributes of the generic entity."""
+        attributes = super().extra_state_attributes
+        if self._data_point.current_channel_tilt_position is not None:
+            attributes[ATTR_CHANNEL_TILT_POSITION] = self._data_point.current_channel_tilt_position
+
+        return attributes
 
     async def async_set_cover_tilt_position(self, **kwargs: Any) -> None:
         """Move the cover to a specific tilt position."""
