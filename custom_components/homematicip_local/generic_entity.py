@@ -166,7 +166,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         device_name = self._ha_device_name
 
         if isinstance(self._data_point, CalculatedDataPoint | GenericDataPoint) and entity_name:
-            if self._cu.enable_sub_devices:
+            if self._cu.enable_sub_devices and self._data_point.channel.device.has_sub_devices:
                 entity_name = self._data_point.name_data.parameter_name or ""
             translated_name = super().name
             if self._do_remove_name():
