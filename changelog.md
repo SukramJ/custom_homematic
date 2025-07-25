@@ -1,13 +1,14 @@
 # Version 1.85.0 (2025-06-17)
 
 ## What's Changed
-- Bump hahomematic to 2025.7.5
+- Bump hahomematic to 2025.7.6
   - Add default customization for (Deleting of obsolete entities/device might be required):
     - ELV-SH-SW1-BAT, 
     - HmIP-WGT, HmIP-WGTC
     - HmIP-SMO230
   - Enable OPERATING_VOLTAGE_LEVEL for HM-CC-RT-DN and HM-TC-IT-WM-W-EU
   - Fire updated events for calculated DPs when refreshed within a second
+  - Refactor argument extraction from exceptions
   - Rename channel* to group* properties for cover, light and switch
 - Check uniqueness of instance name
 
