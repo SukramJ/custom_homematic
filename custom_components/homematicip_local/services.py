@@ -431,8 +431,8 @@ async def _async_service_add_link(hass: HomeAssistant, service: ServiceCall) -> 
                 name=name,
                 description=description,
             )
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
         _LOGGER.debug("Called add_link")
 
 
@@ -445,8 +445,8 @@ async def _async_service_create_central_link(hass: HomeAssistant, service: Servi
             await control.central.create_central_links()
         elif hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
             await hm_device.create_central_links()
-    except BaseHomematicException as ex:
-        raise HomeAssistantError(ex) from ex
+    except BaseHomematicException as bhexc:
+        raise HomeAssistantError(bhexc) from bhexc
     _LOGGER.debug("Called create_central_links")
 
 
@@ -459,8 +459,8 @@ async def _async_service_remove_central_link(hass: HomeAssistant, service: Servi
             await control.central.remove_central_links()
         elif hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
             await hm_device.remove_central_links()
-    except BaseHomematicException as ex:
-        raise HomeAssistantError(ex) from ex
+    except BaseHomematicException as bhexc:
+        raise HomeAssistantError(bhexc) from bhexc
     _LOGGER.debug("Called remove_central_links")
 
 
@@ -475,8 +475,8 @@ async def _async_service_remove_link(hass: HomeAssistant, service: ServiceCall) 
                 sender_address=sender_channel_address,
                 receiver_address=receiver_channel_address,
             )
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
         _LOGGER.debug("Called remove_link")
 
 
@@ -485,8 +485,8 @@ async def _async_service_export_device_definition(hass: HomeAssistant, service: 
     if hm_device := _async_get_hm_device_by_service_data(hass=hass, service=service):
         try:
             await hm_device.export_device_definition()
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
 
         _LOGGER.debug(
             "Called export_device_definition: %s, %s",
@@ -521,8 +521,8 @@ async def _async_service_get_device_value(hass: HomeAssistant, service: ServiceC
                 )
             ) is not None:
                 return {"result": value}
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
     return None
 
 
@@ -534,8 +534,8 @@ async def _async_service_get_link_peers(hass: HomeAssistant, service: ServiceCal
         address = f"{hm_device.address}:{channel_no}" if channel_no is not None else hm_device.address
         try:
             return cast(ServiceResponse, {address: await hm_device.client.get_link_peers(address=address)})
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
     return None
 
 
@@ -552,8 +552,8 @@ async def _async_service_get_link_paramset(hass: HomeAssistant, service: Service
                     paramset_key=sender_channel_address,
                 )
             )
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
     return None
 
 
@@ -571,8 +571,8 @@ async def _async_service_get_paramset(hass: HomeAssistant, service: ServiceCall)
                     paramset_key=paramset_key,
                 )
             )
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
     return None
 
 
@@ -585,8 +585,8 @@ async def _async_service_get_variable_value(hass: HomeAssistant, service: Servic
         try:
             if (value := await control.central.get_system_variable(legacy_name=name)) is not None:
                 return {"result": value}
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
     return None
 
 
@@ -624,8 +624,8 @@ async def _async_service_set_device_value(hass: HomeAssistant, service: ServiceC
                 rx_mode=rx_mode,
                 check_against_pd=True,
             )
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
 
 
 async def _async_service_set_variable_value(hass: HomeAssistant, service: ServiceCall) -> None:
@@ -672,8 +672,8 @@ async def _async_service_put_link_paramset(hass: HomeAssistant, service: Service
                 rx_mode=rx_mode,
                 check_against_pd=True,
             )
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
 
 
 async def _async_service_put_paramset(hass: HomeAssistant, service: ServiceCall) -> None:
@@ -698,8 +698,8 @@ async def _async_service_put_paramset(hass: HomeAssistant, service: ServiceCall)
                 rx_mode=rx_mode,
                 check_against_pd=True,
             )
-        except BaseHomematicException as ex:
-            raise HomeAssistantError(ex) from ex
+        except BaseHomematicException as bhexc:
+            raise HomeAssistantError(bhexc) from bhexc
 
 
 async def _async_service_update_device_firmware_data(hass: HomeAssistant, service: ServiceCall) -> None:
