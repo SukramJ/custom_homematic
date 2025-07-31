@@ -12,6 +12,7 @@
   - Refactor argument extraction from exceptions
   - Rename channel* to group* properties for cover, light and switch
 - Check uniqueness of instance name
+- Follow HA 2025.8: Use platform_data instead platform to avoid deprecation
 
 # Version 1.84.1 (2025-06-27)
 
