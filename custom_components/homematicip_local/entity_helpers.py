@@ -27,6 +27,7 @@ from homeassistant.components.siren import SirenEntityDescription
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntityDescription
 from homeassistant.components.valve import ValveDeviceClass, ValveEntityDescription
 from homeassistant.const import (
+    CONCENTRATION_GRAMS_PER_CUBIC_METER,
     CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
     CONCENTRATION_PARTS_PER_MILLION,
     DEGREE,
@@ -54,8 +55,7 @@ from .support import HmGenericDataPoint
 
 _LOGGER = logging.getLogger(__name__)
 
-CONCENTRATION_CM3: Final = "1/cm\u00b3"  # HmIP-SFD
-CONCENTRATION_GRAMS_PER_CUBIC_METER: Final = "g/m³"  # HB-UNI-Sensor-THPD-BME280
+NUMBER_CONCENTRATION_CM3: Final = "1/cm\u00b3"  # HmIP-SFD
 LENGTH_MICROMETER: Final = "\u00b5m"  # HmIP-SFD
 
 
@@ -318,17 +318,17 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     "NUMBER_CONCENTRATION_PM_1": HmSensorEntityDescription(
         key="NUMBER_CONCENTRATION_PM_1",
-        native_unit_of_measurement=CONCENTRATION_CM3,
+        native_unit_of_measurement=NUMBER_CONCENTRATION_CM3,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "NUMBER_CONCENTRATION_PM_10": HmSensorEntityDescription(
         key="NUMBER_CONCENTRATION_PM_10",
-        native_unit_of_measurement=CONCENTRATION_CM3,
+        native_unit_of_measurement=NUMBER_CONCENTRATION_CM3,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "NUMBER_CONCENTRATION_PM_2_5": HmSensorEntityDescription(
         key="NUMBER_CONCENTRATION_PM_2_5",
-        native_unit_of_measurement=CONCENTRATION_CM3,
+        native_unit_of_measurement=NUMBER_CONCENTRATION_CM3,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     "TYPICAL_PARTICLE_SIZE": HmSensorEntityDescription(
@@ -403,6 +403,7 @@ _SENSOR_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription]
     ),
     "VAPOR_CONCENTRATION": HmSensorEntityDescription(
         key="VAPOR_CONCENTRATION",
+        device_class=SensorDeviceClass.ABSOLUTE_HUMIDITY,
         entity_registry_enabled_default=False,
         native_unit_of_measurement=CONCENTRATION_GRAMS_PER_CUBIC_METER,
         state_class=SensorStateClass.MEASUREMENT,

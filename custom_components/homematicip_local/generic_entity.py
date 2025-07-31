@@ -225,9 +225,9 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         try:
             if (
                 self._name_translation_key
-                and hasattr(self, "platform")
-                and hasattr(self.platform, "platform_translations")
-                and (name := self.platform.platform_translations.get(self._name_translation_key)) is not None
+                and hasattr(self, "platform_data")
+                and hasattr(self.platform_data, "platform_translations")
+                and (name := self.platform_data.platform_translations.get(self._name_translation_key)) is not None
             ):
                 return bool(name == "")
         except Exception:  # pylint: disable=broad-exception-caught
