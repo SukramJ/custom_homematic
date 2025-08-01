@@ -129,7 +129,7 @@ async def get_hahomematic_version(hass: HomeAssistant, domain: str, package_name
     requirements = integration.manifest.get("requirements", [])
 
     for req in requirements:
-        match = re.match(r"^([a-zA-Z0-9_.\-]+)\s*([<>=!~]+.+)?$", req)
+        match = re.match(r"^([a-zA-Z0-9_.\-]+)\s*[<>=!~]*\s*([0-9a-zA-Z_.\-]+)?$", req)
         if match:
             name, version = match.groups()
             if name.lower() == package_name.lower():
