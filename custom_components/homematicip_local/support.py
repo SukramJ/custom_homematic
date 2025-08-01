@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 import logging
+import re
 from typing import Any, TypeAlias, TypeVar, cast
 
 from hahomematic.const import IDENTIFIER_SEPARATOR, EventKey
@@ -15,7 +16,9 @@ from hahomematic.model.hub import GenericProgramDataPoint, GenericSysvarDataPoin
 import voluptuous as vol
 
 from homeassistant.const import CONF_TYPE
+from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.loader import async_get_integration
 
 from .const import (
     CONF_SUBTYPE,
@@ -118,3 +121,18 @@ def get_data_point[DP](data_point: DP) -> DP:
 
 class InvalidConfig(HomeAssistantError):
     """Error to indicate there is invalid config."""
+
+
+async def get_hahomematic_version(hass: HomeAssistant, domain: str, package_name: str) -> str | None:
+    """Return the version of a package from manifest.json."""
+    integration = await async_get_integration(hass, domain)
+    requirements = integration.manifest.get("requirements", [])
+
+    for req in requirements:
+        match = re.match(r"^([a-zA-Z0-9_.\-]+)\s*[<>=!~]*\s*([0-9a-zA-Z_.\-]+)?$", req)
+        if match:
+            name, version = match.groups()
+            if name.lower() == package_name.lower():
+                return version or "0.0.0"
+
+    return None

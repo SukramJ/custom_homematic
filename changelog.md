@@ -1,4 +1,4 @@
-# Version 1.85.0 (2025-06-17)
+# Version 1.85.0 (2025-08-01)
 
 ## What's Changed
 - Bump hahomematic to 2025.7.7
@@ -13,6 +13,7 @@
   - Rename channel* to group* properties for cover, light and switch
 - Check uniqueness of instance name
 - Follow HA 2025.8: Use platform_data instead platform to avoid deprecation
+- Remove version const for hahomematic dependency check
 
 # Version 1.84.1 (2025-06-27)
 

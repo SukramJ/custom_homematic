@@ -29,13 +29,12 @@ from .const import (
     CONF_UN_IGNORES,
     DEFAULT_ENABLE_SYSTEM_NOTIFICATIONS,
     DOMAIN,
-    HMIP_LOCAL_HAHOMEMATIC_VERSION,
     HMIP_LOCAL_MIN_HA_VERSION,
     HMIP_LOCAL_PLATFORMS,
 )
 from .control_unit import ControlConfig, ControlUnit, get_storage_folder
 from .services import async_get_loaded_config_entries, async_setup_services, async_unload_services
-from .support import get_device_address_at_interface_from_identifiers
+from .support import get_device_address_at_interface_from_identifiers, get_hahomematic_version
 
 HA_VERSION = AwesomeVersion(HA_VERSION_STR)
 HomematicConfigEntry: TypeAlias = ConfigEntry[ControlUnit]
@@ -53,13 +52,14 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: HomematicConfigEntry) -> bool:
-    """Set up Homematic(IP) Local from a config entry."""
-    if AwesomeVersion(HMIP_LOCAL_HAHOMEMATIC_VERSION) != AwesomeVersion(HAHM_VERSION):
+    """Set up Homematic(IP) Local from a config entr11y."""
+    expected_version = await get_hahomematic_version(hass=hass, domain=entry.domain, package_name="hahomematic")
+    if AwesomeVersion(expected_version) != AwesomeVersion(HAHM_VERSION):
         _LOGGER.error(
             "This release of Homematic(IP) Local requires hahomematic version %s, but found version %s. "
             "Looks like HA has a problem with dependency management. "
             "This is NOT an issue of the integration.",
-            HMIP_LOCAL_HAHOMEMATIC_VERSION,
+            expected_version,
             HAHM_VERSION,
         )
         _LOGGER.warning("Homematic(IP) Local setup blocked")

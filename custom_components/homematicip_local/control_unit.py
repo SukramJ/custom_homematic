@@ -8,6 +8,7 @@ import logging
 from types import UnionType
 from typing import Any, Final, TypeVar, cast
 
+from hahomematic import __version__ as HAHM_VERSION
 from hahomematic.central import INTERFACE_EVENT_SCHEMA, CentralConfig, CentralUnit
 from hahomematic.client import InterfaceConfig
 from hahomematic.const import (
@@ -149,7 +150,7 @@ class BaseControlUnit:
         )
         try:
             await self._central.start()
-            _LOGGER.info("Started central unit for %s", self._instance_name)
+            _LOGGER.info("Started central unit for %s (%s)", self._instance_name, HAHM_VERSION)
         except BaseHomematicException:
             _LOGGER.warning("START_CENTRAL: Failed to start central unit for %s", self._instance_name)
 
