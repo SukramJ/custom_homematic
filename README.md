@@ -1,5 +1,7 @@
 # Homematic(IP) local
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total)
+![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads-pre/SukramJ/custom_homematic/latest/total)
+
 
 Homematic(IP) [Integration for Home Assistant](https://www.home-assistant.io/getting-started/concepts-terminology/#integrations)
 
