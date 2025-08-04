@@ -1,6 +1,8 @@
 # Homematic(IP) local
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?label=Latest%20Release%20Downloads)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads-pre/SukramJ/custom_homematic/latest/total?label=Latest%20Pre-Release%20Downloads)
+![GitHub Release](https://img.shields.io/github/v/release/SukramJ/custom_homematic?style=for-the-badge)
+![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)
+[![hacs_downloads](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)](https://github.com/SukramJ/custom_homematic/releases/latest)
+![Maintenance](https://img.shields.io/maintenance/SukramJ/2025?style=for-the-badge)
 
 
 Homematic(IP) [Integration for Home Assistant](https://www.home-assistant.io/getting-started/concepts-terminology/#integrations)
@@ -19,7 +21,7 @@ New discussions can be started and found in [hahomamatic repo](https://github.co
 Feature requests can be added as a discussion too.
 A good practice is to search in issues and discussions before starting a new one.
 
-# Homematic(IP) Local (documentation)
+# Documentation
 
 The [HomeMatic](https://www.homematic.com/) integration provides bi-directional communication with your HomeMatic hub (CCU, Homegear etc.).
 It uses an XML-RPC connection to set values on devices and subscribes to receive events the devices and the CCU emit.
