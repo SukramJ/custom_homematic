@@ -1,5 +1,5 @@
 # Homematic(IP) local
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SukramJ&repository=custom_homematic&category=Integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SukramJ&repository=custom_homematic&category=integration)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 ![GitHub Release](https://img.shields.io/github/v/release/SukramJ/custom_homematic?style=for-the-badge)
 [![hacs_downloads](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)](https://github.com/SukramJ/custom_homematic/releases/latest)
