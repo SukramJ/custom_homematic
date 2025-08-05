@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 import logging
 from typing import Any, Final, TypeVar
 from unittest.mock import MagicMock, Mock, patch
@@ -187,9 +188,9 @@ def get_data_point_mock[DP](data_point: DP) -> DP:
 
         if isinstance(data_point, CustomDataPoint):
             for g_entity in data_point._data_entities.values():
-                g_entity._set_last_update()
+                g_entity._set_modified_at(modified_at=datetime.now())
         elif isinstance(data_point, BaseParameterDataPoint):
-            data_point._set_last_update()
+            data_point._set_modified_at(modified_at=datetime.now())
         if hasattr(data_point, "is_valid"):
             assert data_point.is_valid is True
         # patch.object(data_point, "is_valid", return_value=True).start()
@@ -204,7 +205,7 @@ def _get_mockable_method_names(data_point: Any) -> list[str]:
     method_list: list[str] = []
     for attribute in dir(data_point):
         # Get the attribute value
-        attribute_value = getattr(data_point, attribute)
+        attribute_value = getattr(data_point, attribute, None)
         # Check that it is callable
         if (
             callable(attribute_value)
