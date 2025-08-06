@@ -44,9 +44,6 @@ EXCLUDE_METHODS_FROM_MOCKS: Final = [
     "unregister_internal_data_point_updated_callback",
     "write_value",
     "write_temporary_value",
-    # "get_and_start_timer",
-    # "set_timer_on_time",
-    # "reset_timer_on_time",
 ]
 T = TypeVar("T")
 
@@ -192,7 +189,8 @@ def get_data_point_mock[DP](data_point: DP) -> DP:
         for method_name in _get_mockable_method_names(data_point):
             with contextlib.suppress(AttributeError):
                 fn = get_full_qualname(obj=data_point, method_name=method_name)
-                patch(fn).start()
+                if not fn.startswith("unitest.mock"):
+                    patch(fn).start()
 
         if isinstance(data_point, CustomDataPoint):
             for g_entity in data_point._data_points.values():
