@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 from datetime import datetime
 import logging
 from typing import Any, Final, TypeVar
@@ -41,6 +42,9 @@ EXCLUDE_METHODS_FROM_MOCKS: Final = [
     "unregister_internal_data_point_updated_callback",
     "write_value",
     "write_temporary_value",
+    # "get_and_start_timer",
+    # "set_timer_on_time",
+    # "reset_timer_on_time",
 ]
 T = TypeVar("T")
 
@@ -184,10 +188,11 @@ def get_data_point_mock[DP](data_point: DP) -> DP:
     """Return the mocked homematic entity."""
     try:
         for method_name in _get_mockable_method_names(data_point):
-            patch.object(data_point, method_name).start()
+            with contextlib.suppress(AttributeError):
+                patch.object(data_point, method_name).start()
 
         if isinstance(data_point, CustomDataPoint):
-            for g_entity in data_point._data_entities.values():
+            for g_entity in data_point._data_points.values():
                 g_entity._set_modified_at(modified_at=datetime.now())
         elif isinstance(data_point, BaseParameterDataPoint):
             data_point._set_modified_at(modified_at=datetime.now())
