@@ -40,7 +40,7 @@ HA_VERSION = AwesomeVersion(HA_VERSION_STR)
 HomematicConfigEntry: TypeAlias = ConfigEntry[ControlUnit]
 
 
-@dataclass
+@dataclass(kw_only=True, slots=True)
 class HomematicData:
     """Common data for shared homematic ip local data."""
 

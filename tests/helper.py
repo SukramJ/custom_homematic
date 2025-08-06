@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import contextlib
 from datetime import datetime
+import inspect
 import logging
+from types import FunctionType, MethodType
 from typing import Any, Final, TypeVar
 from unittest.mock import MagicMock, Mock, patch
 
@@ -184,10 +187,13 @@ def get_data_point_mock[DP](data_point: DP) -> DP:
     """Return the mocked homematic entity."""
     try:
         for method_name in _get_mockable_method_names(data_point):
-            patch.object(data_point, method_name).start()
+            with contextlib.suppress(AttributeError):
+                fn = get_full_qualname(obj=data_point, method_name=method_name)
+                if not fn.startswith("unitest.mock"):
+                    patch(fn).start()
 
         if isinstance(data_point, CustomDataPoint):
-            for g_entity in data_point._data_entities.values():
+            for g_entity in data_point._data_points.values():
                 g_entity._set_modified_at(modified_at=datetime.now())
         elif isinstance(data_point, BaseParameterDataPoint):
             data_point._set_modified_at(modified_at=datetime.now())
@@ -198,6 +204,28 @@ def get_data_point_mock[DP](data_point: DP) -> DP:
         pass
     finally:
         return data_point
+
+
+def get_full_qualname(obj: Any, method_name: str) -> str:
+    """Return the fully qualified name of a method."""
+    try:
+        attr = getattr(obj, method_name)
+    except AttributeError as e:
+        raise ValueError(f"Object of type {type(obj)} has no attribute '{method_name}'") from e
+
+    # Attempt to resolve the module name
+    module = inspect.getmodule(attr)
+    module_name = module.__name__ if module else obj.__class__.__module__
+
+    # Resolve the qualified name
+    if isinstance(attr, (FunctionType, MethodType)):
+        # For functions or methods
+        qualname = attr.__qualname__
+    else:
+        # For properties or other descriptors, fallback to class-based qualname
+        qualname = f"{obj.__class__.__qualname__}.{method_name}"
+
+    return f"{module_name}.{qualname}"
 
 
 def _get_mockable_method_names(data_point: Any) -> list[str]:
