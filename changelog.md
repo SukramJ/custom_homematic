@@ -1,7 +1,8 @@
-# Version 1.85.1 (2025-08-06)
+# Version 1.85.1 (2025-08-07)
 
 ## What's Changed
-- Bump hahomematic to 2025.8.1
+- Bump hahomematic to 2025.8.3
+  - Simplify should_fire_data_point_updated_callback for calculated data points
   - Use slots
 
 # Version 1.85.0 (2025-08-01)
