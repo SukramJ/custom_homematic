@@ -18,6 +18,7 @@ Please support the community by adding more valuable information to the wiki.
 ## Table of contents
 - [Issues and discussions](#issues-and-discussions)
 - [Documentation](#documentation)
+- [Installation](#installation)
 - [Device support](#device-support)
 - [Requirements](#requirements)
 - [Configuration](#configuration)
@@ -31,6 +32,7 @@ Please support the community by adding more valuable information to the wiki.
 - [Updating a device firmware](#updating-a-device-firmware)
 - [CUxD , CCU-Jack and MQTT support](#cuxd--ccu-jack-and-mqtt-support)
 - [CUxD and CCU-Jack device support](#cuxd-and-ccu-jack-device-support)
+- [Troubleshooting](#troubleshooting)
 - [Frequently asked questions](#frequently-asked-questions)
 - [Examples in YAML](#examples-in-yaml)
 - [Available Blueprints](#available-blueprints)
@@ -50,6 +52,20 @@ You can configure this integration multiple times if you want to integrate multi
 If you are using Homegear with paired [Intertechno](https://intertechno.at/) devices, uni-directional communication is possible as well.
 
 **Please take the time to read the entire documentation before asking for help. It will answer the most common questions that come up while working with this integration.**
+
+## Installation
+
+Recommended: HACS
+- In Home Assistant, go to HACS > Integrations > Explore & Download Repositories.
+- Search for "Homematic(IP) Local" and install it.
+- Restart Home Assistant when prompted.
+- If you do not see it, add this repository as a custom repository in HACS (Category: Integration): https://github.com/SukramJ/custom_homematic, then install.
+
+Manual installation
+- Copy the directory custom_components/homematicip_local from this repository to your Home Assistant config/custom_components directory.
+- Restart Home Assistant.
+
+After installation, proceed with configuration below via the Add Integration flow.
 
 ## Device support
 
@@ -95,7 +111,7 @@ Advanced setups might consider this:
 
 This integration starts a local XML-RPC server within HA, which automatically selects a free port or uses the optionally defined callback port.
 This means that the CCU must be able to start a new connection to the system running HA and to the port. So check the firewall of the system running HA (host/VM) to allow communication from the CCU. This Traffic (state updates) is always unencrypted.
-If running HA on docker it is recommended to use `network_mode: host`, or specify [callback host/port](https://github.com/sukramj/custom_homematic#callback_host-and-callback_port).
+If running HA on docker it is recommended to use `network_mode: host`, or specify the callback_host and callback_port parameters (see [Configuration Variables](#configuration-variables)).
 
 ### Authentication
 
@@ -784,6 +800,18 @@ If the implementation for CUxD or CCU-Jack differs, no further adjustments will 
 In order to adapt the device to your own needs, HA offers extensive options via templates and customization that can be used for this purpose.
 Deviating behavior is acceptable for these devices and does not constitute a fault.
 
+## Troubleshooting
+
+If the integration does not work as expected, try the following before opening an issue:
+- Review Home Assistant logs for entries related to this integration: homematicip_local and hahomematic. Address any errors or warnings shown.
+- Verify required ports are open and reachable between HA and your hub (CCU/RaspberryMatic/Homegear). See Firewall and required ports above.
+- Ensure the CCU user has admin privileges and that your password only contains supported characters (A-Z, a-z, 0-9 and .!$():;#-).
+- When running HA in Docker, prefer network_mode: host. Otherwise, set callback_host and callback_port in the configuration and allow inbound connections from the CCU to that port.
+- If you run multiple HA instances or connect to multiple CCUs, make instance_name unique per HA instance.
+- For persistent auto-discovery entries after setup, click Ignore or reconfigure the existing instance, then restart HA.
+- After updating CCU firmware or changing interfaces, restart Home Assistant and reload the integration.
+- For CUxD/CCU-Jack, ensure MQTT is set up correctly and verify topics/events with an MQTT Explorer before reporting issues.
+
 ## Frequently asked questions
 
 Q: I can see an entity, but it is unavailable.<br>
@@ -793,7 +821,7 @@ Q: I'm using a button on a remote control as a trigger in an automation, but the
 A: See [Events for Homematic(IP) devices](#events-for-homematicip-devices)
 
 Q: My device is not listed under [Events for Homematic(IP) devices](#events-for-homematicip-devices)<br>
-A: I doesn't matter. These are just examples. If you can press it, it is a button and events are emitted.
+A: It doesn't matter. These are just examples. If you can press it, it is a button and events are emitted.
 
 Q: I have a problem with the integration. What can i do?<br>
 A: Before creating an issue, you should review the HA log files for `error` or `warning` entries related to this integration (`homematicip_local`, `hahomematic`) and read the corresponding messages. You can find further information about some messages in this document.
