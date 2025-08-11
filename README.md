@@ -15,6 +15,26 @@ Quick start:
 
 Please support the community by adding more valuable information to the wiki.
 
+## Table of contents
+- [Issues and discussions](#issues-and-discussions)
+- [Documentation](#documentation)
+- [Device support](#device-support)
+- [Requirements](#requirements)
+- [Configuration](#configuration)
+  - [Manual configuration steps](#manual-configuration-steps)
+  - [Auto-discovery](#auto-discovery)
+  - [Configuration Variables](#configuration-variables)
+- [System variables](#system-variables)
+- [Actions](#actions)
+- [Events](#events)
+- [Additional information](#additional-information)
+- [Updating a device firmware](#updating-a-device-firmware)
+- [CUxD , CCU-Jack and MQTT support](#cuxd--ccu-jack-and-mqtt-support)
+- [CUxD and CCU-Jack device support](#cuxd-and-ccu-jack-device-support)
+- [Frequently asked questions](#frequently-asked-questions)
+- [Examples in YAML](#examples-in-yaml)
+- [Available Blueprints](#available-blueprints)
+
 ## Issues and discussions
 
 Please report issues in [hahomematic repo](https://github.com/sukramj/hahomematic/issues).
@@ -155,18 +175,18 @@ This page always displays the default values, also when reconfiguring the integr
 
 ```yaml
 hmip_rf_enabled:
-  description: Enable support for HomematicIP (wiredless and wired) devices.
+  description: Enable support for HomematicIP (wireless and wired) devices.
   type: boolean
   default: false
 hmip_rf_port:
   description: Port for HomematicIP (wireless and wired).
   type: integer
   default: 2010
-bidos_rf_enabled:
+bidcos_rf_enabled:
   description: Enable support for BidCos (HomeMatic wireless) devices.
   type: boolean
   default: false
-bidos_rf_port:
+bidcos_rf_port:
   description: Port for BidCos (HomeMatic wireless).
   type: integer
   default: 2001
