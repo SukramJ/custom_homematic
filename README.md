@@ -1,4 +1,4 @@
-# Homematic(IP) local
+# Homematic(IP) Local
 ![GitHub Release](https://img.shields.io/github/v/release/SukramJ/custom_homematic?style=for-the-badge)
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)
 ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)
@@ -30,12 +30,14 @@ Please support the community by adding more valuable information to the wiki.
 - [Events](#events)
 - [Additional information](#additional-information)
 - [Updating a device firmware](#updating-a-device-firmware)
-- [CUxD , CCU-Jack and MQTT support](#cuxd--ccu-jack-and-mqtt-support)
+- [CUxD, CCU-Jack and MQTT support](#cuxd-ccu-jack-and-mqtt-support)
 - [CUxD and CCU-Jack device support](#cuxd-and-ccu-jack-device-support)
 - [Troubleshooting](#troubleshooting)
 - [Frequently asked questions](#frequently-asked-questions)
 - [Examples in YAML](#examples-in-yaml)
 - [Available Blueprints](#available-blueprints)
+- [Support and Contributing](#support-and-contributing)
+- [License](#license)
 
 ## Issues and discussions
 
@@ -771,9 +773,9 @@ As soon as the firmware has been successfully transferred to the device, it can 
 
 Depending on whether an update command can be transmitted immediately or with a delay, either the updated firmware version is displayed after a short delay, or `in process`/`installing` is displayed again because a command transmission is being waited for. This state is now updated every **5 minutes** until the installation is finished.
 
-If shorter update cycles are desired, these can be triggered by the action `homeassistant.update_device_firmware_data`, but this might have a negative impact on you CCU!
+If shorter update cycles are desired, these can be triggered by the action `homeassistant.update_device_firmware_data`, but this might have a negative impact on your CCU!
 
-# CUxD , CCU-Jack and MQTT support
+## CUxD, CCU-Jack and MQTT support
 
 CUxD is not natively supported due to a missing Python library for BinRPC.
 The implemented solution for CuXD utilises the JSON-RPC-API (with 15s polling) and an optional setup with MQTT (no polling needed!).
@@ -787,13 +789,13 @@ To enable the optional MQTT support the following requirements must be fulfilled
 Besides from receiving events for CUxD and CCU-Jack devices, the MQTT support also enables push events for CCU system variables, if they are correctly setup for CCU-Jack support. This requires `MQTT` as additional marker in the description.
 
 Important:
-- Please read the [MQTT related HA documentation](https://www.home-assistant.io/integrations/mqtt/) on how to setup MQTT in HA,
-- Please read the [CCU-Jack documentation](https://github.com/mdzio/ccu-jack/wiki) on Howto setup CCU-Jack and an optional [MQTT-Bridge](https://github.com/mdzio/ccu-jack/wiki/MQTT-Bridge)
-- Please use an MQTT-Explorer to ensure there are subscribable topics, and the event come in as expected before opening an issue for this integration.
+- Please read the [MQTT integration documentation](https://www.home-assistant.io/integrations/mqtt/) to set up MQTT in Home Assistant.
+- Please read the [CCU-Jack documentation](https://github.com/mdzio/ccu-jack/wiki) on how to set up CCU-Jack and an optional [MQTT Bridge](https://github.com/mdzio/ccu-jack/wiki/MQTT-Bridge).
+- Please use an MQTT explorer to ensure there are subscribable topics and that events arrive as expected before opening an issue for this integration.
 
 ## CUxD and CCU-Jack device support
 
-CUxD and CCU-Jack use Homematic (IP) device and paramset descriptions to be compatible the CCU.
+CUxD and CCU-Jack use Homematic (IP) device and paramset descriptions to be compatible with the CCU.
 This fact is also used by this integration to integrate CUxD and CCU-Jack. The integration is basically done for the original devices connected to BidCos-RF/-Wired) and HmIP-(Wired), and only their functionality and behaviour is relevant.
 
 If the implementation for CUxD or CCU-Jack differs, no further adjustments will be made in this integration!!!
@@ -823,7 +825,7 @@ A: See [Events for Homematic(IP) devices](#events-for-homematicip-devices)
 Q: My device is not listed under [Events for Homematic(IP) devices](#events-for-homematicip-devices)<br>
 A: It doesn't matter. These are just examples. If you can press it, it is a button and events are emitted.
 
-Q: I have a problem with the integration. What can i do?<br>
+Q: I have a problem with the integration. What can I do?<br>
 A: Before creating an issue, you should review the HA log files for `error` or `warning` entries related to this integration (`homematicip_local`, `hahomematic`) and read the corresponding messages. You can find further information about some messages in this document.
 
 Q: What is the source of OPERATING_VOLTAGE_LEVEL, APPARENT_TEMPERATURE, DEW_POINT, FROST_POINT, VAPOR_CONCENTRATION
@@ -833,15 +835,15 @@ A: These are parameters/sensors, that are [calculated](https://github.com/Sukram
 
 
 ### Sample for set_variable_value
-Set boolean variable to true:
+Set a boolean variable to true:
 
 ```yaml
 ---
 action: homematicip_local.set_variable_value
 data:
-  entity_id: sesnsor.ccu2
-  name: Variablename
-  value: "3"
+  entity_id: sensor.ccu2
+  name: Variable name
+  value: true
 ```
 
 ### Sample for set_device_value
@@ -1028,13 +1030,25 @@ The following blueprints can be used to simplify the usage of HomeMatic and Home
 - [Reactivate device by model](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_device_by_model.yaml). Reactivate unavailable devices by device model.
 - [Reactivate every device](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_device_full.yaml). Reactivate all unavailable devices. NOT recommended. Usage of `by device type` or `single device` should be preferred.
 - [Reactivate single device](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_single_device.yaml) Reactivate a single unavailable device.
-- [Show device errors](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml) Show all error eventy emitted by a device. This is an unfiltered blueprint. More filters should be added to the trigger.
+- [Show device errors](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml) Show all error events emitted by a device. This is an unfiltered blueprint. More filters should be added to the trigger.
 
 Feel free to contribute:
 
 - [Community blueprints](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/community)
 
-These blueprints on my own system and share them with you, but I don't want to investigate in blueprints for devices, that I don't own!
-Feel free to copy, improve or enhance these blueprints and adopt them to other devices, and if you like create a PR with a new blueprint.
+I use these blueprints on my own system and share them with you, but I don't want to invest in blueprints for devices that I don't own!
+Feel free to copy, improve, or enhance these blueprints and adapt them to other devices, and if you like, create a PR with a new blueprint.
 
 Just copy these files to "your ha-config_dir"/blueprints/automation
+
+
+## Support and Contributing
+
+- Issues: https://github.com/sukramj/hahomematic/issues
+- Discussions: https://github.com/sukramj/hahomematic/discussions
+- Wiki contributions are welcome: https://github.com/sukramj/hahomematic/wiki
+- Pull requests are welcome in this repository. Please open an issue or discussion first if you plan larger changes.
+
+## License
+
+This project is licensed under the MIT License. See LICENSE for details: https://github.com/sukramj/custom_homematic/blob/master/LICENSE
