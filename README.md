@@ -15,6 +15,15 @@ Quick start:
 
 Please support the community by adding more valuable information to the wiki.
 
+## At a glance
+
+- Local Home Assistant integration for HomeMatic and Homematic IP hubs (CCU2/3, RaspberryMatic, Debmatic, Homegear). No cloud required.
+- Communication: Local XML-RPC for control and push state updates; JSON-RPC for names and rooms.
+- Installation: HACS recommended; manual installation supported.
+- Auto-discovery: Supported for CCU and compatible hubs.
+- Minimum requirements: Home Assistant 2025.8.0+; for Homematic IP on CCU require at least CCU2 2.53.27 / CCU3 3.53.26.
+- Useful links: [Installation guide](https://github.com/sukramj/custom_homematic/wiki/Installation), [Wiki](https://github.com/sukramj/hahomematic/wiki), [Issues](https://github.com/sukramj/hahomematic/issues), [Discussions](https://github.com/sukramj/hahomematic/discussions), [Changelog](https://github.com/sukramj/custom_homematic/blob/master/changelog.md).
+
 ## Table of contents
 - [Issues and discussions](#issues-and-discussions)
 - [Documentation](#documentation)
@@ -287,7 +296,8 @@ mqtt_prefix:
     Required, if CCU-Jack uses and MQTT-Bridge
   type: string
   default: '' 
-un_ignore: (Only visible when reconfiguring the integration)
+un_ignore:
+  # Only visible when reconfiguring the integration
   description: Add additional datapoints/parameters to your instance. See Unignore device parameters
   type: select
 enable_sub_devices:
