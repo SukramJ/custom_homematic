@@ -1,26 +1,28 @@
 # Homematic(IP) local
 ![GitHub Release](https://img.shields.io/github/v/release/SukramJ/custom_homematic?style=for-the-badge)
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)
-![Maintenance](https://img.shields.io/maintenance/SukramJ/2025?style=for-the-badge)
+![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)
 
 
 Homematic(IP) [Integration for Home Assistant](https://www.home-assistant.io/getting-started/concepts-terminology/#integrations)
 
-[Installation](https://github.com/sukramj/custom_homematic/wiki/Installation)
+Quick start:
+- Installation guide: https://github.com/sukramj/custom_homematic/wiki/Installation
+- Alternative installation by J. Maus (RaspberryMatic): https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration
+- Wiki (additional information): https://github.com/sukramj/hahomematic/wiki
+- Changelog: https://github.com/sukramj/custom_homematic/blob/master/changelog.md
+- License: https://github.com/sukramj/custom_homematic/blob/master/LICENSE
 
-[Alternative Installation by J. Maus](https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration)
-
-[Wiki with additional information](https://github.com/sukramj/hahomematic/wiki)
 Please support the community by adding more valuable information to the wiki.
 
-# ISSUES and DISCUSSIONS
+## Issues and discussions
 
 Please report issues in [hahomematic repo](https://github.com/sukramj/hahomematic/issues).
 New discussions can be started and found in [hahomematic repo](https://github.com/sukramj/hahomematic/discussions).
 Feature requests can be added as a discussion too.
 A good practice is to search in issues and discussions before starting a new one.
 
-# Documentation
+## Documentation
 
 The [HomeMatic](https://www.homematic.com/) integration provides bi-directional communication with your HomeMatic hub (CCU, Homegear etc.).
 It uses an XML-RPC connection to set values on devices and subscribes to receive events the devices and the CCU emit.
@@ -480,14 +482,14 @@ Relevant rules for modifying a schedule:
 
 ### `homematicip_local.set_schedule_simple_profile`
 
-__Disclaimer: To much writing to the device could kill your device's storage.__
+__Disclaimer: Too much writing to the device could kill your device's storage.__
 
 Sends the schedule of a climate profile to a device.
 This is a simplified version of `homematicip_local.set_schedule_profile` 
 
 ### `homematicip_local.set_schedule_simple_profile_weekday`
 
-__Disclaimer: To much writing to the device could kill your device's storage.__
+__Disclaimer: Too much writing to the device could kill your device's storage.__
 
 Sends the schedule of a climate profile for a certain weekday to a device.
 This is a simplified version of `homematicip_local.set_schedule_profile_weekday` 
