@@ -1,7 +1,6 @@
 # Homematic(IP) local
 ![GitHub Release](https://img.shields.io/github/v/release/SukramJ/custom_homematic?style=for-the-badge)
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)
-[![hacs_downloads](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)](https://github.com/SukramJ/custom_homematic/releases/latest)
 ![Maintenance](https://img.shields.io/maintenance/SukramJ/2025?style=for-the-badge)
 
 
@@ -16,8 +15,8 @@ Please support the community by adding more valuable information to the wiki.
 
 # ISSUES and DISCUSSIONS
 
-Please report issues in [hahomamatic repo](https://github.com/sukramj/hahomematic/issues).
-New discussions can be started and found in [hahomamatic repo](https://github.com/sukramj/hahomematic/discussions).
+Please report issues in [hahomematic repo](https://github.com/sukramj/hahomematic/issues).
+New discussions can be started and found in [hahomematic repo](https://github.com/sukramj/hahomematic/discussions).
 Feature requests can be added as a discussion too.
 A good practice is to search in issues and discussions before starting a new one.
 
@@ -55,7 +54,7 @@ This integration can be used with any CCU-compatible HomeMatic hub that exposes 
 - Homegear
 - Home Assistant OS / Supervised with a suitable add-on + communication device
 
-Due to a bug in previous version of the CCU2 / CCU3, this integration requires at least the following version for usage with homematic IP devices:
+Due to a bug in previous versions of the CCU2 / CCU3, this integration requires at least the following version for usage with Homematic IP devices:
 
 - CCU2: 2.53.27
 - CCU3: 3.53.26
@@ -72,25 +71,25 @@ To allow communication to your HomeMatic hub, a few ports on the hub have to be 
 
 Advanced setups might consider this:
 
-This integration starts a local XmLRPC server within HA, which automatically selects a free port or uses the optionally defined callback port.
+This integration starts a local XML-RPC server within HA, which automatically selects a free port or uses the optionally defined callback port.
 This means that the CCU must be able to start a new connection to the system running HA and to the port. So check the firewall of the system running HA (host/VM) to allow communication from the CCU. This Traffic (state updates) is always unencrypted.
 If running HA on docker it is recommended to use `network_mode: host`, or specify [callback host/port](https://github.com/sukramj/custom_homematic#callback_host-and-callback_port).
 
 ### Authentication
 
 This integration always passes credentials to the HomeMatic hub when connecting.
-For CCU and descendants (RaspberryMatic, debmatic) it is **recommended** to enable authentication for XmlRPC communication (Settings/Control panel/Security/Authentication). JsonRPC communication ia always authenticated.
+For CCU and descendants (RaspberryMatic, debmatic) it is **recommended** to enable authentication for XML-RPC communication (Settings/Control panel/Security/Authentication). JSON-RPC communication is always authenticated.
 
 The account used for communication is **required** to have admin privileges on your HomeMatic hub.
 It is important to note though, that special characters within your credentials may break the possibility to authenticate.
 Allowed characters for a CCU password are: `A-Z`, `a-z`, `0-9` and `.!$():;#-`.
-The CCU WebUI also supports `ÄäÖöÜüß`, but these characters are not supported by the XmlRPC servers.
+The CCU WebUI also supports `ÄäÖöÜüß`, but these characters are not supported by the XML-RPC servers.
 
 If you are using Homegear and have not set up authentication, please enter dummy-data to complete the configuration flow.
 
 # Configuration
 
-Adding Homematic(IP) Local to you Home Assistant instance can be done via the user interface, by using this My button: [ADD INTEGRATION](https://my.home-assistant.io/redirect/config_flow_start?domain=homematicip_local)
+Adding Homematic(IP) Local to your Home Assistant instance can be done via the user interface, by using this My button: [ADD INTEGRATION](https://my.home-assistant.io/redirect/config_flow_start?domain=homematicip_local)
 
 ## Manual configuration steps
 
@@ -99,13 +98,13 @@ Adding Homematic(IP) Local to you Home Assistant instance can be done via the us
 - From the configuration menu select: [Integrations](https://my.home-assistant.io/redirect/integrations)
 - In the bottom right, click on the [Add Integration](https://my.home-assistant.io/redirect/config_flow_start?domain=homematicip_local) button.
 - From the list, search and select "Homematic(IP) Local".
-- Follow the instruction on screen to complete the set up.
+- Follow the instructions on screen to complete the setup.
 
 ## Auto-discovery
 
-The integration supports auto-discovery for the CCU and compatible hubs like RaspberryMatic. The Home Assistant User Interface will notify you about the integrationg being available for setup. It will pre-fill the instance-name and IP address of your Homematic hub. If you have already set up the integration manually, you can either click the _Ignore_ button or re-configure your existing instance to let Home Assistant know the existing instance is the one it has detected. After re-configuring your instance a HA restart is required.
+The integration supports auto-discovery for the CCU and compatible hubs like RaspberryMatic. The Home Assistant User Interface will notify you about the integration being available for setup. It will pre-fill the instance-name and IP address of your Homematic hub. If you have already set up the integration manually, you can either click the _Ignore_ button or re-configure your existing instance to let Home Assistant know the existing instance is the one it has detected. After re-configuring your instance a HA restart is required.
 
-Autodiscovery uses the last 10-digits of your rf-module's serial to uniquely identify your CCU, but there are rare cases, where the CCU API and the UPNP-Message contains/returns different values. In these cases, where the auto-discovered instance does not disappear after a HA restart, just click on the _Ignore_ button.
+Autodiscovery uses the last 10 digits of your rf-module's serial to uniquely identify your CCU, but there are rare cases where the CCU API and the UPNP-Message contains/returns different values. In these cases, where the auto-discovered instance does not disappear after a HA restart, just click on the _Ignore_ button.
 Known cases are in combination with the rf-module `HM-MOD-RPI-PCB`.
 
 ### Configuration Variables
@@ -289,7 +288,7 @@ The types of system variables in the CCU are:
 - _alert_ (Alarm)
 
 System variables have a description that can be added in the CCU's UI.
-If you add the marker `HAHM` (before 1.76.0 it was `hahm`)to the description extended features for this system variable can be used in HA.
+If you add the marker `HAHM` (before 1.76.0 it was `hahm`) to the description extended features for this system variable can be used in HA.
 This `HAHM` marker is used to control the entity creation in HA.
 Switching system variables from DEFAULT -> EXTENDED or EXTENDED -> DEFAULT requires a restart of HA or a reload of the integration.
 
@@ -347,13 +346,13 @@ Creates a central link from a device to the backend. This is required for rf-dev
 
 ### `homematicip_local.copy_schedule`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Copy the schedule of a climate device to another device
 
 ### `homematicip_local.copy_schedule_profile`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Copy the schedule profile of a climate device to another/the same device
 
@@ -421,13 +420,13 @@ Returns the schedule of a climate profile for a certain weekday.
 
 ### `homematicip_local.put_paramset`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Call to `putParamset` on the XML-RPC interface.
 
 ### `homematicip_local.put_link_paramset`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Call to `putParamset` for direct connections on the XML-RPC interface.
 
@@ -446,13 +445,13 @@ Move a blind to a specific position and tilt position.
 
 ### `homematicip_local.set_device_value`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Set a device parameter via the XML-RPC interface. Preferred when using the UI. Works with device selection.
 
 ### `homematicip_local.set_schedule_profile`
 
-__Disclaimer: To much writing to the device could kill your device's storage.__
+__Disclaimer: Too much writing to the device could kill your device's storage.__
 
 Sends the schedule of a climate profile to a device.
 
@@ -462,7 +461,7 @@ Relevant rules for modifying a schedule:
 
 ### `homematicip_local.set_schedule_profile_weekday`
 
-__Disclaimer: To much writing to the device could kill your device's storage.__
+__Disclaimer: Too much writing to the device could kill your device's storage.__
 
 Sends the schedule of a climate profile for a certain weekday to a device.
 See the [sample](#sample-for-set_schedule_profile_weekday) below
