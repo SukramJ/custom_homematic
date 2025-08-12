@@ -1,27 +1,61 @@
-# Homematic(IP) local
+# Homematic(IP) Local
 ![GitHub Release](https://img.shields.io/github/v/release/SukramJ/custom_homematic?style=for-the-badge)
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)
-[![hacs_downloads](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)](https://github.com/SukramJ/custom_homematic/releases/latest)
-![Maintenance](https://img.shields.io/maintenance/SukramJ/2025?style=for-the-badge)
+![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)
 
 
 Homematic(IP) [Integration for Home Assistant](https://www.home-assistant.io/getting-started/concepts-terminology/#integrations)
 
-[Installation](https://github.com/sukramj/custom_homematic/wiki/Installation)
+Quick start:
+- Installation guide: https://github.com/sukramj/custom_homematic/wiki/Installation
+- Alternative installation by J. Maus (RaspberryMatic): https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration
+- Wiki (additional information): https://github.com/sukramj/hahomematic/wiki
+- Changelog: https://github.com/sukramj/custom_homematic/blob/master/changelog.md
+- License: https://github.com/sukramj/custom_homematic/blob/master/LICENSE
 
-[Alternative Installation by J. Maus](https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration)
-
-[Wiki with additional information](https://github.com/sukramj/hahomematic/wiki)
 Please support the community by adding more valuable information to the wiki.
 
-# ISSUES and DISCUSSIONS
+## At a glance
 
-Please report issues in [hahomamatic repo](https://github.com/sukramj/hahomematic/issues).
-New discussions can be started and found in [hahomamatic repo](https://github.com/sukramj/hahomematic/discussions).
+- Local Home Assistant integration for HomeMatic and Homematic IP hubs (CCU2/3, RaspberryMatic, Debmatic, Homegear). No cloud required.
+- Communication: Local XML-RPC for control and push state updates; JSON-RPC for names and rooms.
+- Installation: HACS recommended; manual installation supported.
+- Auto-discovery: Supported for CCU and compatible hubs.
+- Minimum requirements: Home Assistant 2025.8.0+; for Homematic IP on CCU require at least CCU2 2.53.27 / CCU3 3.53.26.
+- Useful links: [Installation guide](https://github.com/sukramj/custom_homematic/wiki/Installation), [Wiki](https://github.com/sukramj/hahomematic/wiki), [Issues](https://github.com/sukramj/hahomematic/issues), [Discussions](https://github.com/sukramj/hahomematic/discussions), [Changelog](https://github.com/sukramj/custom_homematic/blob/master/changelog.md).
+
+## Table of contents
+- [Issues and discussions](#issues-and-discussions)
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Device support](#device-support)
+- [Requirements](#requirements)
+- [Configuration](#configuration)
+  - [Manual configuration steps](#manual-configuration-steps)
+  - [Auto-discovery](#auto-discovery)
+  - [Configuration Variables](#configuration-variables)
+- [System variables](#system-variables)
+- [Actions](#actions)
+- [Events](#events)
+- [Additional information](#additional-information)
+- [Updating a device firmware](#updating-a-device-firmware)
+- [CUxD, CCU-Jack and MQTT support](#cuxd-ccu-jack-and-mqtt-support)
+- [CUxD and CCU-Jack device support](#cuxd-and-ccu-jack-device-support)
+- [Troubleshooting](#troubleshooting)
+- [Frequently asked questions](#frequently-asked-questions)
+- [Examples in YAML](#examples-in-yaml)
+- [Available Blueprints](#available-blueprints)
+- [Support and Contributing](#support-and-contributing)
+- [License](#license)
+
+## Issues and discussions
+
+Please report issues in [hahomematic repo](https://github.com/sukramj/hahomematic/issues).
+New discussions can be started and found in [hahomematic repo](https://github.com/sukramj/hahomematic/discussions).
 Feature requests can be added as a discussion too.
 A good practice is to search in issues and discussions before starting a new one.
 
-# Documentation
+## Documentation
 
 The [HomeMatic](https://www.homematic.com/) integration provides bi-directional communication with your HomeMatic hub (CCU, Homegear etc.).
 It uses an XML-RPC connection to set values on devices and subscribes to receive events the devices and the CCU emit.
@@ -29,6 +63,20 @@ You can configure this integration multiple times if you want to integrate multi
 If you are using Homegear with paired [Intertechno](https://intertechno.at/) devices, uni-directional communication is possible as well.
 
 **Please take the time to read the entire documentation before asking for help. It will answer the most common questions that come up while working with this integration.**
+
+## Installation
+
+Recommended: HACS
+- In Home Assistant, go to HACS > Integrations > Explore & Download Repositories.
+- Search for "Homematic(IP) Local" and install it.
+- Restart Home Assistant when prompted.
+- If you do not see it, add this repository as a custom repository in HACS (Category: Integration): https://github.com/SukramJ/custom_homematic, then install.
+
+Manual installation
+- Copy the directory custom_components/homematicip_local from this repository to your Home Assistant config/custom_components directory.
+- Restart Home Assistant.
+
+After installation, proceed with configuration below via the Add Integration flow.
 
 ## Device support
 
@@ -55,7 +103,7 @@ This integration can be used with any CCU-compatible HomeMatic hub that exposes 
 - Homegear
 - Home Assistant OS / Supervised with a suitable add-on + communication device
 
-Due to a bug in previous version of the CCU2 / CCU3, this integration requires at least the following version for usage with homematic IP devices:
+Due to a bug in previous versions of the CCU2 / CCU3, this integration requires at least the following version for usage with Homematic IP devices:
 
 - CCU2: 2.53.27
 - CCU3: 3.53.26
@@ -72,25 +120,25 @@ To allow communication to your HomeMatic hub, a few ports on the hub have to be 
 
 Advanced setups might consider this:
 
-This integration starts a local XmLRPC server within HA, which automatically selects a free port or uses the optionally defined callback port.
+This integration starts a local XML-RPC server within HA, which automatically selects a free port or uses the optionally defined callback port.
 This means that the CCU must be able to start a new connection to the system running HA and to the port. So check the firewall of the system running HA (host/VM) to allow communication from the CCU. This Traffic (state updates) is always unencrypted.
-If running HA on docker it is recommended to use `network_mode: host`, or specify [callback host/port](https://github.com/sukramj/custom_homematic#callback_host-and-callback_port).
+If running HA on docker it is recommended to use `network_mode: host`, or specify the callback_host and callback_port parameters (see [Configuration Variables](#configuration-variables)).
 
 ### Authentication
 
 This integration always passes credentials to the HomeMatic hub when connecting.
-For CCU and descendants (RaspberryMatic, debmatic) it is **recommended** to enable authentication for XmlRPC communication (Settings/Control panel/Security/Authentication). JsonRPC communication ia always authenticated.
+For CCU and descendants (RaspberryMatic, debmatic) it is **recommended** to enable authentication for XML-RPC communication (Settings/Control panel/Security/Authentication). JSON-RPC communication is always authenticated.
 
 The account used for communication is **required** to have admin privileges on your HomeMatic hub.
 It is important to note though, that special characters within your credentials may break the possibility to authenticate.
 Allowed characters for a CCU password are: `A-Z`, `a-z`, `0-9` and `.!$():;#-`.
-The CCU WebUI also supports `ÄäÖöÜüß`, but these characters are not supported by the XmlRPC servers.
+The CCU WebUI also supports `ÄäÖöÜüß`, but these characters are not supported by the XML-RPC servers.
 
 If you are using Homegear and have not set up authentication, please enter dummy-data to complete the configuration flow.
 
 # Configuration
 
-Adding Homematic(IP) Local to you Home Assistant instance can be done via the user interface, by using this My button: [ADD INTEGRATION](https://my.home-assistant.io/redirect/config_flow_start?domain=homematicip_local)
+Adding Homematic(IP) Local to your Home Assistant instance can be done via the user interface, by using this My button: [ADD INTEGRATION](https://my.home-assistant.io/redirect/config_flow_start?domain=homematicip_local)
 
 ## Manual configuration steps
 
@@ -99,13 +147,13 @@ Adding Homematic(IP) Local to you Home Assistant instance can be done via the us
 - From the configuration menu select: [Integrations](https://my.home-assistant.io/redirect/integrations)
 - In the bottom right, click on the [Add Integration](https://my.home-assistant.io/redirect/config_flow_start?domain=homematicip_local) button.
 - From the list, search and select "Homematic(IP) Local".
-- Follow the instruction on screen to complete the set up.
+- Follow the instructions on screen to complete the setup.
 
 ## Auto-discovery
 
-The integration supports auto-discovery for the CCU and compatible hubs like RaspberryMatic. The Home Assistant User Interface will notify you about the integrationg being available for setup. It will pre-fill the instance-name and IP address of your Homematic hub. If you have already set up the integration manually, you can either click the _Ignore_ button or re-configure your existing instance to let Home Assistant know the existing instance is the one it has detected. After re-configuring your instance a HA restart is required.
+The integration supports auto-discovery for the CCU and compatible hubs like RaspberryMatic. The Home Assistant User Interface will notify you about the integration being available for setup. It will pre-fill the instance-name and IP address of your Homematic hub. If you have already set up the integration manually, you can either click the _Ignore_ button or re-configure your existing instance to let Home Assistant know the existing instance is the one it has detected. After re-configuring your instance a HA restart is required.
 
-Autodiscovery uses the last 10-digits of your rf-module's serial to uniquely identify your CCU, but there are rare cases, where the CCU API and the UPNP-Message contains/returns different values. In these cases, where the auto-discovered instance does not disappear after a HA restart, just click on the _Ignore_ button.
+Autodiscovery uses the last 10 digits of your rf-module's serial to uniquely identify your CCU, but there are rare cases where the CCU API and the UPNP-Message contains/returns different values. In these cases, where the auto-discovered instance does not disappear after a HA restart, just click on the _Ignore_ button.
 Known cases are in combination with the rf-module `HM-MOD-RPI-PCB`.
 
 ### Configuration Variables
@@ -154,18 +202,18 @@ This page always displays the default values, also when reconfiguring the integr
 
 ```yaml
 hmip_rf_enabled:
-  description: Enable support for HomematicIP (wiredless and wired) devices.
+  description: Enable support for HomematicIP (wireless and wired) devices.
   type: boolean
   default: false
 hmip_rf_port:
   description: Port for HomematicIP (wireless and wired).
   type: integer
   default: 2010
-bidos_rf_enabled:
+bidcos_rf_enabled:
   description: Enable support for BidCos (HomeMatic wireless) devices.
   type: boolean
   default: false
-bidos_rf_port:
+bidcos_rf_port:
   description: Port for BidCos (HomeMatic wireless).
   type: integer
   default: 2001
@@ -248,7 +296,8 @@ mqtt_prefix:
     Required, if CCU-Jack uses and MQTT-Bridge
   type: string
   default: '' 
-un_ignore: (Only visible when reconfiguring the integration)
+un_ignore:
+  # Only visible when reconfiguring the integration
   description: Add additional datapoints/parameters to your instance. See Unignore device parameters
   type: select
 enable_sub_devices:
@@ -289,7 +338,7 @@ The types of system variables in the CCU are:
 - _alert_ (Alarm)
 
 System variables have a description that can be added in the CCU's UI.
-If you add the marker `HAHM` (before 1.76.0 it was `hahm`)to the description extended features for this system variable can be used in HA.
+If you add the marker `HAHM` (before 1.76.0 it was `hahm`) to the description extended features for this system variable can be used in HA.
 This `HAHM` marker is used to control the entity creation in HA.
 Switching system variables from DEFAULT -> EXTENDED or EXTENDED -> DEFAULT requires a restart of HA or a reload of the integration.
 
@@ -347,13 +396,13 @@ Creates a central link from a device to the backend. This is required for rf-dev
 
 ### `homematicip_local.copy_schedule`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Copy the schedule of a climate device to another device
 
 ### `homematicip_local.copy_schedule_profile`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Copy the schedule profile of a climate device to another/the same device
 
@@ -421,13 +470,13 @@ Returns the schedule of a climate profile for a certain weekday.
 
 ### `homematicip_local.put_paramset`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Call to `putParamset` on the XML-RPC interface.
 
 ### `homematicip_local.put_link_paramset`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Call to `putParamset` for direct connections on the XML-RPC interface.
 
@@ -446,13 +495,13 @@ Move a blind to a specific position and tilt position.
 
 ### `homematicip_local.set_device_value`
 
-__Disclaimer: To much writing to the device MASTER paramset could kill your device's storage.__
+__Disclaimer: Too much writing to the device MASTER paramset could kill your device's storage.__
 
 Set a device parameter via the XML-RPC interface. Preferred when using the UI. Works with device selection.
 
 ### `homematicip_local.set_schedule_profile`
 
-__Disclaimer: To much writing to the device could kill your device's storage.__
+__Disclaimer: Too much writing to the device could kill your device's storage.__
 
 Sends the schedule of a climate profile to a device.
 
@@ -462,7 +511,7 @@ Relevant rules for modifying a schedule:
 
 ### `homematicip_local.set_schedule_profile_weekday`
 
-__Disclaimer: To much writing to the device could kill your device's storage.__
+__Disclaimer: Too much writing to the device could kill your device's storage.__
 
 Sends the schedule of a climate profile for a certain weekday to a device.
 See the [sample](#sample-for-set_schedule_profile_weekday) below
@@ -481,14 +530,14 @@ Relevant rules for modifying a schedule:
 
 ### `homematicip_local.set_schedule_simple_profile`
 
-__Disclaimer: To much writing to the device could kill your device's storage.__
+__Disclaimer: Too much writing to the device could kill your device's storage.__
 
 Sends the schedule of a climate profile to a device.
 This is a simplified version of `homematicip_local.set_schedule_profile` 
 
 ### `homematicip_local.set_schedule_simple_profile_weekday`
 
-__Disclaimer: To much writing to the device could kill your device's storage.__
+__Disclaimer: Too much writing to the device could kill your device's storage.__
 
 Sends the schedule of a climate profile for a certain weekday to a device.
 This is a simplified version of `homematicip_local.set_schedule_profile_weekday` 
@@ -734,9 +783,9 @@ As soon as the firmware has been successfully transferred to the device, it can 
 
 Depending on whether an update command can be transmitted immediately or with a delay, either the updated firmware version is displayed after a short delay, or `in process`/`installing` is displayed again because a command transmission is being waited for. This state is now updated every **5 minutes** until the installation is finished.
 
-If shorter update cycles are desired, these can be triggered by the action `homeassistant.update_device_firmware_data`, but this might have a negative impact on you CCU!
+If shorter update cycles are desired, these can be triggered by the action `homeassistant.update_device_firmware_data`, but this might have a negative impact on your CCU!
 
-# CUxD , CCU-Jack and MQTT support
+## CUxD, CCU-Jack and MQTT support
 
 CUxD is not natively supported due to a missing Python library for BinRPC.
 The implemented solution for CuXD utilises the JSON-RPC-API (with 15s polling) and an optional setup with MQTT (no polling needed!).
@@ -750,18 +799,30 @@ To enable the optional MQTT support the following requirements must be fulfilled
 Besides from receiving events for CUxD and CCU-Jack devices, the MQTT support also enables push events for CCU system variables, if they are correctly setup for CCU-Jack support. This requires `MQTT` as additional marker in the description.
 
 Important:
-- Please read the [MQTT related HA documentation](https://www.home-assistant.io/integrations/mqtt/) on how to setup MQTT in HA,
-- Please read the [CCU-Jack documentation](https://github.com/mdzio/ccu-jack/wiki) on Howto setup CCU-Jack and an optional [MQTT-Bridge](https://github.com/mdzio/ccu-jack/wiki/MQTT-Bridge)
-- Please use an MQTT-Explorer to ensure there are subscribable topics, and the event come in as expected before opening an issue for this integration.
+- Please read the [MQTT integration documentation](https://www.home-assistant.io/integrations/mqtt/) to set up MQTT in Home Assistant.
+- Please read the [CCU-Jack documentation](https://github.com/mdzio/ccu-jack/wiki) on how to set up CCU-Jack and an optional [MQTT Bridge](https://github.com/mdzio/ccu-jack/wiki/MQTT-Bridge).
+- Please use an MQTT explorer to ensure there are subscribable topics and that events arrive as expected before opening an issue for this integration.
 
 ## CUxD and CCU-Jack device support
 
-CUxD and CCU-Jack use Homematic (IP) device and paramset descriptions to be compatible the CCU.
+CUxD and CCU-Jack use Homematic (IP) device and paramset descriptions to be compatible with the CCU.
 This fact is also used by this integration to integrate CUxD and CCU-Jack. The integration is basically done for the original devices connected to BidCos-RF/-Wired) and HmIP-(Wired), and only their functionality and behaviour is relevant.
 
 If the implementation for CUxD or CCU-Jack differs, no further adjustments will be made in this integration!!!
 In order to adapt the device to your own needs, HA offers extensive options via templates and customization that can be used for this purpose.
 Deviating behavior is acceptable for these devices and does not constitute a fault.
+
+## Troubleshooting
+
+If the integration does not work as expected, try the following before opening an issue:
+- Review Home Assistant logs for entries related to this integration: homematicip_local and hahomematic. Address any errors or warnings shown.
+- Verify required ports are open and reachable between HA and your hub (CCU/RaspberryMatic/Homegear). See Firewall and required ports above.
+- Ensure the CCU user has admin privileges and that your password only contains supported characters (A-Z, a-z, 0-9 and .!$():;#-).
+- When running HA in Docker, prefer network_mode: host. Otherwise, set callback_host and callback_port in the configuration and allow inbound connections from the CCU to that port.
+- If you run multiple HA instances or connect to multiple CCUs, make instance_name unique per HA instance.
+- For persistent auto-discovery entries after setup, click Ignore or reconfigure the existing instance, then restart HA.
+- After updating CCU firmware or changing interfaces, restart Home Assistant and reload the integration.
+- For CUxD/CCU-Jack, ensure MQTT is set up correctly and verify topics/events with an MQTT Explorer before reporting issues.
 
 ## Frequently asked questions
 
@@ -772,9 +833,9 @@ Q: I'm using a button on a remote control as a trigger in an automation, but the
 A: See [Events for Homematic(IP) devices](#events-for-homematicip-devices)
 
 Q: My device is not listed under [Events for Homematic(IP) devices](#events-for-homematicip-devices)<br>
-A: I doesn't matter. These are just examples. If you can press it, it is a button and events are emitted.
+A: It doesn't matter. These are just examples. If you can press it, it is a button and events are emitted.
 
-Q: I have a problem with the integration. What can i do?<br>
+Q: I have a problem with the integration. What can I do?<br>
 A: Before creating an issue, you should review the HA log files for `error` or `warning` entries related to this integration (`homematicip_local`, `hahomematic`) and read the corresponding messages. You can find further information about some messages in this document.
 
 Q: What is the source of OPERATING_VOLTAGE_LEVEL, APPARENT_TEMPERATURE, DEW_POINT, FROST_POINT, VAPOR_CONCENTRATION
@@ -784,15 +845,15 @@ A: These are parameters/sensors, that are [calculated](https://github.com/Sukram
 
 
 ### Sample for set_variable_value
-Set boolean variable to true:
+Set a boolean variable to true:
 
 ```yaml
 ---
 action: homematicip_local.set_variable_value
 data:
-  entity_id: sesnsor.ccu2
-  name: Variablename
-  value: "3"
+  entity_id: sensor.ccu2
+  name: Variable name
+  value: true
 ```
 
 ### Sample for set_device_value
@@ -979,13 +1040,25 @@ The following blueprints can be used to simplify the usage of HomeMatic and Home
 - [Reactivate device by model](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_device_by_model.yaml). Reactivate unavailable devices by device model.
 - [Reactivate every device](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_device_full.yaml). Reactivate all unavailable devices. NOT recommended. Usage of `by device type` or `single device` should be preferred.
 - [Reactivate single device](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_single_device.yaml) Reactivate a single unavailable device.
-- [Show device errors](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml) Show all error eventy emitted by a device. This is an unfiltered blueprint. More filters should be added to the trigger.
+- [Show device errors](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml) Show all error events emitted by a device. This is an unfiltered blueprint. More filters should be added to the trigger.
 
 Feel free to contribute:
 
 - [Community blueprints](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/community)
 
-These blueprints on my own system and share them with you, but I don't want to investigate in blueprints for devices, that I don't own!
-Feel free to copy, improve or enhance these blueprints and adopt them to other devices, and if you like create a PR with a new blueprint.
+I use these blueprints on my own system and share them with you, but I don't want to invest in blueprints for devices that I don't own!
+Feel free to copy, improve, or enhance these blueprints and adapt them to other devices, and if you like, create a PR with a new blueprint.
 
 Just copy these files to "your ha-config_dir"/blueprints/automation
+
+
+## Support and Contributing
+
+- Issues: https://github.com/sukramj/hahomematic/issues
+- Discussions: https://github.com/sukramj/hahomematic/discussions
+- Wiki contributions are welcome: https://github.com/sukramj/hahomematic/wiki
+- Pull requests are welcome in this repository. Please open an issue or discussion first if you plan larger changes.
+
+## License
+
+This project is licensed under the MIT License. See LICENSE for details: https://github.com/sukramj/custom_homematic/blob/master/LICENSE
