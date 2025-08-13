@@ -235,7 +235,7 @@ class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], C
 
     _attr_translation_key = "hmip_climate"
     _enable_turn_on_off_backwards_compatibility: bool = False
-    __no_recored_attributes = HaHomematicGenericEntity.NO_RECORED_ATTRIBUTES
+    __no_recored_attributes = HaHomematicGenericEntity.NO_RECORDED_ATTRIBUTES
     __no_recored_attributes.update({ATTR_OPTIMUM_START_STOP, ATTR_TEMPERATURE_OFFSET})
     _unrecorded_attributes = frozenset(__no_recored_attributes)
 
