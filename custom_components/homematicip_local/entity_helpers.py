@@ -844,7 +844,7 @@ _BINARY_SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, 
 }
 
 
-_BUTTOM_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription] = {
+_BUTTON_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription] = {
     "RESET_MOTION": HmButtonEntityDescription(
         key="RESET_MOTION",
         entity_category=EntityCategory.CONFIG,
@@ -934,7 +934,7 @@ _ENTITY_DESCRIPTION_BY_DEVICE: Mapping[DataPointCategory, Mapping[str | tuple[st
 
 _ENTITY_DESCRIPTION_BY_PARAM: Mapping[DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]] = {
     DataPointCategory.BINARY_SENSOR: _BINARY_SENSOR_DESCRIPTIONS_BY_PARAM,
-    DataPointCategory.BUTTON: _BUTTOM_DESCRIPTIONS_BY_PARAM,
+    DataPointCategory.BUTTON: _BUTTON_DESCRIPTIONS_BY_PARAM,
     DataPointCategory.NUMBER: _NUMBER_DESCRIPTIONS_BY_PARAM,
     DataPointCategory.SELECT: _SELECT_DESCRIPTIONS_BY_PARAM,
     DataPointCategory.SENSOR: _SENSOR_DESCRIPTIONS_BY_PARAM,
