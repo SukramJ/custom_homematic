@@ -1,4 +1,4 @@
-"""Generic entity for the HomematicIP Cloud component."""
+"""Generic entity for the Homematic(IP) Local component."""
 
 from __future__ import annotations
 
@@ -42,7 +42,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
     _attr_has_entity_name = True
     _attr_should_poll = False
 
-    NO_RECORED_ATTRIBUTES = {
+    NO_RECORDED_ATTRIBUTES = {
         ATTR_ADDRESS,
         ATTR_FUNCTION,
         ATTR_INTERFACE_ID,
@@ -51,7 +51,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         ATTR_VALUE_STATE,
     }
 
-    _unrecorded_attributes = frozenset(NO_RECORED_ATTRIBUTES)
+    _unrecorded_attributes = frozenset(NO_RECORDED_ATTRIBUTES)
 
     def __init__(
         self,
@@ -211,7 +211,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 if channel_group_master.name.isnumeric()
                 else channel_group_master.name
                 if channel_group_master.name
-                else f"{hm_device.name}-{channel_group_master.no}"
+                else f"{hm_device.name}-{channel_group_master.group_no}"
             )
         return hm_device.name
 
@@ -345,13 +345,13 @@ class HaHomematicGenericHubEntity(Entity):
     _attr_has_entity_name = True
     _attr_should_poll = False
 
-    NO_RECORED_ATTRIBUTES = {
+    NO_RECORDED_ATTRIBUTES = {
         ATTR_DESCRIPTION,
         ATTR_NAME,
         ATTR_VALUE_STATE,
     }
 
-    _unrecorded_attributes = frozenset(NO_RECORED_ATTRIBUTES)
+    _unrecorded_attributes = frozenset(NO_RECORDED_ATTRIBUTES)
 
     def __init__(
         self,
