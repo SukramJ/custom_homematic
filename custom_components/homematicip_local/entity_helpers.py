@@ -1007,7 +1007,7 @@ def get_name_and_translation_key(
     if entity_desc.translation_key:
         return name, entity_desc.translation_key
 
-    if isinstance(data_point, CalculatedDataPoint | GenericDataPoint):
+    if isinstance(data_point, (CalculatedDataPoint, GenericDataPoint)):
         if isinstance(entity_desc, HmEntityDescription):
             if entity_desc.name_source == HmNameSource.ENTITY_NAME:
                 return name, name.lower()
@@ -1023,7 +1023,7 @@ def _find_entity_description(
     data_point: HmGenericDataPoint | GenericHubDataPoint | CustomDataPoint,
 ) -> EntityDescription | None:
     """Find the entity_description for platform."""
-    if isinstance(data_point, CalculatedDataPoint | GenericDataPoint):
+    if isinstance(data_point, (CalculatedDataPoint, GenericDataPoint)):
         if entity_desc := _get_entity_description_by_model_and_param(data_point=data_point):
             return entity_desc
 
