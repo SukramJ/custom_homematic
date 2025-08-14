@@ -1,17 +1,17 @@
 # Homematic(IP) Local
-![GitHub Release](https://img.shields.io/github/v/release/SukramJ/custom_homematic?style=for-the-badge)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/custom_homematic/latest/total?style=for-the-badge)
+![GitHub Release](https://img.shields.io/github/v/release/SukramJ/homematicip_local?style=for-the-badge)
+![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/homematicip_local/latest/total?style=for-the-badge)
 ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)
 
 
 Homematic(IP) [Integration for Home Assistant](https://www.home-assistant.io/getting-started/concepts-terminology/#integrations)
 
 Quick start:
-- Installation guide: https://github.com/sukramj/custom_homematic/wiki/Installation
+- Installation guide: https://github.com/sukramj/homematicip_local/wiki/Installation
 - Alternative installation by J. Maus (RaspberryMatic): https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration
 - Wiki (additional information): https://github.com/sukramj/aiohomematic/wiki
-- Changelog: https://github.com/sukramj/custom_homematic/blob/master/changelog.md
-- License: https://github.com/sukramj/custom_homematic/blob/master/LICENSE
+- Changelog: https://github.com/sukramj/homematicip_local/blob/master/changelog.md
+- License: https://github.com/sukramj/homematicip_local/blob/master/LICENSE
 
 Please support the community by adding more valuable information to the wiki.
 
@@ -22,7 +22,7 @@ Please support the community by adding more valuable information to the wiki.
 - Installation: HACS recommended; manual installation supported.
 - Auto-discovery: Supported for CCU and compatible hubs.
 - Minimum requirements: Home Assistant 2025.8.0+; for Homematic IP on CCU require at least CCU2 2.53.27 / CCU3 3.53.26.
-- Useful links: [Installation guide](https://github.com/sukramj/custom_homematic/wiki/Installation), [Wiki](https://github.com/sukramj/aiohomematic/wiki), [Issues](https://github.com/sukramj/aiohomematic/issues), [Discussions](https://github.com/sukramj/aiohomematic/discussions), [Changelog](https://github.com/sukramj/custom_homematic/blob/master/changelog.md).
+- Useful links: [Installation guide](https://github.com/sukramj/homematicip_local/wiki/Installation), [Wiki](https://github.com/sukramj/aiohomematic/wiki), [Issues](https://github.com/sukramj/aiohomematic/issues), [Discussions](https://github.com/sukramj/aiohomematic/discussions), [Changelog](https://github.com/sukramj/homematicip_local/blob/master/changelog.md).
 
 ## Table of contents
 - [Issues and discussions](#issues-and-discussions)
@@ -70,7 +70,7 @@ Recommended: HACS
 - In Home Assistant, go to HACS > Integrations > Explore & Download Repositories.
 - Search for "Homematic(IP) Local" and install it.
 - Restart Home Assistant when prompted.
-- If you do not see it, add this repository as a custom repository in HACS (Category: Integration): https://github.com/SukramJ/custom_homematic, then install.
+- If you do not see it, add this repository as a custom repository in HACS (Category: Integration): https://github.com/SukramJ/homematicip_local, then install.
 
 Manual installation
 - Copy the directory custom_components/homematicip_local from this repository to your Home Assistant config/custom_components directory.
@@ -327,7 +327,7 @@ These two options are required for _special_ network environments. If for exampl
 
 System variables are fetched every 30 seconds from backend (CCU/Homegear) and belong to a device of type CCU. You could also click on action on the integration's overview in HA.
 
-System variables are initially created as **[deactivated](https://github.com/sukramj/custom_homematic#deactivated-entities)** entity.
+System variables are initially created as **[deactivated](https://github.com/sukramj/homematicip_local#deactivated-entities)** entity.
 
 The types of system variables in the CCU are:
 
@@ -392,7 +392,7 @@ Clears the cache for a central unit from Home Assistant. Requires a restart.
 ### `homematicip_local.create_central_links`
 
 Creates a central link from a device to the backend. This is required for rf-devices to enable button-press events.
-[See](https://github.com/sukramj/custom_homematic?tab=readme-ov-file#events-for-homematicip-devices)
+[See](https://github.com/sukramj/homematicip_local?tab=readme-ov-file#events-for-homematicip-devices)
 
 ### `homematicip_local.copy_schedule`
 
@@ -581,7 +581,7 @@ Attention: This action gets the value for the entity via a 'getValue' from the b
 
 ### `homeassistant.update_device_firmware_data`
 
-Update the firmware data for all devices. For more information see [updating the firmware](https://github.com/sukramj/custom_homematic#updating-the-firmware)
+Update the firmware data for all devices. For more information see [updating the firmware](https://github.com/sukramj/homematicip_local#updating-the-firmware)
 
 ## Events
 
@@ -592,21 +592,21 @@ Events fired by this integration that can be consumed by users.
 This event type is used when a key is pressed on a device,
 and can be used with device triggers or event entities in automation, so manual event listening is not necessary.
 
-In this context, the following must also be observed: [Events for Homematic(IP) devices](https://github.com/sukramj/custom_homematic#events-for-homematicip-devices)
+In this context, the following must also be observed: [Events for Homematic(IP) devices](https://github.com/sukramj/homematicip_local#events-for-homematicip-devices)
 
 The `PRESS*` parameters are evaluated for this event type in the backend.
 
 ### `homematic.device_availability`
 
 This event type is used when a device is no longer available or is available again,
-and can be used with the blueprint [Support for persistent notifications for unavailable devices](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_persistent_notification.yaml).
+and can be used with the blueprint [Support for persistent notifications for unavailable devices](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local_persistent_notification.yaml).
 
 The `UNREACH` parameter is evaluated for this event type in the backend.
 
 ### `homematic.device_error`
 
 This event type is used when a device is in an error state.
-A sample usage is shown in the blueprint [Show device errors](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml).
+A sample usage is shown in the blueprint [Show device errors](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml).
 
 The `ERROR*` parameters are evaluated for this event type in the backend.
 
@@ -706,7 +706,7 @@ If a device's channels are assigned to multiple rooms or nothing is set, the are
 
 Not all parameters of a HomeMatic or HomematicIP device are created as entity. These parameters are filtered out to provide a better user experience for the majority of the users. If you need more parameters as entities have a look at [this](https://github.com/sukramj/aiohomematic/blob/devel/docs/unignore.md) description. Starting with version 1.65.0 this can be configured in the reconfiguration flow under advanced options. You use this at your own risk!!!
 
-BUT remember: Some parameters are already created as entities, but are **[deactivated](https://github.com/sukramj/custom_homematic#deactivated-entities)**.
+BUT remember: Some parameters are already created as entities, but are **[deactivated](https://github.com/sukramj/homematicip_local#deactivated-entities)**.
 
 ### Devices with buttons
 
@@ -723,7 +723,7 @@ See this [explanation](https://github.com/sukramj/aiohomematic/blob/devel/docs/r
 The `LEVEL` parameter of the HmIP-eTRV can be written, i.e. this parameter is created as a **number** entity and the valve can be moved to any position.
 However, this **manual position** is reversed shortly thereafter by the device's internal control logic, causing the valve to return to its original position almost immediately. Since the internal control logic of the device can neither be bypassed nor deactivated, manual control of the valve opening degree is not useful. The `LEVEL` parameter is therefore created as a sensor, and thus also supports long-term statistics.
 
-If you need the `LEVEL` parameter as number entity, then this can be done by using the [unignore](https://github.com/sukramj/custom_homematic#unignore-device-parameters) feature by adding LEVEL to the file.
+If you need the `LEVEL` parameter as number entity, then this can be done by using the [unignore](https://github.com/sukramj/homematicip_local#unignore-device-parameters) feature by adding LEVEL to the file.
 
 ### Pressing buttons via automation
 
@@ -744,9 +744,9 @@ data:
 To receive button-press events for Homematic(IP) devices like WRC2 / WRC6 (wall switch) or SPDR (passage sensor) or the KRC4 (key ring remote control) or HM-PBI-4-FM (radio button interface) you have to several options:
 
 #### Option A:
-Use the action [create_central_links](https://github.com/sukramj/custom_homematic?tab=readme-ov-file#homeassistantcreate_central_links).
+Use the action [create_central_links](https://github.com/sukramj/homematicip_local?tab=readme-ov-file#homeassistantcreate_central_links).
 A one time execution is required to activate the events.
-To deactivate the events the action [remove_central_links](https://github.com/sukramj/custom_homematic?tab=readme-ov-file#homeassistantremove_central_links) can be used.
+To deactivate the events the action [remove_central_links](https://github.com/sukramj/homematicip_local?tab=readme-ov-file#homeassistantremove_central_links) can be used.
 
 #### Option B:
 With RaspberryMatic no program is needed for buttons. Events can directly activated/deactivated within ->Settings->Devices. Click the "+" of e.g. a remote control then click directly the "button-channel". Press "activate". There is no direct feedback but a action message should appear.
@@ -1032,19 +1032,19 @@ BidCos-RF devices have an optional parameter for put_paramset which defines the 
 
 The following blueprints can be used to simplify the usage of HomeMatic and HomematicIP device:
 
-- [Support for 2-button Remotes](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local-actions-for-2-button.yaml): Support for two button remote like HmIP-WRC2.
-- [Support for 4-button Key Ring Remote Control](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local-actions-for-key_ring_remote_control.yaml): Support for four button remote like HmIP-KRCA.
-- [Support for 6-button Remotes](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local-actions-for-6-button.yaml): Support for six button remote like HmIP-WRC6.
-- [Support for 8-button Remotes](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local-actions-for-8-button.yaml): Support for eight button remote like HmIP-RC8.
-- [Support for persistent notifications for unavailable devices](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_persistent_notification.yaml): Enable persistent notifications about unavailable devices.
-- [Reactivate device by model](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_device_by_model.yaml). Reactivate unavailable devices by device model.
-- [Reactivate every device](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_device_full.yaml). Reactivate all unavailable devices. NOT recommended. Usage of `by device type` or `single device` should be preferred.
-- [Reactivate single device](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_reactivate_single_device.yaml) Reactivate a single unavailable device.
-- [Show device errors](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml) Show all error events emitted by a device. This is an unfiltered blueprint. More filters should be added to the trigger.
+- [Support for 2-button Remotes](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local-actions-for-2-button.yaml): Support for two button remote like HmIP-WRC2.
+- [Support for 4-button Key Ring Remote Control](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local-actions-for-key_ring_remote_control.yaml): Support for four button remote like HmIP-KRCA.
+- [Support for 6-button Remotes](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local-actions-for-6-button.yaml): Support for six button remote like HmIP-WRC6.
+- [Support for 8-button Remotes](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local-actions-for-8-button.yaml): Support for eight button remote like HmIP-RC8.
+- [Support for persistent notifications for unavailable devices](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local_persistent_notification.yaml): Enable persistent notifications about unavailable devices.
+- [Reactivate device by model](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local_reactivate_device_by_model.yaml). Reactivate unavailable devices by device model.
+- [Reactivate every device](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local_reactivate_device_full.yaml). Reactivate all unavailable devices. NOT recommended. Usage of `by device type` or `single device` should be preferred.
+- [Reactivate single device](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local_reactivate_single_device.yaml) Reactivate a single unavailable device.
+- [Show device errors](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local_show_device_error.yaml) Show all error events emitted by a device. This is an unfiltered blueprint. More filters should be added to the trigger.
 
 Feel free to contribute:
 
-- [Community blueprints](https://github.com/sukramj/custom_homematic/blob/devel/blueprints/community)
+- [Community blueprints](https://github.com/sukramj/homematicip_local/blob/devel/blueprints/community)
 
 I use these blueprints on my own system and share them with you, but I don't want to invest in blueprints for devices that I don't own!
 Feel free to copy, improve, or enhance these blueprints and adapt them to other devices, and if you like, create a PR with a new blueprint.
@@ -1061,4 +1061,4 @@ Just copy these files to "your ha-config_dir"/blueprints/automation
 
 ## License
 
-This project is licensed under the MIT License. See LICENSE for details: https://github.com/sukramj/custom_homematic/blob/master/LICENSE
+This project is licensed under the MIT License. See LICENSE for details: https://github.com/sukramj/homematicip_local/blob/master/LICENSE
