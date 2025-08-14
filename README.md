@@ -1,8 +1,5 @@
 # Homematic(IP) Local
-![GitHub Release](https://img.shields.io/github/v/release/SukramJ/homematicip_local?style=for-the-badge)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/SukramJ/homematicip_local/latest/total?style=for-the-badge)
-![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)
-
+[![releasebadge]][release] [![License][license-shield]](LICENSE.md) [![hainstall][hainstallbadge]][hainstall]
 
 Homematic(IP) [Integration for Home Assistant](https://www.home-assistant.io/getting-started/concepts-terminology/#integrations)
 
@@ -1058,6 +1055,13 @@ Just copy these files to "your ha-config_dir"/blueprints/automation
 - Discussions: https://github.com/sukramj/aiohomematic/discussions
 - Wiki contributions are welcome: https://github.com/sukramj/aiohomematic/wiki
 - Pull requests are welcome in this repository. Please open an issue or discussion first if you plan larger changes.
+
+
+[license-shield]: https://img.shields.io/github/license/SukramJ/custom_homematic.svg?style=for-the-badge
+[release]: https://github.com/SukramJ/custom_homematic/releases
+[releasebadge]: https://img.shields.io/github/v/release/SukramJ/custom_homematic?style=for-the-badge
+[hainstall]: https://my.home-assistant.io/redirect/config_flow_start/?domain=homematicip_local
+[hainstallbadge]: https://img.shields.io/badge/dynamic/json?style=for-the-badge&logo=home-assistant&logoColor=ccc&label=usage&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.homematicip_local.total
 
 ## License
 
