@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Final
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.custom import BaseCustomDpSiren, SirenOnArgs
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.custom import BaseCustomDpSiren, SirenOnArgs
 import voluptuous as vol
 
 from homeassistant.components.siren import ATTR_DURATION, ATTR_TONE, SirenEntity, SirenEntityFeature
@@ -20,7 +20,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import HomematicConfigEntry
 from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericRestoreEntity
+from .generic_entity import AioHomematicGenericRestoreEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_SIREN: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSiren(
+            AioHomematicSiren(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -71,7 +71,7 @@ async def async_setup_entry(
     async_add_siren(data_points=control_unit.get_new_data_points(data_point_type=BaseCustomDpSiren))
 
 
-class HaHomematicSiren(HaHomematicGenericRestoreEntity[BaseCustomDpSiren], SirenEntity):
+class AioHomematicSiren(AioHomematicGenericRestoreEntity[BaseCustomDpSiren], SirenEntity):
     """Representation of the HomematicIP siren entity."""
 
     _attr_supported_features = SirenEntityFeature.TURN_OFF | SirenEntityFeature.TURN_ON

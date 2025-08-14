@@ -1,10 +1,10 @@
-"""Tests for switch entities of hahomematic."""
+"""Tests for switch entities of aiohomematic."""
 
 from __future__ import annotations
 
 from typing import cast
 
-from hahomematic.model.hub import SysvarDpSwitch
+from aiohomematic.model.hub import SysvarDpSwitch
 import pytest
 
 from homeassistant.const import STATE_OFF, STATE_ON

@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Final
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.custom import CustomDpDimmer, CustomDpIpFixedColorLight, LightOffArgs, LightOnArgs
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.custom import CustomDpDimmer, CustomDpIpFixedColorLight, LightOffArgs, LightOnArgs
 import voluptuous as vol
 
 from homeassistant.components.light import (
@@ -29,7 +29,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import HomematicConfigEntry
 from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericRestoreEntity
+from .generic_entity import AioHomematicGenericRestoreEntity
 
 ATTR_ON_TIME: Final = "on_time"
 
@@ -54,7 +54,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_LIGHT: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicLight(
+            AioHomematicLight(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -82,7 +82,7 @@ async def async_setup_entry(
     )
 
 
-class HaHomematicLight(HaHomematicGenericRestoreEntity[CustomDpDimmer], LightEntity):
+class AioHomematicLight(AioHomematicGenericRestoreEntity[CustomDpDimmer], LightEntity):
     """Representation of the HomematicIP light entity."""
 
     _attr_min_color_temp_kelvin = 2000  # 500 Mireds

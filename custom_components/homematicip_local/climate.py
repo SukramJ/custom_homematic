@@ -7,8 +7,8 @@ from datetime import datetime, timedelta
 import logging
 from typing import Any, Final, cast
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.custom import (
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.custom import (
     PROFILE_DICT,
     PROFILE_PREFIX,
     SIMPLE_PROFILE_DICT,
@@ -48,7 +48,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import HomematicConfigEntry
 from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericEntity, HaHomematicGenericRestoreEntity
+from .generic_entity import AioHomematicGenericEntity, AioHomematicGenericRestoreEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -108,7 +108,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_CLIMATE: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicClimate(
+            AioHomematicClimate(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -230,12 +230,12 @@ async def async_setup_entry(
     )
 
 
-class HaHomematicClimate(HaHomematicGenericRestoreEntity[BaseCustomDpClimate], ClimateEntity):
+class AioHomematicClimate(AioHomematicGenericRestoreEntity[BaseCustomDpClimate], ClimateEntity):
     """Representation of the HomematicIP climate entity."""
 
     _attr_translation_key = "hmip_climate"
     _enable_turn_on_off_backwards_compatibility: bool = False
-    __no_recored_attributes = HaHomematicGenericEntity.NO_RECORED_ATTRIBUTES
+    __no_recored_attributes = AioHomematicGenericEntity.NO_RECORDED_ATTRIBUTES
     __no_recored_attributes.update({ATTR_OPTIMUM_START_STOP, ATTR_TEMPERATURE_OFFSET})
     _unrecorded_attributes = frozenset(__no_recored_attributes)
 

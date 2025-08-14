@@ -5,9 +5,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from hahomematic.const import DataPointCategory, SysvarType
-from hahomematic.model.generic import BaseDpNumber
-from hahomematic.model.hub import SysvarDpNumber
+from aiohomematic.const import DataPointCategory, SysvarType
+from aiohomematic.model.generic import BaseDpNumber
+from aiohomematic.model.hub import SysvarDpNumber
 
 from homeassistant.components.number import NumberEntity, NumberMode, RestoreNumber
 from homeassistant.const import EntityCategory
@@ -19,7 +19,7 @@ from . import HomematicConfigEntry
 from .const import HmEntityState
 from .control_unit import ControlUnit, signal_new_data_point
 from .entity_helpers import HmNumberEntityDescription
-from .generic_entity import ATTR_VALUE_STATE, HaHomematicGenericEntity, HaHomematicGenericSysvarEntity
+from .generic_entity import ATTR_VALUE_STATE, AioHomematicGenericEntity, AioHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_NUMBER: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicNumber(
+            AioHomematicNumber(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -52,7 +52,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_NUMBER: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarNumber(control_unit=control_unit, data_point=data_point) for data_point in data_points
+            AioHomematicSysvarNumber(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
@@ -77,7 +77,7 @@ async def async_setup_entry(
     async_add_hub_number(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpNumber))
 
 
-class HaHomematicNumber(HaHomematicGenericEntity[BaseDpNumber], RestoreNumber):
+class AioHomematicNumber(AioHomematicGenericEntity[BaseDpNumber], RestoreNumber):
     """Representation of the HomematicIP number entity."""
 
     entity_description: HmNumberEntityDescription
@@ -141,7 +141,7 @@ class HaHomematicNumber(HaHomematicGenericEntity[BaseDpNumber], RestoreNumber):
             self._restored_native_value = restored_sensor_data.native_value
 
 
-class HaHomematicSysvarNumber(HaHomematicGenericSysvarEntity[SysvarDpNumber], NumberEntity):
+class AioHomematicSysvarNumber(AioHomematicGenericSysvarEntity[SysvarDpNumber], NumberEntity):
     """Representation of the HomematicIP hub number entity."""
 
     _attr_mode = NumberMode.BOX

@@ -9,12 +9,12 @@ from enum import StrEnum
 import logging
 from typing import Final
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.calculated import CalculatedDataPoint
-from hahomematic.model.custom import CustomDataPoint
-from hahomematic.model.generic import GenericDataPoint
-from hahomematic.model.hub import GenericHubDataPoint, GenericSysvarDataPoint
-from hahomematic.support import element_matches_key
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.calculated import CalculatedDataPoint
+from aiohomematic.model.custom import CustomDataPoint
+from aiohomematic.model.generic import GenericDataPoint
+from aiohomematic.model.hub import GenericHubDataPoint, GenericSysvarDataPoint
+from aiohomematic.support import element_matches_key
 
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass, BinarySensorEntityDescription
 from homeassistant.components.button import ButtonEntityDescription
@@ -844,7 +844,7 @@ _BINARY_SENSOR_DESCRIPTIONS_BY_DEVICE_AND_PARAM: Mapping[tuple[str | tuple[str, 
 }
 
 
-_BUTTOM_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription] = {
+_BUTTON_DESCRIPTIONS_BY_PARAM: Mapping[str | tuple[str, ...], EntityDescription] = {
     "RESET_MOTION": HmButtonEntityDescription(
         key="RESET_MOTION",
         entity_category=EntityCategory.CONFIG,
@@ -934,7 +934,7 @@ _ENTITY_DESCRIPTION_BY_DEVICE: Mapping[DataPointCategory, Mapping[str | tuple[st
 
 _ENTITY_DESCRIPTION_BY_PARAM: Mapping[DataPointCategory, Mapping[str | tuple[str, ...], EntityDescription]] = {
     DataPointCategory.BINARY_SENSOR: _BINARY_SENSOR_DESCRIPTIONS_BY_PARAM,
-    DataPointCategory.BUTTON: _BUTTOM_DESCRIPTIONS_BY_PARAM,
+    DataPointCategory.BUTTON: _BUTTON_DESCRIPTIONS_BY_PARAM,
     DataPointCategory.NUMBER: _NUMBER_DESCRIPTIONS_BY_PARAM,
     DataPointCategory.SELECT: _SELECT_DESCRIPTIONS_BY_PARAM,
     DataPointCategory.SENSOR: _SENSOR_DESCRIPTIONS_BY_PARAM,
@@ -1007,7 +1007,7 @@ def get_name_and_translation_key(
     if entity_desc.translation_key:
         return name, entity_desc.translation_key
 
-    if isinstance(data_point, CalculatedDataPoint | GenericDataPoint):
+    if isinstance(data_point, (CalculatedDataPoint, GenericDataPoint)):
         if isinstance(entity_desc, HmEntityDescription):
             if entity_desc.name_source == HmNameSource.ENTITY_NAME:
                 return name, name.lower()
@@ -1023,7 +1023,7 @@ def _find_entity_description(
     data_point: HmGenericDataPoint | GenericHubDataPoint | CustomDataPoint,
 ) -> EntityDescription | None:
     """Find the entity_description for platform."""
-    if isinstance(data_point, CalculatedDataPoint | GenericDataPoint):
+    if isinstance(data_point, (CalculatedDataPoint, GenericDataPoint)):
         if entity_desc := _get_entity_description_by_model_and_param(data_point=data_point):
             return entity_desc
 

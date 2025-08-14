@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from hahomematic.const import Interface, ProgramData, SystemVariableData, SysvarType
+from aiohomematic.const import Interface, ProgramData, SystemVariableData, SysvarType
 
 CONFIG_ENTRY_ID = "12345678"
 CONFIG_ENTRY_UNIQUE_ID = "9876543210"

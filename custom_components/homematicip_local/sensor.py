@@ -7,9 +7,9 @@ from decimal import Decimal
 import logging
 from typing import Any, cast
 
-from hahomematic.const import DEFAULT_MULTIPLIER, DataPointCategory, ParameterType, SysvarType
-from hahomematic.model.generic import DpSensor
-from hahomematic.model.hub import SysvarDpSensor
+from aiohomematic.const import DEFAULT_MULTIPLIER, DataPointCategory, ParameterType, SysvarType
+from aiohomematic.model.generic import DpSensor
+from aiohomematic.model.hub import SysvarDpSensor
 
 from homeassistant.components.sensor import RestoreSensor, SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.core import HomeAssistant, callback
@@ -21,7 +21,7 @@ from . import HomematicConfigEntry
 from .const import HmEntityState
 from .control_unit import ControlUnit, signal_new_data_point
 from .entity_helpers import HmSensorEntityDescription
-from .generic_entity import ATTR_VALUE_STATE, HaHomematicGenericEntity, HaHomematicGenericSysvarEntity
+from .generic_entity import ATTR_VALUE_STATE, AioHomematicGenericEntity, AioHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_SENSOR: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSensor(
+            AioHomematicSensor(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -54,7 +54,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_SENSOR: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarSensor(control_unit=control_unit, data_point=data_point) for data_point in data_points
+            AioHomematicSysvarSensor(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
@@ -78,7 +78,7 @@ async def async_setup_entry(
     async_add_hub_sensor(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSensor))
 
 
-class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
+class AioHomematicSensor(AioHomematicGenericEntity[DpSensor], RestoreSensor):
     """Representation of the HomematicIP sensor entity."""
 
     entity_description: HmSensorEntityDescription
@@ -154,7 +154,7 @@ class HaHomematicSensor(HaHomematicGenericEntity[DpSensor], RestoreSensor):
             self._restored_native_value = restored_sensor_data.native_value
 
 
-class HaHomematicSysvarSensor(HaHomematicGenericSysvarEntity[SysvarDpSensor], SensorEntity):
+class AioHomematicSysvarSensor(AioHomematicGenericSysvarEntity[SysvarDpSensor], SensorEntity):
     """Representation of the HomematicIP hub sensor entity."""
 
     def __init__(

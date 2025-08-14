@@ -473,16 +473,16 @@ fixture-parentheses = false
 
 [tool.ruff.lint.flake8-import-conventions.extend-aliases]
 voluptuous = "vol"
-"hahomematic.central_unit" = "hmcu"
-"hahomematic.client" = "hmcl"
-"hahomematic.exporter" = "hmexp"
-"hahomematic.platforms.custom.definition" = "hmed"
-"hahomematic.platforms.custom.entity" = "hmce"
-"hahomematic.platforms.device" = "hmd"
-"hahomematic.platforms.entity" = "hme"
-"hahomematic.platforms.generic.entity" = "hmge"
-"hahomematic.support" = "hms"
-"hahomematic.xml_rpc_server" = "xmlrpc"
+"aiohomematic.central_unit" = "hmcu"
+"aiohomematic.client" = "hmcl"
+"aiohomematic.exporter" = "hmexp"
+"aiohomematic.platforms.custom.definition" = "hmed"
+"aiohomematic.platforms.custom.entity" = "hmce"
+"aiohomematic.platforms.device" = "hmd"
+"aiohomematic.platforms.entity" = "hme"
+"aiohomematic.platforms.generic.entity" = "hmge"
+"aiohomematic.support" = "hms"
+"aiohomematic.xml_rpc_server" = "xmlrpc"
 
 [tool.ruff.lint.per-file-ignores]
 "script/*" = ["T20"]

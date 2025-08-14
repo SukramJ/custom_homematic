@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Final
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.custom import CustomDpIpIrrigationValve
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.custom import CustomDpIpIrrigationValve
 import voluptuous as vol
 
 from homeassistant.components.valve import ValveEntity, ValveEntityFeature
@@ -19,7 +19,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import HomematicConfigEntry
 from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericRestoreEntity
+from .generic_entity import AioHomematicGenericRestoreEntity
 
 _LOGGER = logging.getLogger(__name__)
 ATTR_ON_TIME: Final = "on_time"
@@ -40,7 +40,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_VALVE: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicValve(
+            AioHomematicValve(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -72,7 +72,7 @@ async def async_setup_entry(
     )
 
 
-class HaHomematicValve(HaHomematicGenericRestoreEntity[CustomDpIpIrrigationValve], ValveEntity):
+class AioHomematicValve(AioHomematicGenericRestoreEntity[CustomDpIpIrrigationValve], ValveEntity):
     """Representation of the HomematicIP valve entity."""
 
     @property

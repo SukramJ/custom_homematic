@@ -7,7 +7,7 @@ from pprint import pformat
 from typing import Any, Final, cast
 from urllib.parse import urlparse
 
-from hahomematic.const import (
+from aiohomematic.const import (
     DEFAULT_ENABLE_PROGRAM_SCAN,
     DEFAULT_ENABLE_SYSVAR_SCAN,
     DEFAULT_PROGRAM_MARKERS,
@@ -19,7 +19,7 @@ from hahomematic.const import (
     Interface,
     SystemInformation,
 )
-from hahomematic.exceptions import AuthFailure, BaseHomematicException
+from aiohomematic.exceptions import AuthFailure, BaseHomematicException
 import voluptuous as vol
 from voluptuous.schema_builder import UNDEFINED, Schema
 

@@ -1,4 +1,4 @@
-"""Generic entity for the HomematicIP Cloud component."""
+"""Generic entity for the Homematic(IP) Local component."""
 
 from __future__ import annotations
 
@@ -6,12 +6,12 @@ from collections.abc import Mapping
 import logging
 from typing import Any, Final, Generic
 
-from hahomematic.const import CALLBACK_TYPE, CallSource
-from hahomematic.model.calculated import CalculatedDataPoint
-from hahomematic.model.custom import CustomDataPoint
-from hahomematic.model.data_point import CallbackDataPoint
-from hahomematic.model.generic import GenericDataPoint
-from hahomematic.model.hub import GenericHubDataPoint, GenericProgramDataPoint, GenericSysvarDataPoint
+from aiohomematic.const import CALLBACK_TYPE, CallSource
+from aiohomematic.model.calculated import CalculatedDataPoint
+from aiohomematic.model.custom import CustomDataPoint
+from aiohomematic.model.data_point import CallbackDataPoint
+from aiohomematic.model.generic import GenericDataPoint
+from aiohomematic.model.hub import GenericHubDataPoint, GenericProgramDataPoint, GenericSysvarDataPoint
 
 from homeassistant.core import State, callback
 from homeassistant.helpers import device_registry as dr, entity_registry as er
@@ -36,13 +36,13 @@ ATTR_PARAMETER: Final = "parameter"
 ATTR_VALUE_STATE: Final = "value_state"
 
 
-class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
+class AioHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
     """Representation of the HomematicIP generic entity."""
 
     _attr_has_entity_name = True
     _attr_should_poll = False
 
-    NO_RECORED_ATTRIBUTES = {
+    NO_RECORDED_ATTRIBUTES = {
         ATTR_ADDRESS,
         ATTR_FUNCTION,
         ATTR_INTERFACE_ID,
@@ -51,7 +51,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         ATTR_VALUE_STATE,
     }
 
-    _unrecorded_attributes = frozenset(NO_RECORED_ATTRIBUTES)
+    _unrecorded_attributes = frozenset(NO_RECORDED_ATTRIBUTES)
 
     def __init__(
         self,
@@ -211,7 +211,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 if channel_group_master.name.isnumeric()
                 else channel_group_master.name
                 if channel_group_master.name
-                else f"{hm_device.name}-{channel_group_master.no}"
+                else f"{hm_device.name}-{channel_group_master.group_no}"
             )
         return hm_device.name
 
@@ -310,7 +310,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 device_registry.async_remove_device(device_id)
 
 
-class HaHomematicGenericRestoreEntity(HaHomematicGenericEntity[HmGenericDataPoint], RestoreEntity):
+class AioHomematicGenericRestoreEntity(AioHomematicGenericEntity[HmGenericDataPoint], RestoreEntity):
     """Representation of the HomematicIP generic restore entity."""
 
     _restored_state: State | None = None
@@ -339,19 +339,19 @@ class HaHomematicGenericRestoreEntity(HaHomematicGenericEntity[HmGenericDataPoin
         self._restored_state = await self.async_get_last_state()
 
 
-class HaHomematicGenericHubEntity(Entity):
+class AioHomematicGenericHubEntity(Entity):
     """Representation of the HomematicIP generic hub entity."""
 
     _attr_has_entity_name = True
     _attr_should_poll = False
 
-    NO_RECORED_ATTRIBUTES = {
+    NO_RECORDED_ATTRIBUTES = {
         ATTR_DESCRIPTION,
         ATTR_NAME,
         ATTR_VALUE_STATE,
     }
 
-    _unrecorded_attributes = frozenset(NO_RECORED_ATTRIBUTES)
+    _unrecorded_attributes = frozenset(NO_RECORDED_ATTRIBUTES)
 
     def __init__(
         self,
@@ -469,7 +469,7 @@ class HaHomematicGenericHubEntity(Entity):
                 entity_registry.async_remove(entity_id)
 
 
-class HaHomematicGenericProgramEntity(Generic[HmGenericProgramDataPoint], HaHomematicGenericHubEntity):
+class AioHomematicGenericProgramEntity(Generic[HmGenericProgramDataPoint], AioHomematicGenericHubEntity):
     """Representation of the HomematicIP generic sysvar entity."""
 
     def __init__(
@@ -502,7 +502,7 @@ class HaHomematicGenericProgramEntity(Generic[HmGenericProgramDataPoint], HaHome
         return attributes
 
 
-class HaHomematicGenericSysvarEntity(Generic[HmGenericSysvarDataPoint], HaHomematicGenericHubEntity):
+class AioHomematicGenericSysvarEntity(Generic[HmGenericSysvarDataPoint], AioHomematicGenericHubEntity):
     """Representation of the HomematicIP generic sysvar entity."""
 
     def __init__(
