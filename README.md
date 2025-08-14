@@ -56,8 +56,7 @@ A good practice is to search in issues and discussions before starting a new one
 
 The [HomeMatic](https://www.homematic.com/) integration provides bi-directional communication with your HomeMatic hub (CCU, Homegear etc.).
 It uses an XML-RPC connection to set values on devices and subscribes to receive events the devices and the CCU emit.
-You can configure this integration multiple times if you want to integrate multiple HomeMatic hubs into Home Assistant.  
-If you are using Homegear with paired [Intertechno](https://intertechno.at/) devices, uni-directional communication is possible as well.
+You can configure this integration multiple times if you want to integrate multiple HomeMatic hubs into Home Assistant.
 
 **Please take the time to read the entire documentation before asking for help. It will answer the most common questions that come up while working with this integration.**
 
