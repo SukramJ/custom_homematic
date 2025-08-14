@@ -1,6 +1,6 @@
-# Contributing to hahomematic's custom_component
+# Contributing to aiohomematic's custom_component
 
-If there is anything you want to see in hahomematic's custom_component (features, bugfixes etc.), you can fork this repository, make your changes and then create a pull request (against the devel-branch). Just like with most of the other repositories here.
+If there is anything you want to see in aiohomematic's custom_component (features, bugfixes etc.), you can fork this repository, make your changes and then create a pull request (against the devel-branch). Just like with most of the other repositories here.
 
 Please restrict your changes to the actual code within the custom_components/homematicip_local-folder. The repository-maintainers are keeping track of changes and will updated the changelog and setup.py.
 

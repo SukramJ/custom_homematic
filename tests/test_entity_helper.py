@@ -1,4 +1,4 @@
-"""Test the HaHomematic entity helper."""
+"""Test the AioHomematic entity helper."""
 
 from __future__ import annotations
 

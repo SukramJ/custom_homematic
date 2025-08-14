@@ -5,10 +5,10 @@ from __future__ import annotations
 import logging
 from typing import Any, Final
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.custom import CustomDpSwitch
-from hahomematic.model.generic import DpSwitch
-from hahomematic.model.hub import ProgramDpSwitch, SysvarDpSwitch
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.custom import CustomDpSwitch
+from aiohomematic.model.generic import DpSwitch
+from aiohomematic.model.hub import ProgramDpSwitch, SysvarDpSwitch
 import voluptuous as vol
 
 from homeassistant.components.switch import SwitchEntity
@@ -22,9 +22,9 @@ from . import HomematicConfigEntry
 from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
 from .generic_entity import (
-    HaHomematicGenericProgramEntity,
-    HaHomematicGenericRestoreEntity,
-    HaHomematicGenericSysvarEntity,
+    AioHomematicGenericProgramEntity,
+    AioHomematicGenericRestoreEntity,
+    AioHomematicGenericSysvarEntity,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_SWITCH: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSwitch(
+            AioHomematicSwitch(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -60,14 +60,14 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_SWITCH: Adding %i data points", len(data_points))
 
         if sysvar_entities := [
-            HaHomematicSysvarSwitch(control_unit=control_unit, data_point=data_point)
+            AioHomematicSysvarSwitch(control_unit=control_unit, data_point=data_point)
             for data_point in data_points
             if isinstance(data_point, SysvarDpSwitch)
         ]:
             async_add_entities(sysvar_entities)
 
         if program_entities := [
-            HaHomematicProgramSwitch(control_unit=control_unit, data_point=data_point)
+            AioHomematicProgramSwitch(control_unit=control_unit, data_point=data_point)
             for data_point in data_points
             if isinstance(data_point, ProgramDpSwitch)
         ]:
@@ -107,7 +107,7 @@ async def async_setup_entry(
     )
 
 
-class HaHomematicSwitch(HaHomematicGenericRestoreEntity[CustomDpSwitch | DpSwitch], SwitchEntity):
+class AioHomematicSwitch(AioHomematicGenericRestoreEntity[CustomDpSwitch | DpSwitch], SwitchEntity):
     """Representation of the HomematicIP switch entity."""
 
     @property
@@ -153,7 +153,7 @@ class HaHomematicSwitch(HaHomematicGenericRestoreEntity[CustomDpSwitch | DpSwitc
             await self._data_point.set_on_time(on_time=on_time)
 
 
-class HaHomematicSysvarSwitch(HaHomematicGenericSysvarEntity[SysvarDpSwitch], SwitchEntity):
+class AioHomematicSysvarSwitch(AioHomematicGenericSysvarEntity[SysvarDpSwitch], SwitchEntity):
     """Representation of the HomematicIP sysvar switch entity."""
 
     @property
@@ -170,7 +170,7 @@ class HaHomematicSysvarSwitch(HaHomematicGenericSysvarEntity[SysvarDpSwitch], Sw
         await self._data_point.send_variable(False)
 
 
-class HaHomematicProgramSwitch(HaHomematicGenericProgramEntity[ProgramDpSwitch], SwitchEntity):
+class AioHomematicProgramSwitch(AioHomematicGenericProgramEntity[ProgramDpSwitch], SwitchEntity):
     """Representation of the HomematicIP program switch entity."""
 
     def __init__(

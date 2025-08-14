@@ -1,7 +1,7 @@
 # Version 1.85.2 (2025-08-07)
 
 ## What's Changed
-- Bump hahomematic to 2025.8.6
+- Bump aiohomematic to 2025.8.6
   - Do not send additional parameter in kwargs for events
   - Small performance improvements
 - Use parameter from datapoint for events

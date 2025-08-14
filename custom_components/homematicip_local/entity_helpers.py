@@ -9,12 +9,12 @@ from enum import StrEnum
 import logging
 from typing import Final
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.calculated import CalculatedDataPoint
-from hahomematic.model.custom import CustomDataPoint
-from hahomematic.model.generic import GenericDataPoint
-from hahomematic.model.hub import GenericHubDataPoint, GenericSysvarDataPoint
-from hahomematic.support import element_matches_key
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.calculated import CalculatedDataPoint
+from aiohomematic.model.custom import CustomDataPoint
+from aiohomematic.model.generic import GenericDataPoint
+from aiohomematic.model.hub import GenericHubDataPoint, GenericSysvarDataPoint
+from aiohomematic.support import element_matches_key
 
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass, BinarySensorEntityDescription
 from homeassistant.components.button import ButtonEntityDescription

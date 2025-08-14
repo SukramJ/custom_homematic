@@ -1,4 +1,4 @@
-"""Tests for switch entities of hahomematic."""
+"""Tests for switch entities of aiohomematic."""
 
 from __future__ import annotations
 

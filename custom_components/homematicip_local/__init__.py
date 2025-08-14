@@ -7,11 +7,11 @@ from dataclasses import dataclass
 import logging
 from typing import TypeAlias
 
+from aiohomematic import __version__ as HAHM_VERSION
+from aiohomematic.caches.persistent import cleanup_cache_dirs
+from aiohomematic.const import DEFAULT_ENABLE_SYSVAR_SCAN, DEFAULT_SYS_SCAN_INTERVAL, DEFAULT_UN_IGNORES
+from aiohomematic.support import find_free_port
 from awesomeversion import AwesomeVersion
-from hahomematic import __version__ as HAHM_VERSION
-from hahomematic.caches.persistent import cleanup_cache_dirs
-from hahomematic.const import DEFAULT_ENABLE_SYSVAR_SCAN, DEFAULT_SYS_SCAN_INTERVAL, DEFAULT_UN_IGNORES
-from hahomematic.support import find_free_port
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EVENT_HOMEASSISTANT_STOP, __version__ as HA_VERSION_STR
@@ -34,7 +34,7 @@ from .const import (
 )
 from .control_unit import ControlConfig, ControlUnit, get_storage_folder
 from .services import async_get_loaded_config_entries, async_setup_services, async_unload_services
-from .support import get_device_address_at_interface_from_identifiers, get_hahomematic_version
+from .support import get_aiohomematic_version, get_device_address_at_interface_from_identifiers
 
 HA_VERSION = AwesomeVersion(HA_VERSION_STR)
 HomematicConfigEntry: TypeAlias = ConfigEntry[ControlUnit]
@@ -53,10 +53,10 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: HomematicConfigEntry) -> bool:
     """Set up Homematic(IP) Local from a config entr11y."""
-    expected_version = await get_hahomematic_version(hass=hass, domain=entry.domain, package_name="hahomematic")
+    expected_version = await get_aiohomematic_version(hass=hass, domain=entry.domain, package_name="aiohomematic")
     if AwesomeVersion(expected_version) != AwesomeVersion(HAHM_VERSION):
         _LOGGER.error(
-            "This release of Homematic(IP) Local requires hahomematic version %s, but found version %s. "
+            "This release of Homematic(IP) Local requires aiohomematic version %s, but found version %s. "
             "Looks like HA has a problem with dependency management. "
             "This is NOT an issue of the integration.",
             expected_version,
@@ -65,7 +65,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: HomematicConfigEntry) ->
         _LOGGER.warning("Homematic(IP) Local setup blocked")
         return False
     _LOGGER.debug(
-        "Homematic(IP) Local setup with hahomematic version %s",
+        "Homematic(IP) Local setup with aiohomematic version %s",
         HAHM_VERSION,
     )
 

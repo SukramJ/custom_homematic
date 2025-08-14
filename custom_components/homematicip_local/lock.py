@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.custom import BaseCustomDpLock, LockState
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.custom import BaseCustomDpLock, LockState
 
 from homeassistant.components.lock import LockEntity, LockEntityFeature
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -16,7 +16,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericRestoreEntity
+from .generic_entity import AioHomematicGenericRestoreEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_LOCK: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicLock(
+            AioHomematicLock(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -54,7 +54,7 @@ async def async_setup_entry(
     async_add_lock(data_points=control_unit.get_new_data_points(data_point_type=BaseCustomDpLock))
 
 
-class HaHomematicLock(HaHomematicGenericRestoreEntity[BaseCustomDpLock], LockEntity):
+class AioHomematicLock(AioHomematicGenericRestoreEntity[BaseCustomDpLock], LockEntity):
     """Representation of the HomematicIP lock entity."""
 
     def __init__(

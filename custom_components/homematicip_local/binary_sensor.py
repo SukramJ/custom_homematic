@@ -5,9 +5,9 @@ from __future__ import annotations
 import logging
 from typing import cast
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.generic import DpBinarySensor
-from hahomematic.model.hub import SysvarDpBinarySensor
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.generic import DpBinarySensor
+from aiohomematic.model.hub import SysvarDpBinarySensor
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.const import STATE_ON, STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -17,7 +17,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericRestoreEntity, HaHomematicGenericSysvarEntity
+from .generic_entity import AioHomematicGenericRestoreEntity, AioHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ async def async_setup_entry(
         """Add binary_sensor from Homematic(IP) Local."""
         _LOGGER.debug("ASYNC_ADD_BINARY_SENSOR: Adding %i data points", len(data_points))
         if entities := [
-            HaHomematicBinarySensor(control_unit=control_unit, data_point=data_point) for data_point in data_points
+            AioHomematicBinarySensor(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
@@ -44,7 +44,7 @@ async def async_setup_entry(
         """Add sysvar binary sensor from Homematic(IP) Local."""
         _LOGGER.debug("ASYNC_ADD_HUB_BINARY_SENSOR: Adding %i data points", len(data_points))
         if entities := [
-            HaHomematicSysvarBinarySensor(control_unit=control_unit, data_point=data_point)
+            AioHomematicSysvarBinarySensor(control_unit=control_unit, data_point=data_point)
             for data_point in data_points
         ]:
             async_add_entities(entities)
@@ -69,7 +69,7 @@ async def async_setup_entry(
     async_add_hub_binary_sensor(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpBinarySensor))
 
 
-class HaHomematicBinarySensor(HaHomematicGenericRestoreEntity[DpBinarySensor], BinarySensorEntity):
+class AioHomematicBinarySensor(AioHomematicGenericRestoreEntity[DpBinarySensor], BinarySensorEntity):
     """Representation of the Homematic(IP) Local binary sensor."""
 
     @property
@@ -86,7 +86,7 @@ class HaHomematicBinarySensor(HaHomematicGenericRestoreEntity[DpBinarySensor], B
         return cast(bool | None, self._data_point.default)
 
 
-class HaHomematicSysvarBinarySensor(HaHomematicGenericSysvarEntity[SysvarDpBinarySensor], BinarySensorEntity):
+class AioHomematicSysvarBinarySensor(AioHomematicGenericSysvarEntity[SysvarDpBinarySensor], BinarySensorEntity):
     """Representation of the HomematicIP hub binary_sensor entity."""
 
     @property

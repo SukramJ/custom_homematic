@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import logging
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.generic import DpSelect
-from hahomematic.model.hub import SysvarDpSelect
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.generic import DpSelect
+from aiohomematic.model.hub import SysvarDpSelect
 
 from homeassistant.components.select import SelectEntity
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -16,7 +16,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericRestoreEntity, HaHomematicGenericSysvarEntity
+from .generic_entity import AioHomematicGenericRestoreEntity, AioHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_SELECT: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSelect(
+            AioHomematicSelect(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -49,7 +49,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_SELECT: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarSelect(control_unit=control_unit, data_point=data_point) for data_point in data_points
+            AioHomematicSysvarSelect(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
@@ -74,7 +74,7 @@ async def async_setup_entry(
     async_add_hub_select(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpSelect))
 
 
-class HaHomematicSelect(HaHomematicGenericRestoreEntity[DpSelect], SelectEntity):
+class AioHomematicSelect(AioHomematicGenericRestoreEntity[DpSelect], SelectEntity):
     """Representation of the HomematicIP select entity."""
 
     @property
@@ -106,7 +106,7 @@ class HaHomematicSelect(HaHomematicGenericRestoreEntity[DpSelect], SelectEntity)
         await self._data_point.send_value(option.upper())
 
 
-class HaHomematicSysvarSelect(HaHomematicGenericSysvarEntity[SysvarDpSelect], SelectEntity):
+class AioHomematicSysvarSelect(AioHomematicGenericSysvarEntity[SysvarDpSelect], SelectEntity):
     """Representation of the HomematicIP hub select entity."""
 
     @property

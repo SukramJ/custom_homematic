@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import Any
 from unittest.mock import patch
 
-from hahomematic.const import CONF_PASSWORD, CONF_USERNAME, Interface, SystemInformation
-from hahomematic.exceptions import AuthFailure, NoConnectionException
+from aiohomematic.const import CONF_PASSWORD, CONF_USERNAME, Interface, SystemInformation
+from aiohomematic.exceptions import AuthFailure, NoConnectionException
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 

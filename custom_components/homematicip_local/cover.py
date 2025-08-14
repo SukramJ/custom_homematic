@@ -5,9 +5,9 @@ from __future__ import annotations
 import logging
 from typing import Any, Final, TypeVar
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.custom import CustomDpBlind, CustomDpCover, CustomDpGarage, CustomDpIpBlind
-from hahomematic.model.data_point import CallParameterCollector
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.custom import CustomDpBlind, CustomDpCover, CustomDpGarage, CustomDpIpBlind
+from aiohomematic.model.data_point import CallParameterCollector
 import voluptuous as vol
 
 from homeassistant.components.cover import (
@@ -27,7 +27,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import HomematicConfigEntry
 from .const import HmipLocalServices
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericRestoreEntity
+from .generic_entity import AioHomematicGenericRestoreEntity
 from .services import CONF_WAIT_FOR_CALLBACK
 
 ATTR_CHANNEL_POSITION: Final = "channel_position"
@@ -50,41 +50,41 @@ async def async_setup_entry(
     def async_add_cover(data_points: tuple[HmGenericCover, ...]) -> None:
         """Add cover from Homematic(IP) Local."""
         _LOGGER.debug("ASYNC_ADD_COVER: Adding %i data points", len(data_points))
-        entities: list[HaHomematicBaseCover] = []
+        entities: list[AioHomematicBaseCover] = []
 
         for data_point in data_points:
             if isinstance(data_point, CustomDpIpBlind):
                 if data_point.operation_mode and data_point.operation_mode == "SHUTTER":
                     entities.append(
-                        HaHomematicCover(
+                        AioHomematicCover(
                             control_unit=control_unit,
                             data_point=data_point,
                         )
                     )
                 else:
                     entities.append(
-                        HaHomematicBlind(
+                        AioHomematicBlind(
                             control_unit=control_unit,
                             data_point=data_point,
                         )
                     )
             elif isinstance(data_point, CustomDpBlind):
                 entities.append(
-                    HaHomematicBlind(
+                    AioHomematicBlind(
                         control_unit=control_unit,
                         data_point=data_point,
                     )
                 )
             elif isinstance(data_point, CustomDpCover):
                 entities.append(
-                    HaHomematicCover(
+                    AioHomematicCover(
                         control_unit=control_unit,
                         data_point=data_point,
                     )
                 )
             elif isinstance(data_point, CustomDpGarage):
                 entities.append(
-                    HaHomematicGarage(
+                    AioHomematicGarage(
                         control_unit=control_unit,
                         data_point=data_point,
                     )
@@ -116,7 +116,7 @@ async def async_setup_entry(
     )
 
 
-class HaHomematicBaseCover(HaHomematicGenericRestoreEntity[HmGenericCover], CoverEntity):
+class AioHomematicBaseCover(AioHomematicGenericRestoreEntity[HmGenericCover], CoverEntity):
     """Representation of the HomematicIP cover entity."""
 
     @property
@@ -195,11 +195,11 @@ class HaHomematicBaseCover(HaHomematicGenericRestoreEntity[HmGenericCover], Cove
         await self._data_point.stop()
 
 
-class HaHomematicCover(HaHomematicBaseCover[CustomDpCover]):
+class AioHomematicCover(AioHomematicBaseCover[CustomDpCover]):
     """Representation of the HomematicIP cover entity."""
 
 
-class HaHomematicBlind(HaHomematicBaseCover[CustomDpBlind | CustomDpIpBlind]):
+class AioHomematicBlind(AioHomematicBaseCover[CustomDpBlind | CustomDpIpBlind]):
     """Representation of the HomematicIP blind entity."""
 
     @property
@@ -239,5 +239,5 @@ class HaHomematicBlind(HaHomematicBaseCover[CustomDpBlind | CustomDpIpBlind]):
         await self._data_point.stop_tilt()
 
 
-class HaHomematicGarage(HaHomematicBaseCover[CustomDpGarage]):
+class AioHomematicGarage(AioHomematicBaseCover[CustomDpGarage]):
     """Representation of the HomematicIP garage entity."""

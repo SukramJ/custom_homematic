@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Final
 
-from hahomematic.const import CALLBACK_TYPE, DataPointCategory
-from hahomematic.model.update import DpUpdate
+from aiohomematic.const import CALLBACK_TYPE, DataPointCategory
+from aiohomematic.model.update import DpUpdate
 
 from homeassistant.components.update import UpdateEntity, UpdateEntityFeature
 from homeassistant.core import HomeAssistant, callback
@@ -38,7 +38,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_UPDATE: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicUpdate(
+            AioHomematicUpdate(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -57,7 +57,7 @@ async def async_setup_entry(
     async_add_update(data_points=control_unit.get_new_data_points(data_point_type=DpUpdate))
 
 
-class HaHomematicUpdate(UpdateEntity):
+class AioHomematicUpdate(UpdateEntity):
     """Representation of the HomematicIP update entity."""
 
     _attr_supported_features = UpdateEntityFeature.PROGRESS | UpdateEntityFeature.INSTALL

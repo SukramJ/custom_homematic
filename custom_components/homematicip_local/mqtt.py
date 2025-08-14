@@ -5,8 +5,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Final, cast
 
-from hahomematic.central import CentralUnit
-from hahomematic.const import SYSVAR_STATE_PATH_ROOT
+from aiohomematic.central import CentralUnit
+from aiohomematic.const import SYSVAR_STATE_PATH_ROOT
 
 from homeassistant.components.mqtt.models import ReceiveMessage
 from homeassistant.components.mqtt.subscription import (

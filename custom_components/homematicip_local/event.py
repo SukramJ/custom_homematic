@@ -5,9 +5,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from hahomematic.const import CALLBACK_TYPE, DATA_POINT_EVENTS, DataPointCategory, EventKey
-from hahomematic.model.device import Channel, Device
-from hahomematic.model.event import GenericEvent
+from aiohomematic.const import CALLBACK_TYPE, DATA_POINT_EVENTS, DataPointCategory, EventKey
+from aiohomematic.model.device import Channel, Device
+from aiohomematic.model.event import GenericEvent
 
 from homeassistant.components.event import EventDeviceClass, EventEntity
 from homeassistant.core import HomeAssistant, callback
@@ -38,7 +38,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_EVENT: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicEvent(
+            AioHomematicEvent(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -58,7 +58,7 @@ async def async_setup_entry(
         async_add_event(data_points=control_unit.central.get_events(event_type=event_type, registered=False))
 
 
-class HaHomematicEvent(EventEntity):
+class AioHomematicEvent(EventEntity):
     """Representation of the Homematic(IP) Local event."""
 
     _attr_device_class = EventDeviceClass.BUTTON

@@ -10,12 +10,12 @@ from types import FunctionType, MethodType
 from typing import Any, Final, TypeVar
 from unittest.mock import MagicMock, Mock, patch
 
-from hahomematic import const as hahomematic_const
-from hahomematic.central import CentralConfig
-from hahomematic.client import InterfaceConfig, _ClientConfig
-from hahomematic.model.custom import CustomDataPoint
-from hahomematic.model.data_point import BaseParameterDataPoint
-from hahomematic_support.client_local import ClientLocal, LocalRessources
+from aiohomematic import const as aiohomematic_const
+from aiohomematic.central import CentralConfig
+from aiohomematic.client import InterfaceConfig, _ClientConfig
+from aiohomematic.model.custom import CustomDataPoint
+from aiohomematic.model.data_point import BaseParameterDataPoint
+from aiohomematic_support.client_local import ClientLocal, LocalRessources
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.homematicip_local.control_unit import ControlUnit
@@ -72,7 +72,7 @@ class Factory:
         """Return a central based on give address_device_translation."""
         interface_config = InterfaceConfig(
             central_name=const.INSTANCE_NAME,
-            interface=hahomematic_const.Interface.BIDCOS_RF,
+            interface=aiohomematic_const.Interface.BIDCOS_RF,
             port=const.LOCAL_PORT,
         )
 
@@ -108,18 +108,18 @@ class Factory:
         )
         await client.init_client()
 
-        patch("hahomematic.central.CentralUnit._get_primary_client", return_value=client).start()
-        patch("hahomematic.client._ClientConfig.create_client", return_value=client).start()
+        patch("aiohomematic.central.CentralUnit._get_primary_client", return_value=client).start()
+        patch("aiohomematic.client._ClientConfig.create_client", return_value=client).start()
         patch(
-            "hahomematic_support.client_local.ClientLocal.get_all_system_variables",
+            "aiohomematic_support.client_local.ClientLocal.get_all_system_variables",
             return_value=const.SYSVAR_DATA if add_sysvars else [],
         ).start()
         patch(
-            "hahomematic_support.client_local.ClientLocal.get_all_programs",
+            "aiohomematic_support.client_local.ClientLocal.get_all_programs",
             return_value=const.PROGRAM_DATA if add_programs else [],
         ).start()
         patch(
-            "hahomematic.central.CentralUnit._identify_ip_addr",
+            "aiohomematic.central.CentralUnit._identify_ip_addr",
             return_value="127.0.0.1",
         ).start()
 

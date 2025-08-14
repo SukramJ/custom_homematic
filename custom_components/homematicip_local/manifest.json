@@ -8,9 +8,9 @@
   "homekit": {},
   "integration_type": "hub",
   "iot_class": "local_push",
-  "issue_tracker": "https://github.com/sukramj/hahomematic/issues",
-  "loggers": ["hahomematic"],
-  "requirements": ["hahomematic==2025.8.6"],
+  "issue_tracker": "https://github.com/sukramj/aiohomematic/issues",
+  "loggers": ["aiohomematic"],
+  "requirements": ["aiohomematic==2025.8.6"],
   "ssdp": [
     {
       "manufacturer": "EQ3",

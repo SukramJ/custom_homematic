@@ -9,7 +9,7 @@ Homematic(IP) [Integration for Home Assistant](https://www.home-assistant.io/get
 Quick start:
 - Installation guide: https://github.com/sukramj/custom_homematic/wiki/Installation
 - Alternative installation by J. Maus (RaspberryMatic): https://github.com/jens-maus/RaspberryMatic/wiki/HomeAssistant-Integration
-- Wiki (additional information): https://github.com/sukramj/hahomematic/wiki
+- Wiki (additional information): https://github.com/sukramj/aiohomematic/wiki
 - Changelog: https://github.com/sukramj/custom_homematic/blob/master/changelog.md
 - License: https://github.com/sukramj/custom_homematic/blob/master/LICENSE
 
@@ -22,7 +22,7 @@ Please support the community by adding more valuable information to the wiki.
 - Installation: HACS recommended; manual installation supported.
 - Auto-discovery: Supported for CCU and compatible hubs.
 - Minimum requirements: Home Assistant 2025.8.0+; for Homematic IP on CCU require at least CCU2 2.53.27 / CCU3 3.53.26.
-- Useful links: [Installation guide](https://github.com/sukramj/custom_homematic/wiki/Installation), [Wiki](https://github.com/sukramj/hahomematic/wiki), [Issues](https://github.com/sukramj/hahomematic/issues), [Discussions](https://github.com/sukramj/hahomematic/discussions), [Changelog](https://github.com/sukramj/custom_homematic/blob/master/changelog.md).
+- Useful links: [Installation guide](https://github.com/sukramj/custom_homematic/wiki/Installation), [Wiki](https://github.com/sukramj/aiohomematic/wiki), [Issues](https://github.com/sukramj/aiohomematic/issues), [Discussions](https://github.com/sukramj/aiohomematic/discussions), [Changelog](https://github.com/sukramj/custom_homematic/blob/master/changelog.md).
 
 ## Table of contents
 - [Issues and discussions](#issues-and-discussions)
@@ -50,8 +50,8 @@ Please support the community by adding more valuable information to the wiki.
 
 ## Issues and discussions
 
-Please report issues in [hahomematic repo](https://github.com/sukramj/hahomematic/issues).
-New discussions can be started and found in [hahomematic repo](https://github.com/sukramj/hahomematic/discussions).
+Please report issues in [aiohomematic repo](https://github.com/sukramj/aiohomematic/issues).
+New discussions can be started and found in [aiohomematic repo](https://github.com/sukramj/aiohomematic/discussions).
 Feature requests can be added as a discussion too.
 A good practice is to search in issues and discussions before starting a new one.
 
@@ -84,7 +84,7 @@ HomeMatic and HomematicIP devices are integrated by automatically detecting the 
 However, for more complex devices (thermostats, some cover-devices and more) we perform a custom mapping to better represent the devices features. This is an internal detail you usually don't have to care about.
 It may become relevant though if new hardware becomes available.
 In such a case the automatic mode will be active. Therefore f.ex. a new thermostat-model might not include the `climate` entity.
-In such a case you may report the missing customization in the [hahomematic](https://github.com/sukramj/hahomematic) repository.
+In such a case you may report the missing customization in the [aiohomematic](https://github.com/sukramj/aiohomematic) repository.
 Please report missing devices **after** you installed the integration and ensured it is missing or faulty.
 
 ### Deactivated Entities
@@ -559,7 +559,7 @@ For booleans the following values can be used:
 
 ### `homematicip_local.turn_on_siren`
 
-Turn siren on. Siren can be disabled by siren.turn_off. Useful helpers for siren can be found [here](https://github.com/sukramj/hahomematic/blob/devel/docs/input_select_helper.md#siren).
+Turn siren on. Siren can be disabled by siren.turn_off. Useful helpers for siren can be found [here](https://github.com/sukramj/aiohomematic/blob/devel/docs/input_select_helper.md#siren).
 
 ### `homematicip_local.light_set_on_time`
 
@@ -619,10 +619,10 @@ This will only delete the device from Home Assistant and not from the CCU.
 
 ### What is the meaning of `Error fetching initial data` / `Fehler beim Abrufen der Anfangsdaten`?
 
-This integration uses a [REGA script](https://github.com/sukramj/hahomematic/blob/devel/hahomematic/rega_scripts/fetch_all_device_data.fn) to fetch as much data in a single call as possible, to avoid multiple request to get the required initial data.
+This integration uses a [REGA script](https://github.com/sukramj/aiohomematic/blob/devel/aiohomematic/rega_scripts/fetch_all_device_data.fn) to fetch as much data in a single call as possible, to avoid multiple request to get the required initial data.
 In rare cases the output of the script can be invalid, so a further processing is not possible, and the fallback solution is to fetch all required data with individual calls, that cause a higher duty cycle during the start phase of the integration.
 
-This problem can be analysed by executing the [REGA script](https://github.com/sukramj/hahomematic/blob/devel/hahomematic/rega_scripts/fetch_all_device_data.fn) in the CCU. The parameter ##interface## (line 17) must be replaced with the interface mention from the poped-up issue. The expected result is a valid json. 
+This problem can be analysed by executing the [REGA script](https://github.com/sukramj/aiohomematic/blob/devel/aiohomematic/rega_scripts/fetch_all_device_data.fn) in the CCU. The parameter ##interface## (line 17) must be replaced with the interface mention from the poped-up issue. The expected result is a valid json. 
 Search (search for GET_ALL_DEVICE_DATA) within the issue tracker and discussion forum for related items.
 
 Please don't create an issue, because this is not an issue with the integration. 
@@ -704,7 +704,7 @@ If a device's channels are assigned to multiple rooms or nothing is set, the are
 
 ### Unignore device parameters
 
-Not all parameters of a HomeMatic or HomematicIP device are created as entity. These parameters are filtered out to provide a better user experience for the majority of the users. If you need more parameters as entities have a look at [this](https://github.com/sukramj/hahomematic/blob/devel/docs/unignore.md) description. Starting with version 1.65.0 this can be configured in the reconfiguration flow under advanced options. You use this at your own risk!!!
+Not all parameters of a HomeMatic or HomematicIP device are created as entity. These parameters are filtered out to provide a better user experience for the majority of the users. If you need more parameters as entities have a look at [this](https://github.com/sukramj/aiohomematic/blob/devel/docs/unignore.md) description. Starting with version 1.65.0 this can be configured in the reconfiguration flow under advanced options. You use this at your own risk!!!
 
 BUT remember: Some parameters are already created as entities, but are **[deactivated](https://github.com/sukramj/custom_homematic#deactivated-entities)**.
 
@@ -714,7 +714,7 @@ Devices with buttons (e.g. HM-Sen-MDIR-WM55 and other remote controls) may not b
 
 ### Fixing RSSI values
 
-See this [explanation](https://github.com/sukramj/hahomematic/blob/devel/docs/rssi_fix.md) how the RSSI values are fixed.
+See this [explanation](https://github.com/sukramj/aiohomematic/blob/devel/docs/rssi_fix.md) how the RSSI values are fixed.
 
 ### Changing the default platform for some parameters
 
@@ -815,7 +815,7 @@ Deviating behavior is acceptable for these devices and does not constitute a fau
 ## Troubleshooting
 
 If the integration does not work as expected, try the following before opening an issue:
-- Review Home Assistant logs for entries related to this integration: homematicip_local and hahomematic. Address any errors or warnings shown.
+- Review Home Assistant logs for entries related to this integration: homematicip_local and aiohomematic. Address any errors or warnings shown.
 - Verify required ports are open and reachable between HA and your hub (CCU/RaspberryMatic/Homegear). See Firewall and required ports above.
 - Ensure the CCU user has admin privileges and that your password only contains supported characters (A-Z, a-z, 0-9 and .!$():;#-).
 - When running HA in Docker, prefer network_mode: host. Otherwise, set callback_host and callback_port in the configuration and allow inbound connections from the CCU to that port.
@@ -836,10 +836,10 @@ Q: My device is not listed under [Events for Homematic(IP) devices](#events-for-
 A: It doesn't matter. These are just examples. If you can press it, it is a button and events are emitted.
 
 Q: I have a problem with the integration. What can I do?<br>
-A: Before creating an issue, you should review the HA log files for `error` or `warning` entries related to this integration (`homematicip_local`, `hahomematic`) and read the corresponding messages. You can find further information about some messages in this document.
+A: Before creating an issue, you should review the HA log files for `error` or `warning` entries related to this integration (`homematicip_local`, `aiohomematic`) and read the corresponding messages. You can find further information about some messages in this document.
 
 Q: What is the source of OPERATING_VOLTAGE_LEVEL, APPARENT_TEMPERATURE, DEW_POINT, FROST_POINT, VAPOR_CONCENTRATION
-A: These are parameters/sensors, that are [calculated](https://github.com/SukramJ/hahomematic/blob/devel/docs/calculated_climate_sensors.md) based on existing parameters to add more information to a device.
+A: These are parameters/sensors, that are [calculated](https://github.com/SukramJ/aiohomematic/blob/devel/docs/calculated_climate_sensors.md) based on existing parameters to add more information to a device.
 
 ## Examples in YAML
 
@@ -1054,9 +1054,9 @@ Just copy these files to "your ha-config_dir"/blueprints/automation
 
 ## Support and Contributing
 
-- Issues: https://github.com/sukramj/hahomematic/issues
-- Discussions: https://github.com/sukramj/hahomematic/discussions
-- Wiki contributions are welcome: https://github.com/sukramj/hahomematic/wiki
+- Issues: https://github.com/sukramj/aiohomematic/issues
+- Discussions: https://github.com/sukramj/aiohomematic/discussions
+- Wiki contributions are welcome: https://github.com/sukramj/aiohomematic/wiki
 - Pull requests are welcome in this repository. Please open an issue or discussion first if you plan larger changes.
 
 ## License

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import logging
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.generic import DpButton
-from hahomematic.model.hub import ProgramDpButton
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.generic import DpButton
+from aiohomematic.model.hub import ProgramDpButton
 
 from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant, callback
@@ -15,7 +15,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import ATTR_DESCRIPTION, ATTR_NAME, HaHomematicGenericEntity, HaHomematicGenericHubEntity
+from .generic_entity import ATTR_DESCRIPTION, ATTR_NAME, AioHomematicGenericEntity, AioHomematicGenericHubEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_BUTTON: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicButton(
+            AioHomematicButton(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -48,7 +48,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_PROGRAM_BUTTON: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicProgramButton(control_unit=control_unit, data_point=data_point) for data_point in data_points
+            AioHomematicProgramButton(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
@@ -73,7 +73,7 @@ async def async_setup_entry(
     async_add_program_button(data_points=control_unit.get_new_hub_data_points(data_point_type=ProgramDpButton))
 
 
-class HaHomematicButton(HaHomematicGenericEntity[DpButton], ButtonEntity):
+class AioHomematicButton(AioHomematicGenericEntity[DpButton], ButtonEntity):
     """Representation of the Homematic(IP) Local button."""
 
     async def async_press(self) -> None:
@@ -81,7 +81,7 @@ class HaHomematicButton(HaHomematicGenericEntity[DpButton], ButtonEntity):
         await self._data_point.press()
 
 
-class HaHomematicProgramButton(HaHomematicGenericHubEntity, ButtonEntity):
+class AioHomematicProgramButton(AioHomematicGenericHubEntity, ButtonEntity):
     """Representation of the Homematic(IP) Local button."""
 
     def __init__(

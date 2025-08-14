@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import logging
 
-from hahomematic.const import DataPointCategory
-from hahomematic.model.generic import DpText
-from hahomematic.model.hub import SysvarDpText
+from aiohomematic.const import DataPointCategory
+from aiohomematic.model.generic import DpText
+from aiohomematic.model.hub import SysvarDpText
 
 from homeassistant.components.text import TextEntity
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -16,7 +16,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import HomematicConfigEntry
 from .control_unit import ControlUnit, signal_new_data_point
-from .generic_entity import HaHomematicGenericRestoreEntity, HaHomematicGenericSysvarEntity
+from .generic_entity import AioHomematicGenericRestoreEntity, AioHomematicGenericSysvarEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_TEXT: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicText(
+            AioHomematicText(
                 control_unit=control_unit,
                 data_point=data_point,
             )
@@ -49,7 +49,7 @@ async def async_setup_entry(
         _LOGGER.debug("ASYNC_ADD_HUB_TEXT: Adding %i data points", len(data_points))
 
         if entities := [
-            HaHomematicSysvarText(control_unit=control_unit, data_point=data_point) for data_point in data_points
+            AioHomematicSysvarText(control_unit=control_unit, data_point=data_point) for data_point in data_points
         ]:
             async_add_entities(entities)
 
@@ -73,7 +73,7 @@ async def async_setup_entry(
     async_add_hub_text(data_points=control_unit.get_new_hub_data_points(data_point_type=SysvarDpText))
 
 
-class HaHomematicText(HaHomematicGenericRestoreEntity[DpText], TextEntity):
+class AioHomematicText(AioHomematicGenericRestoreEntity[DpText], TextEntity):
     """Representation of the HomematicIP text entity."""
 
     @property
@@ -98,7 +98,7 @@ class HaHomematicText(HaHomematicGenericRestoreEntity[DpText], TextEntity):
         await self._data_point.send_value(value=value)
 
 
-class HaHomematicSysvarText(HaHomematicGenericSysvarEntity[SysvarDpText], TextEntity):
+class AioHomematicSysvarText(AioHomematicGenericSysvarEntity[SysvarDpText], TextEntity):
     """Representation of the HomematicIP hub text entity."""
 
     @property

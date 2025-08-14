@@ -8,10 +8,10 @@ import logging
 from types import UnionType
 from typing import Any, Final, TypeVar, cast
 
-from hahomematic import __version__ as HAHM_VERSION
-from hahomematic.central import INTERFACE_EVENT_SCHEMA, CentralConfig, CentralUnit
-from hahomematic.client import InterfaceConfig
-from hahomematic.const import (
+from aiohomematic import __version__ as HAHM_VERSION
+from aiohomematic.central import INTERFACE_EVENT_SCHEMA, CentralConfig, CentralUnit
+from aiohomematic.client import InterfaceConfig
+from aiohomematic.const import (
     CALLBACK_TYPE,
     CONF_PASSWORD,
     CONF_USERNAME,
@@ -35,9 +35,9 @@ from hahomematic.const import (
     Parameter,
     SystemInformation,
 )
-from hahomematic.exceptions import BaseHomematicException
-from hahomematic.model.data_point import CallbackDataPoint
-from hahomematic.support import check_config
+from aiohomematic.exceptions import BaseHomematicException
+from aiohomematic.model.data_point import CallbackDataPoint
+from aiohomematic.support import check_config
 
 from homeassistant.const import CONF_HOST, CONF_PATH, CONF_PORT
 from homeassistant.core import HomeAssistant, callback

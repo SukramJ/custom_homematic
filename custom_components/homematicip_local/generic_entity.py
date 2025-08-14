@@ -6,12 +6,12 @@ from collections.abc import Mapping
 import logging
 from typing import Any, Final, Generic
 
-from hahomematic.const import CALLBACK_TYPE, CallSource
-from hahomematic.model.calculated import CalculatedDataPoint
-from hahomematic.model.custom import CustomDataPoint
-from hahomematic.model.data_point import CallbackDataPoint
-from hahomematic.model.generic import GenericDataPoint
-from hahomematic.model.hub import GenericHubDataPoint, GenericProgramDataPoint, GenericSysvarDataPoint
+from aiohomematic.const import CALLBACK_TYPE, CallSource
+from aiohomematic.model.calculated import CalculatedDataPoint
+from aiohomematic.model.custom import CustomDataPoint
+from aiohomematic.model.data_point import CallbackDataPoint
+from aiohomematic.model.generic import GenericDataPoint
+from aiohomematic.model.hub import GenericHubDataPoint, GenericProgramDataPoint, GenericSysvarDataPoint
 
 from homeassistant.core import State, callback
 from homeassistant.helpers import device_registry as dr, entity_registry as er
@@ -36,7 +36,7 @@ ATTR_PARAMETER: Final = "parameter"
 ATTR_VALUE_STATE: Final = "value_state"
 
 
-class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
+class AioHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
     """Representation of the HomematicIP generic entity."""
 
     _attr_has_entity_name = True
@@ -310,7 +310,7 @@ class HaHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 device_registry.async_remove_device(device_id)
 
 
-class HaHomematicGenericRestoreEntity(HaHomematicGenericEntity[HmGenericDataPoint], RestoreEntity):
+class AioHomematicGenericRestoreEntity(AioHomematicGenericEntity[HmGenericDataPoint], RestoreEntity):
     """Representation of the HomematicIP generic restore entity."""
 
     _restored_state: State | None = None
@@ -339,7 +339,7 @@ class HaHomematicGenericRestoreEntity(HaHomematicGenericEntity[HmGenericDataPoin
         self._restored_state = await self.async_get_last_state()
 
 
-class HaHomematicGenericHubEntity(Entity):
+class AioHomematicGenericHubEntity(Entity):
     """Representation of the HomematicIP generic hub entity."""
 
     _attr_has_entity_name = True
@@ -469,7 +469,7 @@ class HaHomematicGenericHubEntity(Entity):
                 entity_registry.async_remove(entity_id)
 
 
-class HaHomematicGenericProgramEntity(Generic[HmGenericProgramDataPoint], HaHomematicGenericHubEntity):
+class AioHomematicGenericProgramEntity(Generic[HmGenericProgramDataPoint], AioHomematicGenericHubEntity):
     """Representation of the HomematicIP generic sysvar entity."""
 
     def __init__(
@@ -502,7 +502,7 @@ class HaHomematicGenericProgramEntity(Generic[HmGenericProgramDataPoint], HaHome
         return attributes
 
 
-class HaHomematicGenericSysvarEntity(Generic[HmGenericSysvarDataPoint], HaHomematicGenericHubEntity):
+class AioHomematicGenericSysvarEntity(Generic[HmGenericSysvarDataPoint], AioHomematicGenericHubEntity):
     """Representation of the HomematicIP generic sysvar entity."""
 
     def __init__(

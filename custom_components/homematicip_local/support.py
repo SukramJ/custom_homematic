@@ -7,12 +7,12 @@ import logging
 import re
 from typing import Any, TypeAlias, TypeVar, cast
 
-from hahomematic.const import IDENTIFIER_SEPARATOR, EventKey
-from hahomematic.model.calculated import CalculatedDataPoint
-from hahomematic.model.custom import CustomDataPoint
-from hahomematic.model.data_point import EVENT_DATA_SCHEMA
-from hahomematic.model.generic import GenericDataPoint
-from hahomematic.model.hub import GenericProgramDataPoint, GenericSysvarDataPoint
+from aiohomematic.const import IDENTIFIER_SEPARATOR, EventKey
+from aiohomematic.model.calculated import CalculatedDataPoint
+from aiohomematic.model.custom import CustomDataPoint
+from aiohomematic.model.data_point import EVENT_DATA_SCHEMA
+from aiohomematic.model.generic import GenericDataPoint
+from aiohomematic.model.hub import GenericProgramDataPoint, GenericSysvarDataPoint
 import voluptuous as vol
 
 from homeassistant.const import CONF_TYPE
@@ -123,7 +123,7 @@ class InvalidConfig(HomeAssistantError):
     """Error to indicate there is invalid config."""
 
 
-async def get_hahomematic_version(hass: HomeAssistant, domain: str, package_name: str) -> str | None:
+async def get_aiohomematic_version(hass: HomeAssistant, domain: str, package_name: str) -> str | None:
     """Return the version of a package from manifest.json."""
     integration = await async_get_integration(hass, domain)
     requirements = integration.manifest.get("requirements", [])

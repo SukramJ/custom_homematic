@@ -6,8 +6,8 @@ from collections.abc import Mapping
 from dataclasses import asdict
 from typing import Any
 
-from hahomematic.central import CentralUnit
-from hahomematic.const import CONF_PASSWORD, CONF_USERNAME, DataPointCategory
+from aiohomematic.central import CentralUnit
+from aiohomematic.const import CONF_PASSWORD, CONF_USERNAME, DataPointCategory
 
 from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.core import HomeAssistant

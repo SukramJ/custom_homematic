@@ -1,4 +1,4 @@
-"""Module with hahomematic services."""
+"""Module with aiohomematic services."""
 
 from __future__ import annotations
 
@@ -6,11 +6,11 @@ from datetime import datetime
 import logging
 from typing import TYPE_CHECKING, Final, cast
 
-from hahomematic.const import ForcedDeviceAvailability, ParamsetKey
-from hahomematic.exceptions import BaseHomematicException
-from hahomematic.model.device import Device
-from hahomematic.support import get_device_address, to_bool
-import hahomematic.validator as haval
+from aiohomematic.const import ForcedDeviceAvailability, ParamsetKey
+from aiohomematic.exceptions import BaseHomematicException
+from aiohomematic.model.device import Device
+from aiohomematic.support import get_device_address, to_bool
+import aiohomematic.validator as haval
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntryState
@@ -221,7 +221,7 @@ SCHEMA_UPDATE_DEVICE_FIRMWARE_DATA = vol.Schema(
 
 
 async def async_setup_services(hass: HomeAssistant) -> None:
-    """Create the hahomematic services."""
+    """Create the aiohomematic services."""
 
     @verify_domain_control(hass, DOMAIN)
     async def async_call_hmip_local_service(service: ServiceCall) -> ServiceResponse:

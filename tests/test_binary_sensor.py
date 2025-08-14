@@ -1,4 +1,4 @@
-"""Tests for binary_sensor entities of hahomematic."""
+"""Tests for binary_sensor entities of aiohomematic."""
 
 from __future__ import annotations
 

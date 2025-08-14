@@ -1,8 +1,8 @@
-"""Tests for recorder for excluded attributes of hahomematic entities."""
+"""Tests for recorder for excluded attributes of aiohomematic entities."""
 
 from __future__ import annotations
 
-from hahomematic.const import DeviceFirmwareState, EventKey
+from aiohomematic.const import DeviceFirmwareState, EventKey
 import pytest
 from pytest_homeassistant_custom_component.components.recorder.common import async_wait_recording_done
 
