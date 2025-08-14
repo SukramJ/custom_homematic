@@ -8,7 +8,7 @@ blueprint:
     Tested with HmIP-KRCA. Should work with other device too.
     v2022-10-28
   domain: automation
-  source_url: https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local-actions-for-key_ring_remote_control.yaml
+  source_url: https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local-actions-for-key_ring_remote_control.yaml
   input:
     remote:
       name: 4-Button Device (e.g. HmIP-KRCA)

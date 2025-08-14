@@ -3,7 +3,7 @@ blueprint:
   description: Display persistent notification if device is not available.
     v2022-12-11
   domain: automation
-  source_url: https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local_persistent_notification.yaml
+  source_url: https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local_persistent_notification.yaml
 
 mode: restart
 max_exceeded: silent

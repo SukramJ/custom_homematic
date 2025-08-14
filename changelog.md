@@ -1659,7 +1659,7 @@ Rounding support for Concentration of HmIP-SCTH230 will be re-added with HA 2023
   Old behaviour was to display a DEFAULT value.
   As soon as events have been received from the CCU the state will switch to the correct state.
   This should be relevant, if HA has been restarted shortly after the CCU has been restart.
-  See [Readme](https://github.com/sukramj/custom_homematic#noteworthy-about-entity-states) for further information.
+  See [Readme](https://github.com/sukramj/homematicip_local#noteworthy-about-entity-states) for further information.
 - Add attribute state_uncertain
   There is now an extra attribute at each entity, that shows is the state of the entity might be uncertain due to a CCU restart.
   This should be relevant, if the CCU has been restarted and HA is still running.
@@ -1743,7 +1743,7 @@ Rounding support for Concentration of HmIP-SCTH230 will be re-added with HA 2023
 
 - Bump hahomematic to 1.8.0
   - Enable additional sysvar entity types
-- Create sysvars with new types. [See](https://github.com/sukramj/custom_homematic#system-variables)
+- Create sysvars with new types. [See](https://github.com/sukramj/homematicip_local#system-variables)
 
 # Version 1.7.3 (2022-06-01)
 

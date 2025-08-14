@@ -8,7 +8,7 @@ blueprint:
     by @andyboeh
     v2022-12-05
   domain: automation
-  source_url: https://github.com/sukramj/custom_homematic/blob/devel/blueprints/community/homematicip_local-actions-for-4-button-fm.yaml
+  source_url: https://github.com/sukramj/homematicip_local/blob/devel/blueprints/community/homematicip_local-actions-for-4-button-fm.yaml
   input:
     remote:
       name: 4-Button Device (e.g. HM-PBI-4-FM)

@@ -8,7 +8,7 @@ blueprint:
     Tested with HmIP-RC8. Should work with other device too.
     v2022-10-28
   domain: automation
-  source_url: https://github.com/sukramj/custom_homematic/blob/devel/blueprints/automation/homematicip_local-actions-for-8-button.yaml
+  source_url: https://github.com/sukramj/homematicip_local/blob/devel/blueprints/automation/homematicip_local-actions-for-8-button.yaml
   input:
     remote:
       name: 8-Button Device
