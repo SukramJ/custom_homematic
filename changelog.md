@@ -4,7 +4,9 @@
 - Bump aiohomematic to 2025.8.6
   - Do not send additional parameter in kwargs for events
   - Small performance improvements
+  - Rename hahomematic to aiohomematic
 - Use parameter from datapoint for events
+- Rename custom_homematic to homematicip_local
   
 # Version 1.85.1 (2025-08-07)
 
