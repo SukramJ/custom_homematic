@@ -34,3 +34,4 @@
 /venv
 /.idea/*
 .coverage
+/config
