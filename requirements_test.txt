@@ -9,4 +9,4 @@ pur==7.3.3
 pydevccu==0.1.15
 pylint==3.3.8
 pylint_strict_informational==0.1
-pytest-homeassistant-custom-component==0.13.270
+pytest-homeassistant-custom-component==0.13.271

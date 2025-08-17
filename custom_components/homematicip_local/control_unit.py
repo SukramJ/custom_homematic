@@ -444,6 +444,21 @@ class ControlUnit(BaseControlUnit):
             }
         )
 
+    def create_via_device(self, identifier: str, suggested_area: str | None, via_device: str) -> None:
+        """Create a via device for a device."""
+        device_registry = dr.async_get(self._hass)
+        device_registry.async_get_or_create(
+            config_entry_id=self._entry_id,
+            identifiers={
+                (
+                    DOMAIN,
+                    identifier,
+                )
+            },
+            suggested_area=suggested_area,
+            via_device=(DOMAIN, via_device),
+        )
+
     def get_new_data_points(
         self,
         data_point_type: type[_DATA_POINT_T] | UnionType,

@@ -1,3 +1,8 @@
+# Version 1.85.3 (2025-08-17)
+
+## What's Changed
+- Fix area assignment with enabled sub devices
+
 # Version 1.85.2 (2025-08-07)
 
 ## What's Changed
