@@ -41,7 +41,7 @@ from aiohomematic.support import check_config
 
 from homeassistant.const import CONF_HOST, CONF_PATH, CONF_PORT
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers import aiohttp_client, device_registry as dr
+from homeassistant.helpers import aiohttp_client, area_registry as ar, device_registry as dr
 from homeassistant.helpers.device_registry import DeviceEntry, DeviceEntryType, DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.issue_registry import IssueSeverity, async_create_issue, async_delete_issue
@@ -458,6 +458,18 @@ class ControlUnit(BaseControlUnit):
             suggested_area=suggested_area,
             via_device=(DOMAIN, via_device),
         )
+
+    def refresh_device_area(self, identifiers: set[tuple[str, str]], area_name: str) -> None:
+        """Refresh the area of a device."""
+        area_reg = ar.async_get(self._hass)
+        device_reg = dr.async_get(self._hass)
+        area = area_reg.async_get_or_create(name=area_name)
+
+        if (device := device_reg.async_get_device(identifiers=identifiers)) is None:
+            raise ValueError(f"Device {identifiers} nicht gefunden")
+
+        if device.area_id != area.id:
+            device_reg.async_update_device(device.id, area_id=area.id)
 
     def get_new_data_points(
         self,
