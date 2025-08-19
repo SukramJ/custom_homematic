@@ -75,7 +75,9 @@ class AioHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         via_device = hm_device.central.name
         suggested_area = hm_device.room
 
-        control_unit.create_via_device(identifier=identifier, suggested_area=suggested_area, via_device=via_device)
+        control_unit.ensure_via_device_exists(
+            identifier=identifier, suggested_area=suggested_area, via_device=via_device
+        )
 
         if control_unit.enable_sub_devices and hm_device.has_sub_devices and data_point.channel.is_in_multi_group:
             via_device = hm_device.identifier
