@@ -444,9 +444,13 @@ class ControlUnit(BaseControlUnit):
             }
         )
 
-    def create_via_device(self, identifier: str, suggested_area: str | None, via_device: str) -> None:
+    def ensure_via_device_exists(self, identifier: str, suggested_area: str | None, via_device: str) -> None:
         """Create a via device for a device."""
         device_registry = dr.async_get(self._hass)
+
+        if device_registry.async_get_device(identifiers={(DOMAIN, via_device)}) is not None:
+            return
+
         device_registry.async_get_or_create(
             config_entry_id=self._entry_id,
             identifiers={
