@@ -980,11 +980,50 @@ _DEFAULT_PLATFORM_DESCRIPTION: Mapping[DataPointCategory, EntityDescription] = {
 }
 
 
+# Cache for entity description lookups to avoid repeated expensive matching
+# Keyed by a stable signature derived from the data point properties used in lookups
+_ENTITY_DESCRIPTION_CACHE: dict[tuple, EntityDescription | None] = {}
+
+
+def _data_point_signature(
+    data_point: HmGenericDataPoint | CustomDataPoint | GenericHubDataPoint,
+) -> tuple:
+    """
+    Create a stable, hashable signature for a data point to cache lookups.
+
+    The signature only includes attributes relevant for entity description resolution.
+    """
+    category = data_point.category.value if hasattr(data_point.category, "value") else data_point.category
+    # Calculated/GenericDataPoint: use device model, parameter and unit (for sensor unit mapping)
+    if isinstance(data_point, (CalculatedDataPoint, GenericDataPoint)):
+        model = getattr(data_point.device, "model", None)
+        parameter = getattr(data_point, "parameter", None)
+        unit = getattr(data_point, "unit", None)
+        return ("cg", category, model, str(parameter).lower() if isinstance(parameter, str) else parameter, unit)
+    # CustomDataPoint: use model and postfix
+    if isinstance(data_point, CustomDataPoint):
+        model = getattr(data_point.device, "model", None)
+        postfix = getattr(data_point, "data_point_name_postfix", None)
+        return ("custom", category, model, postfix)
+    # GenericSysvarDataPoint: use var name
+    if isinstance(data_point, GenericSysvarDataPoint):
+        return ("sysvar", category, getattr(data_point, "name", None))
+    # GenericHubDataPoint and others: category only
+    return ("other", category)
+
+
 def get_entity_description(
     data_point: HmGenericDataPoint | CustomDataPoint | GenericHubDataPoint,
 ) -> EntityDescription | None:
     """Get the entity_description."""
-    if entity_desc := _find_entity_description(data_point=data_point):
+    signature = _data_point_signature(data_point)
+    cached = _ENTITY_DESCRIPTION_CACHE.get(signature, ...)
+    if cached is ...:
+        cached = _find_entity_description(data_point=data_point)
+        _ENTITY_DESCRIPTION_CACHE[signature] = cached
+
+    entity_desc = cached
+    if entity_desc:
         name, translation_key = get_name_and_translation_key(data_point=data_point, entity_desc=entity_desc)
         enabled_default = entity_desc.entity_registry_enabled_default if data_point.enabled_default else False
         return dataclasses.replace(
