@@ -1,7 +1,8 @@
 # Version 1.85.3 (2025-08-17)
 
 ## What's Changed
-- Bump aiohomematic to 2025.8.7
+- Bump aiohomematic to 2025.8.8
+  - Improve fetch_all_device_data
   - Improve room assignment
 - Fix area/room assignment with enabled sub devices
 
