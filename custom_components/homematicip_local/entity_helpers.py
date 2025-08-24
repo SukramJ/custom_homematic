@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import OrderedDict
 from collections.abc import Mapping
 import dataclasses
 from dataclasses import dataclass
@@ -982,47 +983,47 @@ _DEFAULT_PLATFORM_DESCRIPTION: Mapping[DataPointCategory, EntityDescription] = {
 
 # Cache for entity description lookups to avoid repeated expensive matching
 # Keyed by a stable signature derived from the data point properties used in lookups
-_ENTITY_DESCRIPTION_CACHE: dict[tuple, EntityDescription | None] = {}
+_ENTITY_DESCRIPTION_CACHE_MAX_SIZE: Final[int] = 512
+_ENTITY_DESCRIPTION_CACHE: OrderedDict[str, EntityDescription | None] = OrderedDict()
 
 
-def _data_point_signature(
-    data_point: HmGenericDataPoint | CustomDataPoint | GenericHubDataPoint,
-) -> tuple:
+def _cache_get(signature: str) -> EntityDescription | None | UndefinedType:
     """
-    Create a stable, hashable signature for a data point to cache lookups.
+    Return cached value if present; move key to end to mark as recently used.
 
-    The signature only includes attributes relevant for entity description resolution.
+    Returns UNDEFINED if key not in cache to distinguish from cached None.
     """
-    category = data_point.category.value if hasattr(data_point.category, "value") else data_point.category
-    # Calculated/GenericDataPoint: use device model, parameter and unit (for sensor unit mapping)
-    if isinstance(data_point, (CalculatedDataPoint, GenericDataPoint)):
-        model = getattr(data_point.device, "model", None)
-        parameter = getattr(data_point, "parameter", None)
-        unit = getattr(data_point, "unit", None)
-        return ("cg", category, model, str(parameter).lower() if isinstance(parameter, str) else parameter, unit)
-    # CustomDataPoint: use model and postfix
-    if isinstance(data_point, CustomDataPoint):
-        model = getattr(data_point.device, "model", None)
-        postfix = getattr(data_point, "data_point_name_postfix", None)
-        return ("custom", category, model, postfix)
-    # GenericSysvarDataPoint: use var name
-    if isinstance(data_point, GenericSysvarDataPoint):
-        return ("sysvar", category, getattr(data_point, "name", None))
-    # GenericHubDataPoint and others: category only
-    return ("other", category)
+
+    try:
+        value = _ENTITY_DESCRIPTION_CACHE[signature]
+        # mark as recently used
+        _ENTITY_DESCRIPTION_CACHE.move_to_end(signature)
+        return value  # noqa: TRY300
+    except KeyError:
+        return UNDEFINED
+
+
+def _cache_set(signature: str, value: EntityDescription | None) -> None:
+    """Insert into LRU cache and enforce max size."""
+    if signature in _ENTITY_DESCRIPTION_CACHE:
+        _ENTITY_DESCRIPTION_CACHE.move_to_end(signature)
+    _ENTITY_DESCRIPTION_CACHE[signature] = value
+    if len(_ENTITY_DESCRIPTION_CACHE) > _ENTITY_DESCRIPTION_CACHE_MAX_SIZE:
+        _ENTITY_DESCRIPTION_CACHE.popitem(last=False)
 
 
 def get_entity_description(
     data_point: HmGenericDataPoint | CustomDataPoint | GenericHubDataPoint,
 ) -> EntityDescription | None:
     """Get the entity_description."""
-    signature = _data_point_signature(data_point)
-    cached = _ENTITY_DESCRIPTION_CACHE.get(signature, ...)
-    if cached is ...:
-        cached = _find_entity_description(data_point=data_point)
-        _ENTITY_DESCRIPTION_CACHE[signature] = cached
+    signature = data_point.signature  # _data_point_signature(data_point=data_point)
+    if (cached := _cache_get(signature=signature)) is UNDEFINED:
+        computed = _find_entity_description(data_point=data_point)
+        _cache_set(signature=signature, value=computed)
+        entity_desc = computed
+    else:
+        entity_desc = cached
 
-    entity_desc = cached
     if entity_desc:
         name, translation_key = get_name_and_translation_key(data_point=data_point, entity_desc=entity_desc)
         enabled_default = entity_desc.entity_registry_enabled_default if data_point.enabled_default else False
