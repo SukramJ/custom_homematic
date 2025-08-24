@@ -556,7 +556,7 @@ class ControlConfig:
         self._sysvar_markers: Final[tuple[DescriptionMarker | str, ...]] = (
             sysvar_markers if (sysvar_markers := ac.get(CONF_SYSVAR_MARKERS)) else DEFAULT_SYSVAR_MARKERS
         )
-        self._un_ignore: Final[tuple[str, ...]] = ac.get(CONF_UN_IGNORES, DEFAULT_UN_IGNORES)
+        self._un_ignore: Final[frozenset[str]] = frozenset(ac.get(CONF_UN_IGNORES, DEFAULT_UN_IGNORES))
 
     @property
     def hass(self) -> HomeAssistant:
@@ -654,7 +654,9 @@ class ControlConfig:
             default_callback_port=self._default_callback_port,
             host=self._host,
             interface_configs=interface_configs,
-            interfaces_requiring_periodic_refresh=() if self._enable_mqtt else INTERFACES_REQUIRING_PERIODIC_REFRESH,
+            interfaces_requiring_periodic_refresh=frozenset(
+                () if self._enable_mqtt else INTERFACES_REQUIRING_PERIODIC_REFRESH
+            ),
             json_port=self._json_port,
             max_read_workers=1,
             name=self._instance_name,

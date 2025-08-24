@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import OrderedDict
 from collections.abc import Mapping
 import dataclasses
 from dataclasses import dataclass
@@ -980,11 +981,50 @@ _DEFAULT_PLATFORM_DESCRIPTION: Mapping[DataPointCategory, EntityDescription] = {
 }
 
 
+# Cache for entity description lookups to avoid repeated expensive matching
+# Keyed by a stable signature derived from the data point properties used in lookups
+_ENTITY_DESCRIPTION_CACHE_MAX_SIZE: Final[int] = 512
+_ENTITY_DESCRIPTION_CACHE: OrderedDict[str, EntityDescription | None] = OrderedDict()
+
+
+def _cache_get(signature: str) -> EntityDescription | None | UndefinedType:
+    """
+    Return cached value if present; move key to end to mark as recently used.
+
+    Returns UNDEFINED if key not in cache to distinguish from cached None.
+    """
+
+    try:
+        value = _ENTITY_DESCRIPTION_CACHE[signature]
+        # mark as recently used
+        _ENTITY_DESCRIPTION_CACHE.move_to_end(signature)
+        return value  # noqa: TRY300
+    except KeyError:
+        return UNDEFINED
+
+
+def _cache_set(signature: str, value: EntityDescription | None) -> None:
+    """Insert into LRU cache and enforce max size."""
+    if signature in _ENTITY_DESCRIPTION_CACHE:
+        _ENTITY_DESCRIPTION_CACHE.move_to_end(signature)
+    _ENTITY_DESCRIPTION_CACHE[signature] = value
+    if len(_ENTITY_DESCRIPTION_CACHE) > _ENTITY_DESCRIPTION_CACHE_MAX_SIZE:
+        _ENTITY_DESCRIPTION_CACHE.popitem(last=False)
+
+
 def get_entity_description(
     data_point: HmGenericDataPoint | CustomDataPoint | GenericHubDataPoint,
 ) -> EntityDescription | None:
     """Get the entity_description."""
-    if entity_desc := _find_entity_description(data_point=data_point):
+    signature = data_point.signature  # _data_point_signature(data_point=data_point)
+    if (cached := _cache_get(signature=signature)) is UNDEFINED:
+        computed = _find_entity_description(data_point=data_point)
+        _cache_set(signature=signature, value=computed)
+        entity_desc = computed
+    else:
+        entity_desc = cached
+
+    if entity_desc:
         name, translation_key = get_name_and_translation_key(data_point=data_point, entity_desc=entity_desc)
         enabled_default = entity_desc.entity_registry_enabled_default if data_point.enabled_default else False
         return dataclasses.replace(
@@ -1119,12 +1159,13 @@ def _get_entity_description_by_var_name(
 
 def _param_in_list(keys: str | tuple[str, ...], name: str, do_wildcard_compare: bool = False) -> bool:
     """Return if parameter is in set."""
-    if isinstance(keys, str):
-        if do_wildcard_compare:
-            return keys.lower() in name.lower()
-        return keys.lower() == name.lower()
+    name_l = name.lower()
+
     if isinstance(keys, tuple):
-        for key in keys:
-            if (do_wildcard_compare and key.lower() in name.lower()) or key.lower() == name.lower():
-                return True
-    return False
+        if do_wildcard_compare:
+            return any(key.lower() in name_l for key in keys)
+        key_set = {key.lower() for key in keys}
+        return name_l in key_set
+
+    key_l = keys.lower()
+    return key_l in name_l if do_wildcard_compare else key_l == name_l
