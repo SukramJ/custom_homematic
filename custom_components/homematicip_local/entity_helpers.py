@@ -1159,12 +1159,13 @@ def _get_entity_description_by_var_name(
 
 def _param_in_list(keys: str | tuple[str, ...], name: str, do_wildcard_compare: bool = False) -> bool:
     """Return if parameter is in set."""
-    if isinstance(keys, str):
-        if do_wildcard_compare:
-            return keys.lower() in name.lower()
-        return keys.lower() == name.lower()
+    name_l = name.lower()
+
     if isinstance(keys, tuple):
-        for key in keys:
-            if (do_wildcard_compare and key.lower() in name.lower()) or key.lower() == name.lower():
-                return True
-    return False
+        if do_wildcard_compare:
+            return any(key.lower() in name_l for key in keys)
+        key_set = {key.lower() for key in keys}
+        return name_l in key_set
+
+    key_l = keys.lower()
+    return key_l in name_l if do_wildcard_compare else key_l == name_l
