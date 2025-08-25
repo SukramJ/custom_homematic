@@ -57,7 +57,8 @@ from .support import HmGenericDataPoint
 _LOGGER = logging.getLogger(__name__)
 
 NUMBER_CONCENTRATION_CM3: Final = "1/cm\u00b3"  # HmIP-SFD
-LENGTH_MICROMETER: Final = "\u00b5m"  # HmIP-SFD
+# Use greek small letter mu "\u03bc" instead of micro sign "\u00B5" for micro unit prefix see HA #144853
+LENGTH_MICROMETER: Final = "\u03bcm"  # HmIP-SFD
 
 
 class HmNameSource(StrEnum):
