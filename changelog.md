@@ -5,7 +5,7 @@
   - Improve fetch_all_device_data
   - Improve room assignment
 - Fix area/room assignment with enabled sub devices
-
+- Use greek small letter mu "\u03bc" instead of micro sign "\u00B5" for micro unit prefix
 # Version 1.85.2 (2025-08-07)
 
 ## What's Changed
