@@ -75,10 +75,6 @@ class AioHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
         via_device = hm_device.central.name
         suggested_area = hm_device.room
 
-        control_unit.ensure_via_device_exists(
-            identifier=identifier, suggested_area=suggested_area, via_device=via_device
-        )
-
         if control_unit.enable_sub_devices and hm_device.has_sub_devices and data_point.channel.is_in_multi_group:
             via_device = hm_device.identifier
 
@@ -87,6 +83,9 @@ class AioHomematicGenericEntity(Generic[HmGenericDataPoint], Entity):
                 if (room := channel_group_master.room) is not None:
                     suggested_area = room
 
+        control_unit.ensure_via_device_exists(
+            identifier=identifier, suggested_area=suggested_area, via_device=via_device
+        )
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, identifier)},
             manufacturer=hm_device.manufacturer,

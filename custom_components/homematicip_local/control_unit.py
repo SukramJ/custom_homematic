@@ -256,6 +256,7 @@ class ControlUnit(BaseControlUnit):
 
         # Handle event of new device creation in Homematic(IP) Local.
         if system_event == BackendSystemEvent.DEVICES_CREATED:
+            self._async_add_virtual_remotes_to_device_registry()
             for platform, data_points in kwargs["new_data_points"].items():
                 if data_points and len(data_points) > 0:
                     async_dispatcher_send(
@@ -269,7 +270,6 @@ class ControlUnit(BaseControlUnit):
                     signal_new_data_point(entry_id=self._entry_id, platform=DataPointCategory.EVENT),
                     channel_events,
                 )
-            self._async_add_virtual_remotes_to_device_registry()
         elif system_event == BackendSystemEvent.HUB_REFRESHED:
             # Handle event of new hub entity creation in Homematic(IP) Local.
             for platform, hub_data_points in kwargs["new_hub_data_points"].items():
@@ -450,6 +450,19 @@ class ControlUnit(BaseControlUnit):
 
         if device_registry.async_get_device(identifiers={(DOMAIN, via_device)}) is not None:
             return
+
+        if via_device != self.central.name:
+            device_registry.async_get_or_create(
+                config_entry_id=self._entry_id,
+                identifiers={
+                    (
+                        DOMAIN,
+                        via_device,
+                    )
+                },
+                suggested_area=suggested_area,
+                via_device=(DOMAIN, self.central.name),
+            )
 
         device_registry.async_get_or_create(
             config_entry_id=self._entry_id,
